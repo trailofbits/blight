@@ -22,7 +22,7 @@ lint:
 .PHONY: test
 .ONESHELL:
 test:
-	. env/bin/activate && cd test
+	. env/bin/activate
 	pytest --cov=canker test/
 	python -m coverage report -m --fail-under 100
 
