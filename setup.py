@@ -32,7 +32,7 @@ setup(
         ],
     },
     platforms="any",
-    python_requires=">=3.6",
+    python_requires=">=3.7",
     install_requires=[
         "click ~= 7.1",
     ],
