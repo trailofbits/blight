@@ -24,7 +24,6 @@ lint:
 test:
 	. env/bin/activate && cd test
 	pytest --cov=canker test/
-	# python -m coverage run -m pytest
 	python -m coverage report -m --fail-under 100
 
 .PHONY: package
