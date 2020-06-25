@@ -1,6 +1,8 @@
 canker
 ======
 
+[![Build Status](https://img.shields.io/github/workflow/status/trailofbits/canker/CI/master)](https://github.com/trailofbits/canker/actions?query=workflow%3ACI)
+
 `canker` is a catch-all compile-tool wrapper.
 
 ## Usage
