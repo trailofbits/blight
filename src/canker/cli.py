@@ -1,3 +1,4 @@
+import logging
 import os
 import shlex
 import shutil
@@ -7,6 +8,8 @@ import click
 
 import canker.tool
 from canker.util import die
+
+logging.basicConfig(level=os.environ.get("LOGLEVEL", "INFO").upper())
 
 
 def _export(variable, value):

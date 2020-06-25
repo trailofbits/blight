@@ -9,10 +9,6 @@ class Record(Action):
     def before_run(self, tool):
         record_file = Path(os.getenv("CANKER_ACTION_RECORD_FILE"))
 
-        print(tool.lang)
-        print(tool.std)
-        print(tool.stage)
-
         with record_file.open("a") as io:
             record = {"tool": tool.wrapped_tool(), "args": tool.args}
             print(json.dumps(record), file=io)

@@ -1,8 +1,11 @@
+import logging
 import os
 import subprocess
 
 from canker.enums import CompilerStage, Lang, Std
 from canker.util import die, load_actions, rindex
+
+logger = logging.getLogger(__name__)
 
 CANKER_TOOL_MAP = {
     "canker-cc": "CC",
@@ -83,6 +86,7 @@ class LangMixin:
         elif self.__class__ == CXX:
             return Lang.Cxx
         else:
+            logger.debug(f"unknown default language mode for {self}")
             return Lang.Unknown
 
 
@@ -97,6 +101,7 @@ class StdMixin(LangMixin):
             elif self.lang == Lang.Cxx:
                 return Std.Cxx03
             else:
+                logger.debug(f"-ansi passed but unknown language: {self.lang}")
                 return Std.Unknown
 
         std_flags = [flag for flag in self.args if flag.startswith("-std=")]
@@ -109,6 +114,7 @@ class StdMixin(LangMixin):
             elif self.lang == Lang.Cxx:
                 return Std.GnuxxUnknown
             else:
+                logger.debug(f"no -std= flag and unknown language: {self.lang}")
                 return Std.Unknown
 
         # Experimentally, both GCC and clang respect the last -std=XXX flag passed.
@@ -191,14 +197,19 @@ class StdMixin(LangMixin):
         # don't know yet. Make an effort to guess at it.
         std_name = last_std_flag.split("=")[1]
         if std_name.startswith("c++"):
+            logger.debug(f"partially unrecognized c++ std: {last_std_flag}")
             return Std.CxxUnknown
         elif std_name.startswith("gnu++"):
+            logger.debug(f"partially unrecognized gnu++ std: {last_std_flag}")
             return Std.GnuxxUnknown
         elif std_name.startswith("gnu"):
+            logger.debug(f"partially unrecognized gnu c std: {last_std_flag}")
             return Std.GnuUnknown
         elif std_name.startswith("c") or std_name.startswith("iso9899"):
+            logger.debug(f"partially unrecognized c std: {last_std_flag}")
             return Std.CUnknown
 
+        logger.debug(f"completely unrecognized -std= flag: {last_std_flag}")
         return Std.Unknown
 
 
@@ -225,20 +236,25 @@ class CompilerTool(Tool, StdMixin):
 
 
 class CC(CompilerTool):
-    pass
+    def __repr__(self):
+        return f"<CC {self.wrapped_tool()} {self.lang} {self.std} {self.stage}>"
 
 
 class CXX(CompilerTool):
-    pass
+    def __repr__(self):
+        return f"<CXX {self.wrapped_tool()} {self.lang} {self.std} {self.stage}>"
 
 
 class CPP(Tool, StdMixin):
-    pass
+    def __repr__(self):
+        return f"<CPP {self.wrapped_tool()} {self.lang} {self.std}>"
 
 
 class LD(Tool):
-    pass
+    def __repr__(self):
+        return f"<LD {self.wrapped_tool()}>"
 
 
 class AS(Tool):
-    pass
+    def __repr__(self):
+        return f"<AS {self.wrapped_tool()}>"
