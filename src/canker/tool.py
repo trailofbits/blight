@@ -86,7 +86,7 @@ class LangMixin:
         elif self.__class__ == CXX:
             return Lang.Cxx
         else:
-            logger.debug(f"unknown default language mode for {self}")
+            logger.debug(f"unknown default language mode for {self.__class__.__name__}")
             return Lang.Unknown
 
 

@@ -23,7 +23,8 @@ lint:
 .ONESHELL:
 test:
 	. env/bin/activate && cd test
-	python -m coverage run -m pytest
+	pytest --cov=canker test/
+	# python -m coverage run -m pytest
 	python -m coverage report -m --fail-under 100
 
 .PHONY: package

@@ -42,7 +42,7 @@ setup(
             "black",
             "isort[pyproject]",
             "pytest",
-            "coverage",
+            "pytest-cov",
             "twine",
         ]
     }
