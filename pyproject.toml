@@ -5,3 +5,7 @@ known_first_party = "canker"
 
 [tool.black]
 line-length = 100
+
+[tool.coverage.run]
+# don't attempt code coverage for the CLI entrypoints
+omit = ["src/canker/cli.py"]

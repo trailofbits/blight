@@ -42,7 +42,8 @@ setup(
             "black",
             "isort[pyproject]",
             "pytest",
-            "coverage",
+            "pytest-cov",
+            "coverage[toml]",
             "twine",
         ]
     }

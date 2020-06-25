@@ -31,7 +31,7 @@ class Lang(enum.Enum):
 
 class Std(enum.Enum):
     def is_unknown(self):
-        self in [Std.CUnknown, Std.CxxUnknown, Std.GnuUnknown, Std.GnuxxUnknown, Std.Unknown]
+        return self in [Std.CUnknown, Std.CxxUnknown, Std.GnuUnknown, Std.GnuxxUnknown, Std.Unknown]
 
     # C standards.
     C89 = enum.auto()

@@ -2,8 +2,6 @@ import os
 import shlex
 import sys
 
-import canker.actions
-
 
 def die(message):
     print(f"Fatal: {message}", file=sys.stderr)
@@ -18,6 +16,8 @@ def rindex(items, needle):
 
 
 def load_actions():
+    import canker.actions
+
     action_names = os.getenv("CANKER_ACTIONS")
     if action_names is None:
         return []

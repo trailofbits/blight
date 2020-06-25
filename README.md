@@ -1,6 +1,8 @@
 canker
 ======
 
+[![Build Status](https://img.shields.io/github/workflow/status/trailofbits/canker/CI/master)](https://github.com/trailofbits/canker/actions?query=workflow%3ACI)
+
 `canker` is a catch-all compile-tool wrapper.
 
 ## Usage
@@ -9,7 +11,7 @@ canker
 $ pip3 install canker
 $ eval $(canker-env --guess-wrapped)
 $ export CANKER_ACTIONS="Record"
-$ export CANKER_ACTION_RECORD_FILE=/tmp/demo.jsonl
+$ export CANKER_ACTION_RECORD="output=/tmp/demo.jsonl"
 $ cd /your/project && make
 $ cat /tmp/demo.jsonl
 ```

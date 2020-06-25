@@ -8,14 +8,14 @@ class Action:
     def _should_run_on(self, tool):
         return True
 
-    def before_run(self, tool):
+    def before_run(self, tool):  # pragma: no cover
         pass
 
     def _before_run(self, tool):
         if self._should_run_on(tool):
             self.before_run(tool)
 
-    def after_run(self, tool):
+    def after_run(self, tool):  # pragma: no cover
         pass
 
     def _after_run(self, tool):
