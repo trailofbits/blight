@@ -10,12 +10,6 @@ def die(message):
     sys.exit(1)
 
 
-def which(tool):
-    for prefix in os.getenv("PATH").split(os.pathsep):
-        if (path := (Path(prefix) / tool)).is_file():
-            return str(path)
-
-
 def load_actions():
     action_names = os.getenv("CANKER_ACTIONS")
     if action_names is None:

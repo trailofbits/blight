@@ -1,11 +1,12 @@
 import os
 import shlex
+import shutil
 import sys
 
 import click
 
 import canker.tool
-from canker.util import die, which
+from canker.util import die
 
 
 def _export(variable, value):
@@ -14,7 +15,7 @@ def _export(variable, value):
 
 def _export_guess_wrapped():
     for variable, tool in canker.tool.TOOL_ENV_MAP.items():
-        if tool_path := which(tool):
+        if tool_path := shutil.which(tool):
             _export(f"CANKER_WRAPPED_{variable}", tool_path)
         else:
             die(f"Fatal: Couldn't locate {tool} on the $PATH")
