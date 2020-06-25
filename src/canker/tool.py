@@ -42,7 +42,7 @@ class Tool:
 
     def __init__(self, args):
         if self.__class__ == Tool:
-            raise TypeError(f"can't instantiate {self.__class__.__name__} directly")
+            raise NotImplementedError(f"can't instantiate {self.__class__.__name__} directly")
         self.args = args
         self._actions = load_actions()
 

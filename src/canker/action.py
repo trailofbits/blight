@@ -2,6 +2,9 @@ import canker.tool
 
 
 class Action:
+    def __init__(self, config):
+        self._config = config
+
     def _should_run_on(self, tool):
         return True
 

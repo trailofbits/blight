@@ -1,7 +1,8 @@
 import os
+import shlex
 import sys
 
-from canker import actions
+import canker.actions
 
 
 def die(message):
@@ -21,11 +22,18 @@ def load_actions():
     if action_names is None:
         return []
 
-    action_objects = []
+    actions = []
     for action_name in action_names.split(":"):
-        action_class = getattr(actions, action_name, None)
+        action_class = getattr(canker.actions, action_name, None)
         if action_class is None:
             die(f"Unknown action: {action_name}")
 
-        action_objects.append(action_class())
-    return action_objects
+        action_config = os.getenv(f"CANKER_ACTION_{action_name.upper()}", None)
+        if action_config is not None:
+            action_config = shlex.split(action_config)
+            action_config = dict(c.split("=") for c in action_config)
+        else:
+            action_config = {}
+
+        actions.append(action_class(action_config))
+    return actions
