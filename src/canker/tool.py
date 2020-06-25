@@ -1,7 +1,8 @@
 import os
 import subprocess
 
-from canker.util import die, load_actions
+from canker.enums import CompilerStage, Lang, Std
+from canker.util import die, load_actions, rindex
 
 CANKER_TOOL_MAP = {
     "canker-cc": "CC",
@@ -34,6 +35,7 @@ class Tool:
         wrapped_tool = os.getenv(TOOL_ENV_WRAPPER_MAP[cls.__name__])
         if wrapped_tool is None:
             die(f"No wrapped tool found for {TOOL_ENV_MAP[cls.__name__]}")
+        return wrapped_tool
 
     def __init__(self, args):
         if self.__class__ == Tool:
@@ -57,8 +59,169 @@ class Tool:
         self._after_run()
 
 
-class CompilerTool(Tool):
-    pass
+class LangMixin:
+    @property
+    def lang(self):
+        x_lang_map = {
+            "c": Lang.C,
+            "c-header": Lang.C,
+            "c++": Lang.Cxx,
+            "c++-header": Lang.Cxx,
+        }
+
+        # First, check for `-x lang`. This overrides the language determined by
+        # the frontend's binary name (e.g. `g++`).
+        x_flag_index = rindex(self.args, "-x")
+        if x_flag_index is not None:
+            # TODO(ww): Maybe bounds check.
+            x_lang = self.args[x_flag_index + 1]
+            return x_lang_map.get(x_lang, Lang.Unknown)
+
+        # No `-x lang` means that we're operating in the frontend's default mode.
+        if self.__class__ == CC:
+            return Lang.C
+        elif self.__class__ == CXX:
+            return Lang.Cxx
+        else:
+            return Lang.Unknown
+
+
+class StdMixin(LangMixin):
+    @property
+    def std(self):
+        # First, a special case: if -ansi is present, we're in
+        # C89 mode for C code and C++03 mode for C++ code.
+        if "-ansi" in self.args:
+            if self.lang == Lang.C:
+                return Std.C89
+            elif self.lang == Lang.Cxx:
+                return Std.Cxx03
+            else:
+                return Std.Unknown
+
+        std_flags = [flag for flag in self.args if flag.startswith("-std=")]
+
+        # No -std=XXX flags? The tool is operating in its default standard mode,
+        # which is determined by its language.
+        if std_flags == []:
+            if self.lang == Lang.C:
+                return Std.GnuUnknown
+            elif self.lang == Lang.Cxx:
+                return Std.GnuxxUnknown
+            else:
+                return Std.Unknown
+
+        # Experimentally, both GCC and clang respect the last -std=XXX flag passed.
+        # See: https://stackoverflow.com/questions/40563269/passing-multiple-std-switches-to-g
+        last_std_flag = std_flags[-1]
+
+        std_flag_map = {
+            # C89 flags.
+            "-std=c89": Std.C89,
+            "-std=c90": Std.C89,
+            "-std=iso9899:1990": Std.C89,
+            # C94 flags.
+            "-std=iso9899:199409": Std.C94,
+            # C99 flags.
+            "-std=c99": Std.C99,
+            "-std=c9x": Std.C99,
+            "-std=iso9899:1999": Std.C99,
+            "-std=iso9899:199x": Std.C99,
+            # C11 flags.
+            "-std=c11": Std.C11,
+            "-std=c1x": Std.C11,
+            "-std=iso9899:2011": Std.C11,
+            # C17 flags.
+            "-std=c17": Std.C17,
+            "-std=c18": Std.C17,
+            "-std=iso9899:2017": Std.C17,
+            "-std=iso9899:2018": Std.C17,
+            # C20 (presumptive) flags.
+            "-std=c2x": Std.C2x,
+            # GNU89 flags.
+            "-std=gnu89": Std.Gnu89,
+            "-std=gnu90": Std.Gnu89,
+            # GNU99 flags.
+            "-std=gnu99": Std.Gnu99,
+            "-std=gnu9x": Std.Gnu99,
+            # GNU11 flags.
+            "-std=gnu11": Std.Gnu11,
+            "-std=gnu1x": Std.Gnu11,
+            # GNU17 flags.
+            "-std=gnu17": Std.Gnu17,
+            "-std=gnu18": Std.Gnu17,
+            # GNU20 (presumptive) flags.
+            "-std=gnu2x": Std.Gnu2x,
+            # C++03 flags.
+            # NOTE(ww): Both gcc and clang treat C++98 mode as C++03 mode.
+            "-std=c++98": Std.Cxx03,
+            "-std=c++03": Std.Cxx03,
+            # C++11 flags.
+            "-std=c++11": Std.Cxx11,
+            "-std=c++0x": Std.Cxx11,
+            # C++14 flags.
+            "-std=c++14": Std.Cxx14,
+            "-std=c++1y": Std.Cxx14,
+            # C++17 flags.
+            "-std=c++17": Std.Cxx17,
+            "-std=c++1z": Std.Cxx17,
+            # C++20 (presumptive) flags.
+            "-std=c++2a": Std.Cxx2a,
+            # GNU++03 flags.
+            "-std=gnu++98": Std.Gnuxx03,
+            "-std=gnu++03": Std.Gnuxx03,
+            # GNU++11 flags.
+            "-std=gnu++11": Std.Gnuxx11,
+            "-std=gnu++0x": Std.Gnuxx11,
+            # GNU++14 flags.
+            "-std=gnu++14": Std.Gnuxx14,
+            "-std=gnu++1y": Std.Gnuxx14,
+            # GNU++17 flags.
+            "-std=gnu++17": Std.Gnuxx17,
+            "-std=gnu++1z": Std.Gnuxx17,
+            # GNU++20 (presumptive) flags.
+            "-std=gnu++2a": Std.Gnuxx2a,
+        }
+
+        std = std_flag_map.get(last_std_flag)
+        if std is not None:
+            return std
+
+        # If we've made it here, then we've reached a -std=XXX flag that we
+        # don't know yet. Make an effort to guess at it.
+        std_name = last_std_flag.split("=")[1]
+        if std_name.startswith("c++"):
+            return Std.CxxUnknown
+        elif std_name.startswith("gnu++"):
+            return Std.GnuxxUnknown
+        elif std_name.startswith("gnu"):
+            return Std.GnuUnknown
+        elif std_name.startswith("c") or std_name.startswith("iso9899"):
+            return Std.CUnknown
+
+        return Std.Unknown
+
+
+class CompilerTool(Tool, StdMixin):
+    @property
+    def stage(self):
+        stage_flag_map = {
+            # NOTE(ww): See the TODO in CompilerStage.
+            "-v": CompilerStage.Unknown,
+            "-###": CompilerStage.Unknown,
+            "-E": CompilerStage.Preprocess,
+            "-fsyntax-only": CompilerStage.SyntaxOnly,
+            "-S": CompilerStage.Assemble,
+            "-c": CompilerStage.CompileObject,
+        }
+
+        for flag, stage in stage_flag_map.items():
+            if flag in self.args:
+                return stage
+
+        # No explicit stage flag? Both gcc and clang treat this as
+        # "run all stages", so we do too.
+        return CompilerStage.AllStages
 
 
 class CC(CompilerTool):
@@ -69,7 +232,7 @@ class CXX(CompilerTool):
     pass
 
 
-class CPP(Tool):
+class CPP(Tool, StdMixin):
     pass
 
 

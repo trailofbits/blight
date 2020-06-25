@@ -9,6 +9,13 @@ def die(message):
     sys.exit(1)
 
 
+def rindex(items, needle):
+    for idx, item in enumerate(reversed(items)):
+        if item == needle:
+            return len(items) - idx - 1
+    return None
+
+
 def load_actions():
     action_names = os.getenv("CANKER_ACTIONS")
     if action_names is None:

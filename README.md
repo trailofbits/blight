@@ -25,6 +25,8 @@ $ cat /tmp/demo.jsonl
 
 * Using `LD_PRELOAD` to capture every `exec` in a build system,
 a la [Bear](https://github.com/rizsotto/Bear).
+* Supporting `cl.exe`.
+* Detailed support for non C/C++ languages.
 
 ## The name?
 
