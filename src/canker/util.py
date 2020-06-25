@@ -1,6 +1,5 @@
 import os
 import sys
-from pathlib import Path
 
 from canker import actions
 
@@ -17,7 +16,9 @@ def load_actions():
 
     action_objects = []
     for action_name in action_names.split(":"):
-        if (action_class := getattr(actions, action_name, None)) is None:
+        action_class = getattr(actions, action_name, None)
+        if action_class is None:
             die(f"Unknown action: {action_name}")
+
         action_objects.append(action_class())
     return action_objects

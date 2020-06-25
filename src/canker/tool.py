@@ -31,12 +31,13 @@ TOOL_ENV_WRAPPER_MAP = {
 class Tool:
     @classmethod
     def wrapped_tool(cls):
-        if wrapped_tool := os.getenv(TOOL_ENV_WRAPPER_MAP[cls.__name__]):
-            return wrapped_tool
-        else:
+        wrapped_tool = os.getenv(TOOL_ENV_WRAPPER_MAP[cls.__name__])
+        if wrapped_tool is None:
             die(f"No wrapped tool found for {TOOL_ENV_MAP[cls.__name__]}")
 
     def __init__(self, args):
+        if self.__class__ == Tool:
+            raise TypeError(f"can't instantiate {self.__class__.__name__} directly")
         self.args = args
         self._actions = load_actions()
 
