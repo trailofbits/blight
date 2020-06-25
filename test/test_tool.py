@@ -1,3 +1,4 @@
+import json
 import shlex
 import shutil
 
@@ -10,6 +11,25 @@ from canker.enums import CompilerStage, Lang, Std
 def test_tool_doesnt_instantial():
     with pytest.raises(NotImplementedError):
         tool.Tool([])
+
+
+def test_tool_missing_wrapped_tool(monkeypatch):
+    monkeypatch.delenv("CANKER_WRAPPED_CC")
+    with pytest.raises(SystemExit):
+        tool.CC.wrapped_tool()
+
+
+def test_tool_run(monkeypatch, tmp_path):
+    bench_output = tmp_path / "bench.jsonl"
+    monkeypatch.setenv("CANKER_ACTIONS", "Benchmark")
+    monkeypatch.setenv("CANKER_ACTION_BENCHMARK", f"output={bench_output}")
+
+    cc = tool.CC(["-v"])
+    cc.run()
+
+    bench_record = json.loads(bench_output.read_text())
+    assert bench_record["tool"] == shutil.which("cc")
+    assert isinstance(bench_record["elapsed"], int)
 
 
 def test_cc():
@@ -77,6 +97,7 @@ def test_cpp():
         assert cpp.wrapped_tool() == shutil.which("cpp")
         assert cpp.lang == enums[0]
         assert cpp.std == enums[1]
+        assert cpp.std.is_unknown()
         assert repr(cpp) == f"<CPP {cpp.wrapped_tool()} {cpp.lang} {cpp.std}>"
 
 
@@ -84,9 +105,11 @@ def test_ld():
     ld = tool.LD([])
 
     assert ld.wrapped_tool() == shutil.which("ld")
+    assert repr(ld) == f"<LD {ld.wrapped_tool()}>"
 
 
 def test_as():
     as_ = tool.AS([])
 
     assert as_.wrapped_tool() == shutil.which("as")
+    assert repr(as_) == f"<AS {as_.wrapped_tool()}>"
