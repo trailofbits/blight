@@ -32,73 +32,76 @@ def test_tool_run(monkeypatch, tmp_path):
     assert isinstance(bench_record["elapsed"], int)
 
 
-def test_cc():
-    flags_enum_map = {
-        "": [Lang.C, Std.GnuUnknown, CompilerStage.AllStages],
-        "-x c++": [Lang.Cxx, Std.GnuxxUnknown, CompilerStage.AllStages],
-        "-ansi": [Lang.C, Std.C89, CompilerStage.AllStages],
-        "-ansi -x c++": [Lang.Cxx, Std.Cxx03, CompilerStage.AllStages],
-        "-std=c99": [Lang.C, Std.C99, CompilerStage.AllStages],
-        "-x unknown": [Lang.Unknown, Std.Unknown, CompilerStage.AllStages],
-        "-ansi -x unknown": [Lang.Unknown, Std.Unknown, CompilerStage.AllStages],
-        "-std=cunknown": [Lang.C, Std.CUnknown, CompilerStage.AllStages],
-        "-std=c++unknown": [Lang.C, Std.CxxUnknown, CompilerStage.AllStages],
-        "-std=gnuunknown": [Lang.C, Std.GnuUnknown, CompilerStage.AllStages],
-        "-std=gnu++unknown": [Lang.C, Std.GnuxxUnknown, CompilerStage.AllStages],
-        "-std=nonsense": [Lang.C, Std.Unknown, CompilerStage.AllStages],
-        "-v": [Lang.C, Std.GnuUnknown, CompilerStage.Unknown],
-        "-###": [Lang.C, Std.GnuUnknown, CompilerStage.Unknown],
-        "-E": [Lang.C, Std.GnuUnknown, CompilerStage.Preprocess],
-        "-fsyntax-only": [Lang.C, Std.GnuUnknown, CompilerStage.SyntaxOnly],
-        "-S": [Lang.C, Std.GnuUnknown, CompilerStage.Assemble],
-        "-c": [Lang.C, Std.GnuUnknown, CompilerStage.CompileObject],
-    }
+@pytest.mark.parametrize(
+    ("flags", "lang", "std", "stage"),
+    [
+        ("", Lang.C, Std.GnuUnknown, CompilerStage.AllStages),
+        ("-x c++", Lang.Cxx, Std.GnuxxUnknown, CompilerStage.AllStages),
+        ("-ansi", Lang.C, Std.C89, CompilerStage.AllStages),
+        ("-ansi -x c++", Lang.Cxx, Std.Cxx03, CompilerStage.AllStages),
+        ("-std=c99", Lang.C, Std.C99, CompilerStage.AllStages),
+        ("-x unknown", Lang.Unknown, Std.Unknown, CompilerStage.AllStages),
+        ("-ansi -x unknown", Lang.Unknown, Std.Unknown, CompilerStage.AllStages),
+        ("-std=cunknown", Lang.C, Std.CUnknown, CompilerStage.AllStages),
+        ("-std=c++unknown", Lang.C, Std.CxxUnknown, CompilerStage.AllStages),
+        ("-std=gnuunknown", Lang.C, Std.GnuUnknown, CompilerStage.AllStages),
+        ("-std=gnu++unknown", Lang.C, Std.GnuxxUnknown, CompilerStage.AllStages),
+        ("-std=nonsense", Lang.C, Std.Unknown, CompilerStage.AllStages),
+        ("-v", Lang.C, Std.GnuUnknown, CompilerStage.Unknown),
+        ("-###", Lang.C, Std.GnuUnknown, CompilerStage.Unknown),
+        ("-E", Lang.C, Std.GnuUnknown, CompilerStage.Preprocess),
+        ("-fsyntax-only", Lang.C, Std.GnuUnknown, CompilerStage.SyntaxOnly),
+        ("-S", Lang.C, Std.GnuUnknown, CompilerStage.Assemble),
+        ("-c", Lang.C, Std.GnuUnknown, CompilerStage.CompileObject),
+    ],
+)
+def test_cc(flags, lang, std, stage):
+    flags = shlex.split(flags)
+    cc = tool.CC(flags)
 
-    for flags, enums in flags_enum_map.items():
-        flags = shlex.split(flags)
-        cc = tool.CC(flags)
-
-        assert cc.wrapped_tool() == shutil.which("cc")
-        assert cc.lang == enums[0]
-        assert cc.std == enums[1]
-        assert cc.stage == enums[2]
-        assert repr(cc) == f"<CC {cc.wrapped_tool()} {cc.lang} {cc.std} {cc.stage}>"
-
-
-def test_cxx():
-    flags_enum_map = {
-        "": [Lang.Cxx, Std.GnuxxUnknown, CompilerStage.AllStages],
-        "-x c": [Lang.C, Std.GnuUnknown, CompilerStage.AllStages],
-        "-std=c++17": [Lang.Cxx, Std.Cxx17, CompilerStage.AllStages],
-    }
-
-    for flags, enums in flags_enum_map.items():
-        flags = shlex.split(flags)
-        cxx = tool.CXX(flags)
-
-        assert cxx.wrapped_tool() == shutil.which("c++")
-        assert cxx.lang == enums[0]
-        assert cxx.std == enums[1]
-        assert cxx.stage == enums[2]
-        assert repr(cxx) == f"<CXX {cxx.wrapped_tool()} {cxx.lang} {cxx.std} {cxx.stage}>"
+    assert cc.wrapped_tool() == shutil.which("cc")
+    assert cc.lang == lang
+    assert cc.std == std
+    assert cc.stage == stage
+    assert repr(cc) == f"<CC {cc.wrapped_tool()} {cc.lang} {cc.std} {cc.stage}>"
 
 
-def test_cpp():
-    flags_enum_map = {
-        "": [Lang.Unknown, Std.Unknown],
-        "-x c": [Lang.C, Std.GnuUnknown],
-        "-ansi": [Lang.Unknown, Std.Unknown],
-    }
+@pytest.mark.parametrize(
+    ("flags", "lang", "std", "stage"),
+    [
+        ("", Lang.Cxx, Std.GnuxxUnknown, CompilerStage.AllStages),
+        ("-x c", Lang.C, Std.GnuUnknown, CompilerStage.AllStages),
+        ("-std=c++17", Lang.Cxx, Std.Cxx17, CompilerStage.AllStages),
+    ],
+)
+def test_cxx(flags, lang, std, stage):
+    flags = shlex.split(flags)
+    cxx = tool.CXX(flags)
 
-    for flags, enums in flags_enum_map.items():
-        flags = shlex.split(flags)
-        cpp = tool.CPP(flags)
+    assert cxx.wrapped_tool() == shutil.which("c++")
+    assert cxx.lang == lang
+    assert cxx.std == std
+    assert cxx.stage == stage
+    assert repr(cxx) == f"<CXX {cxx.wrapped_tool()} {cxx.lang} {cxx.std} {cxx.stage}>"
 
-        assert cpp.wrapped_tool() == shutil.which("cpp")
-        assert cpp.lang == enums[0]
-        assert cpp.std == enums[1]
-        assert cpp.std.is_unknown()
-        assert repr(cpp) == f"<CPP {cpp.wrapped_tool()} {cpp.lang} {cpp.std}>"
+
+@pytest.mark.parametrize(
+    ("flags", "lang", "std"),
+    [
+        ("", Lang.Unknown, Std.Unknown),
+        ("-x c", Lang.C, Std.GnuUnknown),
+        ("-ansi", Lang.Unknown, Std.Unknown),
+    ],
+)
+def test_cpp(flags, lang, std):
+    flags = shlex.split(flags)
+    cpp = tool.CPP(flags)
+
+    assert cpp.wrapped_tool() == shutil.which("cpp")
+    assert cpp.lang == lang
+    assert cpp.std == std
+    assert cpp.std.is_unknown()
+    assert repr(cpp) == f"<CPP {cpp.wrapped_tool()} {cpp.lang} {cpp.std}>"
 
 
 def test_ld():
