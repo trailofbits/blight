@@ -19,5 +19,5 @@ class Benchmark(Action):
 
         bench_file = Path(self._config["output"])
         with flock_append(bench_file) as io:
-            bench_record = {"tool": tool.wrapped_tool(), "elapsed": elapsed}
+            bench_record = {"tool": tool.asdict(), "elapsed": elapsed}
             print(json.dumps(bench_record), file=io)

@@ -77,6 +77,18 @@ class Tool:
 
         self._after_run()
 
+    def asdict(self):
+        """
+        Returns:
+            A dictionary representation of this tool
+        """
+
+        return {
+            "name": self.__class__.__name__,
+            "wrapped_tool": self.wrapped_tool(),
+            "args": self.args,
+        }
+
 
 class LangMixin:
     """
@@ -277,6 +289,14 @@ class CompilerTool(Tool, StdMixin):
         # "run all stages", so we do too.
         return CompilerStage.AllStages
 
+    def asdict(self):
+        return {
+            **super().asdict(),
+            "lang": self.lang.name,
+            "std": self.std.name,
+            "stage": self.stage.name,
+        }
+
 
 class CC(CompilerTool):
     """
@@ -303,6 +323,13 @@ class CPP(Tool, StdMixin):
 
     def __repr__(self):
         return f"<CPP {self.wrapped_tool()} {self.lang} {self.std}>"
+
+    def asdict(self):
+        return {
+            **super().asdict(),
+            "lang": self.lang.name,
+            "std": self.std.name,
+        }
 
 
 class LD(Tool):

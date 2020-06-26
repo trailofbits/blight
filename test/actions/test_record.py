@@ -12,5 +12,5 @@ def test_record(tmp_path):
     record.before_run(CC(["-fake", "-flags"]))
 
     record_contents = json.loads(output.read_text())
-    assert record_contents["tool"] == shutil.which("cc")
+    assert record_contents["wrapped_tool"] == shutil.which("cc")
     assert record_contents["args"] == ["-fake", "-flags"]

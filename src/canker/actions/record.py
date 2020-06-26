@@ -14,5 +14,4 @@ class Record(Action):
         record_file = Path(self._config["output"])
 
         with flock_append(record_file) as io:
-            record = {"tool": tool.wrapped_tool(), "args": tool.args}
-            print(json.dumps(record), file=io)
+            print(json.dumps(tool.asdict()), file=io)

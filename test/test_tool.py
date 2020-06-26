@@ -28,7 +28,7 @@ def test_tool_run(monkeypatch, tmp_path):
     cc.run()
 
     bench_record = json.loads(bench_output.read_text())
-    assert bench_record["tool"] == shutil.which("cc")
+    assert bench_record["tool"] == cc.asdict()
     assert isinstance(bench_record["elapsed"], int)
 
 
@@ -64,6 +64,14 @@ def test_cc(flags, lang, std, stage):
     assert cc.std == std
     assert cc.stage == stage
     assert repr(cc) == f"<CC {cc.wrapped_tool()} {cc.lang} {cc.std} {cc.stage}>"
+    assert cc.asdict() == {
+        "name": cc.__class__.__name__,
+        "wrapped_tool": cc.wrapped_tool(),
+        "args": flags,
+        "lang": lang.name,
+        "std": std.name,
+        "stage": stage.name,
+    }
 
 
 @pytest.mark.parametrize(
@@ -83,6 +91,14 @@ def test_cxx(flags, lang, std, stage):
     assert cxx.std == std
     assert cxx.stage == stage
     assert repr(cxx) == f"<CXX {cxx.wrapped_tool()} {cxx.lang} {cxx.std} {cxx.stage}>"
+    assert cxx.asdict() == {
+        "name": cxx.__class__.__name__,
+        "wrapped_tool": cxx.wrapped_tool(),
+        "args": flags,
+        "lang": lang.name,
+        "std": std.name,
+        "stage": stage.name,
+    }
 
 
 @pytest.mark.parametrize(
@@ -102,6 +118,13 @@ def test_cpp(flags, lang, std):
     assert cpp.std == std
     assert cpp.std.is_unknown()
     assert repr(cpp) == f"<CPP {cpp.wrapped_tool()} {cpp.lang} {cpp.std}>"
+    assert cpp.asdict() == {
+        "name": cpp.__class__.__name__,
+        "wrapped_tool": cpp.wrapped_tool(),
+        "args": flags,
+        "lang": lang.name,
+        "std": std.name,
+    }
 
 
 def test_ld():
@@ -109,6 +132,11 @@ def test_ld():
 
     assert ld.wrapped_tool() == shutil.which("ld")
     assert repr(ld) == f"<LD {ld.wrapped_tool()}>"
+    assert ld.asdict() == {
+        "name": ld.__class__.__name__,
+        "wrapped_tool": ld.wrapped_tool(),
+        "args": [],
+    }
 
 
 def test_as():
@@ -116,3 +144,8 @@ def test_as():
 
     assert as_.wrapped_tool() == shutil.which("as")
     assert repr(as_) == f"<AS {as_.wrapped_tool()}>"
+    assert as_.asdict() == {
+        "name": as_.__class__.__name__,
+        "wrapped_tool": as_.wrapped_tool(),
+        "args": [],
+    }
