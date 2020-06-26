@@ -3,7 +3,7 @@ canker
 
 ![CI](https://github.com/trailofbits/canker/workflows/CI/badge.svg)
 
-`canker` is a catch-all compile-tool wrapper.
+`canker` is a catch-all compile tool wrapper.
 
 ## Usage
 
