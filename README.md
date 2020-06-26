@@ -31,6 +31,38 @@ a la [Bear](https://github.com/rizsotto/Bear).
 * Detailed support for non C/C++ languages.
 * Parsing arguments that are passed via `@file`.
 
+## Contributing a new action
+
+New canker actions are easy to write. For example, the following prints a message before every `ld`
+invocation:
+
+```python
+# src/canker/actions/printld.py
+
+from canker.action import LDAction
+
+
+class PrintLD(LDAction):
+    def before_run(self, tool):
+        print(f"ld was run with: {tool.args}")
+```
+
+```python
+# src/canker/actions/__init__.py
+
+# bring PrintLD into canker.actions so that `CANKER_ACTIONS` can find it
+from printld import PrintLD  # noqa: F401
+```
+
+```bash
+$ eval $(canker-env --guess-wrapped)
+$ export CANKER_ACTIONS="PrintLD"
+$ make
+```
+
+Check out canker's [API documentation](https://trailofbits.github.io/canker) for more details,
+including the kinds of available actions.
+
 ## The name?
 
 My phone autocorrected "CMake" to "canker" once.
