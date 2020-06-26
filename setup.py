@@ -12,7 +12,7 @@ with open("./README.md") as f:
 setup(
     name="canker",
     version=version["__version__"],
-    license="MIT",
+    license="Apache-2.0",
     author="William Woodruff",
     author_email="william@trailofbits.com",
     description="A catch-all compile-tool wrapper",
