@@ -4,3 +4,4 @@ pip-wheel-metadata/
 __pycache__/
 .coverage
 html/
+dist/
