@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-from setuptools import setup
+from setuptools import setup, find_packages
 
 version = {}
 with open("./src/canker/version.py") as f:
@@ -19,7 +19,7 @@ setup(
     long_description=long_description,
     long_description_content_type="text/markdown",
     url="https://github.com/trailofbits/canker",
-    packages=["canker"],
+    packages=find_packages(),
     package_dir={"": "src"},
     entry_points={
         "console_scripts": [
