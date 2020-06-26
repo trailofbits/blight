@@ -1,8 +1,13 @@
+"""
+The `Benchmark` action.
+"""
+
 import json
 import time
 from pathlib import Path
 
 from canker.action import Action
+from canker.util import flock_append
 
 
 class Benchmark(Action):
@@ -13,6 +18,6 @@ class Benchmark(Action):
         elapsed = (time.monotonic_ns() - self._start_nanos) // 1000
 
         bench_file = Path(self._config["output"])
-        with bench_file.open("a") as io:
+        with flock_append(bench_file) as io:
             bench_record = {"tool": tool.wrapped_tool(), "elapsed": elapsed}
             print(json.dumps(bench_record), file=io)

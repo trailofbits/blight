@@ -26,6 +26,12 @@ test:
 	pytest --cov=canker test/
 	python -m coverage report -m --fail-under 100
 
+.PHONY: doc
+.ONESHELL:
+doc:
+	. env/bin/activate
+	PYTHONWARNINGS='error::UserWarning' pdoc --force --html canker
+
 .PHONY: package
 .ONESHELL:
 package:

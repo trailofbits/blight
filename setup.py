@@ -45,6 +45,7 @@ setup(
             "pytest-cov",
             "coverage[toml]",
             "twine",
+            "pdoc3",
         ]
     }
 )

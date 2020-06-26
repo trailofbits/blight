@@ -37,8 +37,8 @@ def env(guess_wrapped):
         _export(variable, f"canker-{tool}")
 
 
-# NOTE(ww): Specifically *not* a click command!
 def tool():
+    # NOTE(ww): Specifically *not* a click command!
     wrapped_basename = os.path.basename(sys.argv[0])
 
     tool_classname = canker.tool.CANKER_TOOL_MAP.get(wrapped_basename)
