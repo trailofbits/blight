@@ -1,0 +1,32 @@
+name: docs-deploy
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  docs:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          submodules: true
+
+      - uses: actions/setup-python@v1
+        with:
+          python-version: "3.8"
+
+      - name: deps
+        run: make dev
+
+      - name: docs
+        run: make doc
+
+      - name: deploy
+        uses: peaceiris/actions-gh-pages@v3.6.1
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./html/canker
+          publish_branch: gh-pages
+          force_orphan: true

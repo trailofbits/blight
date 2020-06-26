@@ -1,3 +1,7 @@
+"""
+Encapsulations of the tools supported by canker.
+"""
+
 import logging
 import os
 import subprocess
@@ -33,8 +37,17 @@ TOOL_ENV_WRAPPER_MAP = {
 
 
 class Tool:
+    """
+    Represents a generic tool wrapped by canker.
+
+    `Tool` instances cannot be created directory; a specific subclass must be used.
+    """
+
     @classmethod
     def wrapped_tool(cls):
+        """
+        Returns the executable name or path of the tool that this canker tool wraps.
+        """
         wrapped_tool = os.getenv(TOOL_ENV_WRAPPER_MAP[cls.__name__])
         if wrapped_tool is None:
             die(f"No wrapped tool found for {TOOL_ENV_MAP[cls.__name__]}")
@@ -55,6 +68,9 @@ class Tool:
             action._after_run(self)
 
     def run(self):
+        """
+        Runs the wrapped tool with the original arguments.
+        """
         self._before_run()
 
         subprocess.run([self.wrapped_tool(), *self.args])
@@ -63,8 +79,17 @@ class Tool:
 
 
 class LangMixin:
+    """
+    A mixin for tools that have a "language" component, i.e.
+    those that change their behavior based on the language that they're used with.
+    """
+
     @property
     def lang(self):
+        """
+        Returns:
+            A `canker.enums.Lang` value representing the tool's language
+        """
         x_lang_map = {
             "c": Lang.C,
             "c-header": Lang.C,
@@ -91,8 +116,18 @@ class LangMixin:
 
 
 class StdMixin(LangMixin):
+    """
+    A mixin for tools that have a "standard" component, i.e.
+    those that change their behavior based on a particular language standard.
+    """
+
     @property
     def std(self):
+        """
+        Returns:
+            A `canker.enums.Std` value representing the tool's standard
+        """
+
         # First, a special case: if -ansi is present, we're in
         # C89 mode for C code and C++03 mode for C++ code.
         if "-ansi" in self.args:
@@ -214,8 +249,16 @@ class StdMixin(LangMixin):
 
 
 class CompilerTool(Tool, StdMixin):
+    """
+    Represents a generic (C or C++) compiler frontend.
+    """
+
     @property
     def stage(self):
+        """
+        Returns:
+            A `canker.enums.CompilerStage` value representing the stage that this tool is on
+        """
         stage_flag_map = {
             # NOTE(ww): See the TODO in CompilerStage.
             "-v": CompilerStage.Unknown,
@@ -236,25 +279,45 @@ class CompilerTool(Tool, StdMixin):
 
 
 class CC(CompilerTool):
+    """
+    A specialization of `CompilerTool` for the C compiler frontend.
+    """
+
     def __repr__(self):
         return f"<CC {self.wrapped_tool()} {self.lang} {self.std} {self.stage}>"
 
 
 class CXX(CompilerTool):
+    """
+    A specialization of `CompilerTool` for the C++ compiler frontend.
+    """
+
     def __repr__(self):
         return f"<CXX {self.wrapped_tool()} {self.lang} {self.std} {self.stage}>"
 
 
 class CPP(Tool, StdMixin):
+    """
+    Represents the C preprocessor tool.
+    """
+
     def __repr__(self):
         return f"<CPP {self.wrapped_tool()} {self.lang} {self.std}>"
 
 
 class LD(Tool):
+    """
+    Represents the linker.
+    """
+
     def __repr__(self):
         return f"<LD {self.wrapped_tool()}>"
 
 
 class AS(Tool):
+    """
+    Represents the assembler.
+    """
+
     def __repr__(self):
         return f"<AS {self.wrapped_tool()}>"
