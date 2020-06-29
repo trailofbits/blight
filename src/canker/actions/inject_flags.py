@@ -21,13 +21,14 @@ class InjectFlags(CompilerAction):
     For example:
 
     ```bash
-    CANKER_WRAPPED_CC=clang
-    CANKER_ACTIONS="InjectFlags"
-    CANKER_ACTION_INJECTFLAGS="CFLAGS='-g -O0' CPPFLAGS='-DWHATEVER'"
+    export CANKER_WRAPPED_CC=clang
+    export CANKER_ACTIONS="InjectFlags"
+    export CANKER_ACTION_INJECTFLAGS="CFLAGS='-g -O0' CPPFLAGS='-DWHATEVER'"
     make CC=canker-cc
     ```
 
-    will cause canker to add `-g -O0 -DWHATEVER` to each `clang` invocation.
+    will cause canker to add `-g -O0 -DWHATEVER` to each `clang` invocation
+    (unless it's a C++ invocation, e.g. via `-x c++`).
     """
 
     def before_run(self, tool):
