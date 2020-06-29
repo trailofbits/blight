@@ -69,7 +69,7 @@ class Std(enum.Enum):
     Models the various language standards for a tool.
     """
 
-    def is_unknown(self):
+    def is_unknown(self) -> bool:
         """
         Returns:
             `True` if the standard is unknown
@@ -212,21 +212,21 @@ class OptLevel(enum.Enum):
     Models the known optimization levels.
     """
 
-    def for_size(self):
+    def for_size(self) -> bool:
         """
         Returns:
             `True` if the optimization is for compiled size
         """
         return self == OptLevel.OSize or self == OptLevel.OSizeZ
 
-    def for_performance(self):
+    def for_performance(self) -> bool:
         """
         Returns:
             `True` if the optimization is for performance
         """
         return self in [OptLevel.O1, OptLevel.O2, OptLevel.O3, OptLevel.OFast]
 
-    def for_debug(self):
+    def for_debug(self) -> bool:
         """
         Returns:
             `True` if the optimization is for debugging experience
