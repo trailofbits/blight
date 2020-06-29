@@ -6,6 +6,7 @@ import logging
 import os
 import re
 import subprocess
+from typing import Any, Dict, List
 
 from canker.enums import CompilerStage, Lang, OptLevel, Std
 from canker.exceptions import CankerError
@@ -46,7 +47,7 @@ class Tool:
     """
 
     @classmethod
-    def wrapped_tool(cls):
+    def wrapped_tool(cls) -> str:
         """
         Returns the executable name or path of the tool that this canker tool wraps.
         """
@@ -79,7 +80,7 @@ class Tool:
 
         self._after_run()
 
-    def asdict(self):
+    def asdict(self) -> Dict[str, Any]:
         """
         Returns:
             A dictionary representation of this tool
@@ -98,8 +99,11 @@ class LangMixin:
     those that change their behavior based on the language that they're used with.
     """
 
+    # NOTE(ww): Makes mypy happy when referencing self.args below.
+    args: List[str]
+
     @property
-    def lang(self):
+    def lang(self) -> Lang:
         """
         Returns:
             A `canker.enums.Lang` value representing the tool's language
@@ -136,7 +140,7 @@ class StdMixin(LangMixin):
     """
 
     @property
-    def std(self):
+    def std(self) -> Std:
         """
         Returns:
             A `canker.enums.Std` value representing the tool's standard
@@ -267,8 +271,11 @@ class OptMixin:
     A mixin for tools that have an optimization level.
     """
 
+    # NOTE(ww): Makes mypy happy when referencing self.args below.
+    args: List[str]
+
     @property
-    def opt(self):
+    def opt(self) -> OptLevel:
         """
         Returns:
             A `canker.enums.OptLevel` value representing the optimization level
@@ -317,7 +324,7 @@ class CompilerTool(Tool, StdMixin, OptMixin):
     """
 
     @property
-    def stage(self):
+    def stage(self) -> CompilerStage:
         """
         Returns:
             A `canker.enums.CompilerStage` value representing the stage that this tool is on
@@ -340,7 +347,7 @@ class CompilerTool(Tool, StdMixin, OptMixin):
         # "run all stages", so we do too.
         return CompilerStage.AllStages
 
-    def asdict(self):
+    def asdict(self) -> Dict[str, Any]:
         return {
             **super().asdict(),
             "lang": self.lang.name,
@@ -355,7 +362,7 @@ class CC(CompilerTool):
     A specialization of `CompilerTool` for the C compiler frontend.
     """
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return f"<CC {self.wrapped_tool()} {self.lang} {self.std} {self.stage}>"
 
 
@@ -364,7 +371,7 @@ class CXX(CompilerTool):
     A specialization of `CompilerTool` for the C++ compiler frontend.
     """
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return f"<CXX {self.wrapped_tool()} {self.lang} {self.std} {self.stage}>"
 
 
@@ -373,10 +380,10 @@ class CPP(Tool, StdMixin):
     Represents the C preprocessor tool.
     """
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return f"<CPP {self.wrapped_tool()} {self.lang} {self.std}>"
 
-    def asdict(self):
+    def asdict(self) -> Dict[str, Any]:
         return {
             **super().asdict(),
             "lang": self.lang.name,
@@ -389,7 +396,7 @@ class LD(Tool):
     Represents the linker.
     """
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return f"<LD {self.wrapped_tool()}>"
 
 
@@ -398,5 +405,5 @@ class AS(Tool):
     Represents the assembler.
     """
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return f"<AS {self.wrapped_tool()}>"

@@ -17,6 +17,7 @@ lint:
 	black $(ALL_PY_SRCS)
 	isort $(ALL_PY_SRCS)
 	flake8 $(ALL_PY_SRCS)
+	mypy src
 	git diff --exit-code
 
 .PHONY: test

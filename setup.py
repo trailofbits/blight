@@ -46,6 +46,7 @@ setup(
             "coverage[toml]",
             "twine",
             "pdoc3",
+            "mypy",
         ]
     }
 )
