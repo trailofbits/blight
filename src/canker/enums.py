@@ -205,3 +205,75 @@ class Std(enum.Enum):
     """
     A completely unknown language standard.
     """
+
+
+class OptLevel(enum.Enum):
+    """
+    Models the known optimization levels.
+    """
+
+    def for_size(self):
+        """
+        Returns:
+            `True` if the optimization is for compiled size
+        """
+        return self == OptLevel.OSize or self == OptLevel.OSizeZ
+
+    def for_performance(self):
+        """
+        Returns:
+            `True` if the optimization is for performance
+        """
+        return self in [OptLevel.O1, OptLevel.O2, OptLevel.O3, OptLevel.OFast]
+
+    def for_debug(self):
+        """
+        Returns:
+            `True` if the optimization is for debugging experience
+        """
+        return self == OptLevel.ODebug
+
+    O0 = enum.auto()
+    """
+    No optimizations.
+    """
+
+    O1 = enum.auto()
+    """
+    Minimal performance optimizations.
+    """
+
+    O2 = enum.auto()
+    """
+    Some performance optimizations.
+    """
+
+    O3 = enum.auto()
+    """
+    Aggressive performance optimizations.
+    """
+
+    OFast = enum.auto()
+    """
+    Aggressive, possibly standards-breaking performance optimizations.
+    """
+
+    OSize = enum.auto()
+    """
+    Size optimizations.
+    """
+
+    OSizeZ = enum.auto()
+    """
+    More aggressive size optimizations (Clang only).
+    """
+
+    ODebug = enum.auto()
+    """
+    Debugging experience optimizations.
+    """
+
+    Unknown = enum.auto()
+    """
+    An unknown optimization level.
+    """

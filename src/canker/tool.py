@@ -4,9 +4,10 @@ Encapsulations of the tools supported by canker.
 
 import logging
 import os
+import re
 import subprocess
 
-from canker.enums import CompilerStage, Lang, Std
+from canker.enums import CompilerStage, Lang, OptLevel, Std
 from canker.exceptions import CankerError
 from canker.util import load_actions, rindex
 
@@ -261,7 +262,56 @@ class StdMixin(LangMixin):
         return Std.Unknown
 
 
-class CompilerTool(Tool, StdMixin):
+class OptMixin:
+    """
+    A mixin for tools that have an optimization level.
+    """
+
+    @property
+    def opt(self):
+        """
+        Returns:
+            A `canker.enums.OptLevel` value representing the optimization level
+        """
+
+        opt_flag_map = {
+            "-O0": OptLevel.O0,
+            "-O": OptLevel.O1,
+            "-O1": OptLevel.O1,
+            "-O2": OptLevel.O2,
+            "-O3": OptLevel.O3,
+            "-Ofast": OptLevel.OFast,
+            "-Os": OptLevel.OSize,
+            "-Oz": OptLevel.OSizeZ,
+            "-Og": OptLevel.ODebug,
+        }
+
+        # The last optimization flag takes precedence, so iterate over the arguments
+        # in reverse order.
+        for arg in reversed(self.args):
+            opt = opt_flag_map.get(arg)
+            if opt is not None:
+                return opt
+
+            if not arg.startswith("-O"):
+                continue
+
+            # Special case: -O4 and above are currently equivalent to -O3 in
+            # GCC and Clang. Identify these and map them to -O3.
+            if re.fullmatch(r"^-O[1-9]\d*$", arg):
+                return OptLevel.O3
+
+            # Otherwise: We've found an argument that looks like -Osomething,
+            # but we don't know what it is. Treat it as an unknown.
+            logger.debug(f"unknown optimization level: {arg}")
+            return OptLevel.Unknown
+
+        # If we've made it here, then the arguments don't mention an explicit
+        # optimization level. Both GCC and Clang use -O0 by default, so return that here.
+        return OptLevel.O0
+
+
+class CompilerTool(Tool, StdMixin, OptMixin):
     """
     Represents a generic (C or C++) compiler frontend.
     """
@@ -296,6 +346,7 @@ class CompilerTool(Tool, StdMixin):
             "lang": self.lang.name,
             "std": self.std.name,
             "stage": self.stage.name,
+            "opt": self.opt.name,
         }
 
 

@@ -5,7 +5,7 @@ import shutil
 import pytest
 
 from canker import tool
-from canker.enums import CompilerStage, Lang, Std
+from canker.enums import CompilerStage, Lang, OptLevel, Std
 from canker.exceptions import CankerError
 
 
@@ -34,29 +34,41 @@ def test_tool_run(monkeypatch, tmp_path):
 
 
 @pytest.mark.parametrize(
-    ("flags", "lang", "std", "stage"),
+    ("flags", "lang", "std", "stage", "opt"),
     [
-        ("", Lang.C, Std.GnuUnknown, CompilerStage.AllStages),
-        ("-x c++", Lang.Cxx, Std.GnuxxUnknown, CompilerStage.AllStages),
-        ("-ansi", Lang.C, Std.C89, CompilerStage.AllStages),
-        ("-ansi -x c++", Lang.Cxx, Std.Cxx03, CompilerStage.AllStages),
-        ("-std=c99", Lang.C, Std.C99, CompilerStage.AllStages),
-        ("-x unknown", Lang.Unknown, Std.Unknown, CompilerStage.AllStages),
-        ("-ansi -x unknown", Lang.Unknown, Std.Unknown, CompilerStage.AllStages),
-        ("-std=cunknown", Lang.C, Std.CUnknown, CompilerStage.AllStages),
-        ("-std=c++unknown", Lang.C, Std.CxxUnknown, CompilerStage.AllStages),
-        ("-std=gnuunknown", Lang.C, Std.GnuUnknown, CompilerStage.AllStages),
-        ("-std=gnu++unknown", Lang.C, Std.GnuxxUnknown, CompilerStage.AllStages),
-        ("-std=nonsense", Lang.C, Std.Unknown, CompilerStage.AllStages),
-        ("-v", Lang.C, Std.GnuUnknown, CompilerStage.Unknown),
-        ("-###", Lang.C, Std.GnuUnknown, CompilerStage.Unknown),
-        ("-E", Lang.C, Std.GnuUnknown, CompilerStage.Preprocess),
-        ("-fsyntax-only", Lang.C, Std.GnuUnknown, CompilerStage.SyntaxOnly),
-        ("-S", Lang.C, Std.GnuUnknown, CompilerStage.Assemble),
-        ("-c", Lang.C, Std.GnuUnknown, CompilerStage.CompileObject),
+        ("", Lang.C, Std.GnuUnknown, CompilerStage.AllStages, OptLevel.O0),
+        ("-x c++ -O1", Lang.Cxx, Std.GnuxxUnknown, CompilerStage.AllStages, OptLevel.O1),
+        ("-ansi -O2", Lang.C, Std.C89, CompilerStage.AllStages, OptLevel.O2),
+        ("-ansi -x c++ -O3", Lang.Cxx, Std.Cxx03, CompilerStage.AllStages, OptLevel.O3),
+        ("-std=c99 -O4", Lang.C, Std.C99, CompilerStage.AllStages, OptLevel.O3),
+        ("-x unknown -Ofast", Lang.Unknown, Std.Unknown, CompilerStage.AllStages, OptLevel.OFast),
+        (
+            "-ansi -x unknown -Os",
+            Lang.Unknown,
+            Std.Unknown,
+            CompilerStage.AllStages,
+            OptLevel.OSize,
+        ),
+        ("-std=cunknown -Oz", Lang.C, Std.CUnknown, CompilerStage.AllStages, OptLevel.OSizeZ),
+        ("-std=c++unknown -Og", Lang.C, Std.CxxUnknown, CompilerStage.AllStages, OptLevel.ODebug),
+        (
+            "-std=gnuunknown -Omadeup",
+            Lang.C,
+            Std.GnuUnknown,
+            CompilerStage.AllStages,
+            OptLevel.Unknown,
+        ),
+        ("-std=gnu++unknown -O", Lang.C, Std.GnuxxUnknown, CompilerStage.AllStages, OptLevel.O1),
+        ("-std=nonsense", Lang.C, Std.Unknown, CompilerStage.AllStages, OptLevel.O0),
+        ("-v", Lang.C, Std.GnuUnknown, CompilerStage.Unknown, OptLevel.O0),
+        ("-###", Lang.C, Std.GnuUnknown, CompilerStage.Unknown, OptLevel.O0),
+        ("-E", Lang.C, Std.GnuUnknown, CompilerStage.Preprocess, OptLevel.O0),
+        ("-fsyntax-only", Lang.C, Std.GnuUnknown, CompilerStage.SyntaxOnly, OptLevel.O0),
+        ("-S", Lang.C, Std.GnuUnknown, CompilerStage.Assemble, OptLevel.O0),
+        ("-c", Lang.C, Std.GnuUnknown, CompilerStage.CompileObject, OptLevel.O0),
     ],
 )
-def test_cc(flags, lang, std, stage):
+def test_cc(flags, lang, std, stage, opt):
     flags = shlex.split(flags)
     cc = tool.CC(flags)
 
@@ -64,6 +76,7 @@ def test_cc(flags, lang, std, stage):
     assert cc.lang == lang
     assert cc.std == std
     assert cc.stage == stage
+    assert cc.opt == opt
     assert repr(cc) == f"<CC {cc.wrapped_tool()} {cc.lang} {cc.std} {cc.stage}>"
     assert cc.asdict() == {
         "name": cc.__class__.__name__,
@@ -72,18 +85,19 @@ def test_cc(flags, lang, std, stage):
         "lang": lang.name,
         "std": std.name,
         "stage": stage.name,
+        "opt": opt.name,
     }
 
 
 @pytest.mark.parametrize(
-    ("flags", "lang", "std", "stage"),
+    ("flags", "lang", "std", "stage", "opt"),
     [
-        ("", Lang.Cxx, Std.GnuxxUnknown, CompilerStage.AllStages),
-        ("-x c", Lang.C, Std.GnuUnknown, CompilerStage.AllStages),
-        ("-std=c++17", Lang.Cxx, Std.Cxx17, CompilerStage.AllStages),
+        ("", Lang.Cxx, Std.GnuxxUnknown, CompilerStage.AllStages, OptLevel.O0),
+        ("-x c", Lang.C, Std.GnuUnknown, CompilerStage.AllStages, OptLevel.O0),
+        ("-std=c++17", Lang.Cxx, Std.Cxx17, CompilerStage.AllStages, OptLevel.O0),
     ],
 )
-def test_cxx(flags, lang, std, stage):
+def test_cxx(flags, lang, std, stage, opt):
     flags = shlex.split(flags)
     cxx = tool.CXX(flags)
 
@@ -99,6 +113,7 @@ def test_cxx(flags, lang, std, stage):
         "lang": lang.name,
         "std": std.name,
         "stage": stage.name,
+        "opt": opt.name,
     }
 
 
