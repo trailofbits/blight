@@ -6,6 +6,7 @@ import pytest
 
 from canker import tool
 from canker.enums import CompilerStage, Lang, Std
+from canker.exceptions import CankerError
 
 
 def test_tool_doesnt_instantial():
@@ -15,7 +16,7 @@ def test_tool_doesnt_instantial():
 
 def test_tool_missing_wrapped_tool(monkeypatch):
     monkeypatch.delenv("CANKER_WRAPPED_CC")
-    with pytest.raises(SystemExit):
+    with pytest.raises(CankerError):
         tool.CC.wrapped_tool()
 
 

@@ -7,7 +7,8 @@ import os
 import subprocess
 
 from canker.enums import CompilerStage, Lang, Std
-from canker.util import die, load_actions, rindex
+from canker.exceptions import CankerError
+from canker.util import load_actions, rindex
 
 logger = logging.getLogger(__name__)
 
@@ -50,7 +51,7 @@ class Tool:
         """
         wrapped_tool = os.getenv(TOOL_ENV_WRAPPER_MAP[cls.__name__])
         if wrapped_tool is None:
-            die(f"No wrapped tool found for {TOOL_ENV_MAP[cls.__name__]}")
+            raise CankerError(f"No wrapped tool found for {TOOL_ENV_MAP[cls.__name__]}")
         return wrapped_tool
 
     def __init__(self, args):

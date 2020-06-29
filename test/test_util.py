@@ -2,6 +2,7 @@ import pytest
 
 from canker import util
 from canker.actions import Record
+from canker.exceptions import CankerError
 
 
 def test_die():
@@ -28,7 +29,7 @@ def test_load_actions(monkeypatch):
 def test_load_actions_nonexistent(monkeypatch):
     monkeypatch.setenv("CANKER_ACTIONS", "ThisActionDoesNotExist")
 
-    with pytest.raises(SystemExit):
+    with pytest.raises(CankerError):
         util.load_actions()
 
 

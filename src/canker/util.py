@@ -8,6 +8,8 @@ import os
 import shlex
 import sys
 
+from canker.exceptions import CankerError
+
 
 def die(message):
     """
@@ -97,7 +99,7 @@ def load_actions():
     for action_name in action_names.split(":"):
         action_class = getattr(canker.actions, action_name, None)
         if action_class is None:
-            die(f"Unknown action: {action_name}")
+            raise CankerError(f"Unknown action: {action_name}")
 
         action_config = os.getenv(f"CANKER_ACTION_{action_name.upper()}", None)
         if action_config is not None:

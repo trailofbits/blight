@@ -7,6 +7,7 @@ import sys
 import click
 
 import canker.tool
+from canker.exceptions import CankerError
 from canker.util import die
 
 logging.basicConfig(level=os.environ.get("LOGLEVEL", "INFO").upper())
@@ -47,4 +48,7 @@ def tool():
 
     tool_class = getattr(canker.tool, tool_classname)
     tool = tool_class(sys.argv[1:])
-    tool.run()
+    try:
+        tool.run()
+    except CankerError as e:
+        die(str(e))
