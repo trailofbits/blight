@@ -521,6 +521,29 @@ class LD(Tool):
     Represents the linker.
     """
 
+    @property
+    def outputs(self) -> List[str]:
+        """
+        Specializes `Tool.outputs` for the linker.
+        """
+
+        outputs = super().outputs
+        if outputs != []:
+            return outputs
+
+        # The GNU linker additionally supports --output=OUTFILE and
+        # --output OUTFILE. Handle them here.
+        output_flag_index = rindex_prefix(self.args, "--output")
+        if output_flag_index is None:
+            return ["a.out"]
+
+        # Split option form.
+        if self.args[output_flag_index] == "--output":
+            return [self.args[output_flag_index + 1]]
+
+        # Assignment form.
+        return [self.args[output_flag_index].split("=")[1]]
+
     def __repr__(self) -> str:
         return f"<LD {self.wrapped_tool()}>"
 

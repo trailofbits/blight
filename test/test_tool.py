@@ -207,6 +207,22 @@ def test_ld():
     }
 
 
+@pytest.mark.parametrize(
+    ("flags", "output"),
+    [
+        ("", "a.out"),
+        ("-o foo", "foo"),
+        ("-ofoo", "foo"),
+        ("--output foo", "foo"),
+        ("--output=foo", "foo"),
+    ],
+)
+def test_ld_output_forms(flags, output):
+    ld = tool.LD(shlex.split(flags))
+
+    assert ld.outputs == [output]
+
+
 def test_as():
     as_ = tool.AS([])
 
