@@ -7,6 +7,7 @@ import fcntl
 import os
 import shlex
 import sys
+from typing import Any, Optional, Sequence
 
 from canker.exceptions import CankerError
 
@@ -22,10 +23,10 @@ def die(message):
     sys.exit(1)
 
 
-def rindex(items, needle):
+def rindex(items: Sequence[Any], needle: Any) -> Optional[int]:
     """
     Args:
-        items (iterator): The items to search
+        items (sequence): The items to search
         needle (object): The object to search for
 
     Returns:
@@ -33,6 +34,21 @@ def rindex(items, needle):
     """
     for idx, item in enumerate(reversed(items)):
         if item == needle:
+            return len(items) - idx - 1
+    return None
+
+
+def rindex_prefix(items: Sequence[str], prefix: str) -> Optional[int]:
+    """
+    Args:
+        items (sequence of str): The items to search
+        prefix (str): The prefix to find
+
+    Returns:
+        The rightmost index of the element that starts with `prefix`, or `None`
+    """
+    for idx, item in enumerate(reversed(items)):
+        if item.startswith(prefix):
             return len(items) - idx - 1
     return None
 
