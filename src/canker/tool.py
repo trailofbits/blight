@@ -6,11 +6,12 @@ import logging
 import os
 import re
 import subprocess
+from pathlib import Path
 from typing import Any, Dict, List
 
 from canker.enums import CompilerStage, Lang, OptLevel, Std
 from canker.exceptions import CankerError
-from canker.util import load_actions, rindex
+from canker.util import load_actions, rindex_prefix
 
 logger = logging.getLogger(__name__)
 
@@ -60,6 +61,7 @@ class Tool:
         if self.__class__ == Tool:
             raise NotImplementedError(f"can't instantiate {self.__class__.__name__} directly")
         self.args = args
+        self._cwd = Path(os.getcwd()).resolve()
         self._actions = load_actions()
 
     def _before_run(self):
@@ -90,7 +92,84 @@ class Tool:
             "name": self.__class__.__name__,
             "wrapped_tool": self.wrapped_tool(),
             "args": self.args,
+            "cwd": str(self._cwd),
         }
+
+    @property
+    def cwd(self) -> Path:
+        """
+        Returns the directory that this tool was run in.
+        """
+        return self._cwd
+
+    @property
+    def inputs(self) -> List[str]:
+        """
+        Returns all explicit "inputs" to the tool. "Inputs" is subjectively
+        defined to be the "main" inputs to a tool, i.e. source files and **not**
+        additional files that *may* be passed in via options.
+
+        Tools may further refine the behavior of this property
+        by overriding it with their own, more specific behavior.
+
+        **NOTE**: This property, more so than others, relies on heuristics.
+
+        Returns:
+            A list of `str`s, representing the tool's inputs.
+        """
+
+        # Our strategy here is as follows:
+        # * Filter out any arguments that begin with "-" or "@" and
+        #   aren't *just" "-" (since that indicates stdin).
+        # * Then, look for arguments that are files in the tool's current
+        #   directory.
+        inputs = []
+        for idx, arg in enumerate(self.args):
+            if arg.startswith("-") or arg.startswith("@"):
+                if arg == "-":
+                    inputs.append(arg)
+                continue
+
+            candidate = Path(arg)
+            if not candidate.is_file() and not (self.cwd / candidate).is_file():
+                # NOTE(ww): pathlib's is_file returns False for device files, e.g. /dev/stdin.
+                # It would be perverse for a build system to use these, but maybe worth
+                # handling.
+                continue
+
+            # Annoying edge cases: most other flags that take filenames do so in
+            # -flag=filename form, but -aux-info does it without the "=".
+            # Similarly, we need to make sure not to catch an output flag's
+            # argument here.
+            if idx == 0 or self.args[idx - 1] not in ["-aux-info", "-o"]:
+                inputs.append(arg)
+
+        return inputs
+
+    @property
+    def outputs(self) -> List[str]:
+        """
+        Returns all "outputs" produced by the tool. "Outputs" is subjectively
+        defined to be the "main" products of a tool, i.e. results of a particular
+        stage or invocation and **not** any incidental or metadata files that
+        might otherwise be created in the process.
+
+        Tools may further refine the behavior of this mixin-supplied property
+        by overriding it with their own, more specific behavior.
+
+        Returns:
+            A list of `str`, each of which is an output
+        """
+
+        o_flag_index = rindex_prefix(self.args, "-o")
+        if o_flag_index is None:
+            return []
+
+        if self.args[o_flag_index] == "-o":
+            return [self.args[o_flag_index + 1]]
+
+        # NOTE(ww): Outputs like -ofoo. Gross, but valid according to GCC.
+        return [self.args[o_flag_index][2:]]
 
 
 class LangMixin:
@@ -117,10 +196,14 @@ class LangMixin:
 
         # First, check for `-x lang`. This overrides the language determined by
         # the frontend's binary name (e.g. `g++`).
-        x_flag_index = rindex(self.args, "-x")
+        x_flag_index = rindex_prefix(self.args, "-x")
         if x_flag_index is not None:
-            # TODO(ww): Maybe bounds check.
-            x_lang = self.args[x_flag_index + 1]
+            if self.args[x_flag_index] == "-x":
+                # TODO(ww): Maybe bounds check.
+                x_lang = self.args[x_flag_index + 1]
+            else:
+                # NOTE(ww): -xc and -xc++ both work, at least on GCC.
+                x_lang = self.args[x_flag_index][2:]
             return x_lang_map.get(x_lang, Lang.Unknown)
 
         # No `-x lang` means that we're operating in the frontend's default mode.
@@ -157,11 +240,13 @@ class StdMixin(LangMixin):
                 logger.debug(f"-ansi passed but unknown language: {self.lang}")
                 return Std.Unknown
 
-        std_flags = [flag for flag in self.args if flag.startswith("-std=")]
+        # Experimentally, both GCC and clang respect the last -std=XXX flag passed.
+        # See: https://stackoverflow.com/questions/40563269/passing-multiple-std-switches-to-g
+        std_flag_index = rindex_prefix(self.args, "-std=")
 
         # No -std=XXX flags? The tool is operating in its default standard mode,
         # which is determined by its language.
-        if std_flags == []:
+        if std_flag_index is None:
             if self.lang == Lang.C:
                 return Std.GnuUnknown
             elif self.lang == Lang.Cxx:
@@ -170,10 +255,7 @@ class StdMixin(LangMixin):
                 logger.debug(f"no -std= flag and unknown language: {self.lang}")
                 return Std.Unknown
 
-        # Experimentally, both GCC and clang respect the last -std=XXX flag passed.
-        # See: https://stackoverflow.com/questions/40563269/passing-multiple-std-switches-to-g
-        last_std_flag = std_flags[-1]
-
+        last_std_flag = self.args[std_flag_index]
         std_flag_map = {
             # C89 flags.
             "-std=c89": Std.C89,
@@ -321,7 +403,14 @@ class OptMixin:
 class CompilerTool(Tool, StdMixin, OptMixin):
     """
     Represents a generic (C or C++) compiler frontend.
+
+    Like `Tool`, `CompilerTool` cannot be instantiated directly.
     """
+
+    def __init__(self, args):
+        if self.__class__ == CompilerTool:
+            raise NotImplementedError(f"can't instantiate {self.__class__.__name__} directly")
+        super().__init__(args)
 
     @property
     def stage(self) -> CompilerStage:
@@ -329,6 +418,9 @@ class CompilerTool(Tool, StdMixin, OptMixin):
         Returns:
             A `canker.enums.CompilerStage` value representing the stage that this tool is on
         """
+        if len(self.args) == 0:
+            return CompilerStage.Unknown
+
         stage_flag_map = {
             # NOTE(ww): See the TODO in CompilerStage.
             "-v": CompilerStage.Unknown,
@@ -343,9 +435,42 @@ class CompilerTool(Tool, StdMixin, OptMixin):
             if flag in self.args:
                 return stage
 
+        # TODO(ww): Handle header precompilation here. GCC doesn't seem to
+        # consider this a real "stage", but it's different enough from every
+        # other stage to warrant special treatment.
+
         # No explicit stage flag? Both gcc and clang treat this as
         # "run all stages", so we do too.
         return CompilerStage.AllStages
+
+    @property
+    def outputs(self) -> List[str]:
+        """
+        Specializes `Tool.outputs` for compiler tools.
+        """
+        outputs = super().outputs
+        if outputs != []:
+            return outputs
+
+        # Without an explicit `-o outfile`, the default output name(s)
+        # depends on the compiler's stage.
+        if self.stage == CompilerStage.Preprocess:
+            # NOTE(ww): The preprocessor stage emits to stdout, but returning "-" as
+            # a sentinel for that is very meh. If only Python had Rust-style enums.
+            return ["-"]
+        elif self.stage == CompilerStage.Assemble:
+            # NOTE(ww): Outputs are created relative to the current working directory,
+            # not relative to their input. We return them as relative paths to
+            # indicate this (maybe we should just fully resolve them?)
+            return [Path(input_).with_suffix(".s").name for input_ in self.inputs]
+        elif self.stage == CompilerStage.CompileObject:
+            return [Path(input_).with_suffix(".o").name for input_ in self.inputs]
+        elif self.stage == CompilerStage.AllStages:
+            # NOTE(ww): This will be wrong when we're doing header precompilation;
+            # see the TODO in `stage`.
+            return ["a.out"]
+        else:
+            return []
 
     def asdict(self) -> Dict[str, Any]:
         return {

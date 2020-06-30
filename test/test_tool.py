@@ -9,9 +9,14 @@ from canker.enums import CompilerStage, Lang, OptLevel, Std
 from canker.exceptions import CankerError
 
 
-def test_tool_doesnt_instantial():
+def test_tool_doesnt_instantiate():
     with pytest.raises(NotImplementedError):
         tool.Tool([])
+
+
+def test_compilertool_doesnt_instantiate():
+    with pytest.raises(NotImplementedError):
+        tool.CompilerTool([])
 
 
 def test_tool_missing_wrapped_tool(monkeypatch):
@@ -33,15 +38,57 @@ def test_tool_run(monkeypatch, tmp_path):
     assert isinstance(bench_record["elapsed"], int)
 
 
+def test_tool_inputs(tmp_path):
+    foo_input = (tmp_path / "foo.c").resolve()
+    foo_input.touch()
+
+    bar_input = (tmp_path / "bar.c").resolve()
+    bar_input.touch()
+
+    cc = tool.CC([str(foo_input), str(bar_input), "-", "-o", "foo"])
+
+    assert cc.inputs == [str(foo_input), str(bar_input), "-"]
+
+
+def test_tool_output(tmp_path):
+    assert tool.CC(["-ofoo"]).outputs == ["foo"]
+    assert tool.CC(["-o", "foo"]).outputs == ["foo"]
+    assert tool.CC(["foo.c"]).outputs == ["a.out"]
+    assert tool.CC(["-E"]).outputs == ["-"]
+
+    foo_input = (tmp_path / "foo.c").resolve()
+    foo_input.touch()
+
+    assert tool.CC(["-c", str(foo_input)]).outputs == [str(foo_input.with_suffix(".o").name)]
+    assert tool.CC(["-S", str(foo_input)]).outputs == [str(foo_input.with_suffix(".s").name)]
+
+    bar_input = (tmp_path / "bar.c").resolve()
+    bar_input.touch()
+
+    assert tool.CC(["-c", str(foo_input), str(bar_input)]).outputs == [
+        str(foo_input.with_suffix(".o").name),
+        str(bar_input.with_suffix(".o").name),
+    ]
+    assert tool.CC(["-S", str(foo_input), str(bar_input)]).outputs == [
+        str(foo_input.with_suffix(".s").name),
+        str(bar_input.with_suffix(".s").name),
+    ]
+
+    assert tool.CC([]).outputs == []
+    assert tool.CC(["-v"]).outputs == []
+
+
 @pytest.mark.parametrize(
     ("flags", "lang", "std", "stage", "opt"),
     [
-        ("", Lang.C, Std.GnuUnknown, CompilerStage.AllStages, OptLevel.O0),
+        ("", Lang.C, Std.GnuUnknown, CompilerStage.Unknown, OptLevel.O0),
         ("-x c++ -O1", Lang.Cxx, Std.GnuxxUnknown, CompilerStage.AllStages, OptLevel.O1),
+        ("-xc++ -O1", Lang.Cxx, Std.GnuxxUnknown, CompilerStage.AllStages, OptLevel.O1),
         ("-ansi -O2", Lang.C, Std.C89, CompilerStage.AllStages, OptLevel.O2),
         ("-ansi -x c++ -O3", Lang.Cxx, Std.Cxx03, CompilerStage.AllStages, OptLevel.O3),
         ("-std=c99 -O4", Lang.C, Std.C99, CompilerStage.AllStages, OptLevel.O3),
         ("-x unknown -Ofast", Lang.Unknown, Std.Unknown, CompilerStage.AllStages, OptLevel.OFast),
+        ("-xunknown -Ofast", Lang.Unknown, Std.Unknown, CompilerStage.AllStages, OptLevel.OFast),
         (
             "-ansi -x unknown -Os",
             Lang.Unknown,
@@ -82,6 +129,7 @@ def test_cc(flags, lang, std, stage, opt):
         "name": cc.__class__.__name__,
         "wrapped_tool": cc.wrapped_tool(),
         "args": flags,
+        "cwd": str(cc.cwd),
         "lang": lang.name,
         "std": std.name,
         "stage": stage.name,
@@ -92,8 +140,9 @@ def test_cc(flags, lang, std, stage, opt):
 @pytest.mark.parametrize(
     ("flags", "lang", "std", "stage", "opt"),
     [
-        ("", Lang.Cxx, Std.GnuxxUnknown, CompilerStage.AllStages, OptLevel.O0),
+        ("", Lang.Cxx, Std.GnuxxUnknown, CompilerStage.Unknown, OptLevel.O0),
         ("-x c", Lang.C, Std.GnuUnknown, CompilerStage.AllStages, OptLevel.O0),
+        ("-xc", Lang.C, Std.GnuUnknown, CompilerStage.AllStages, OptLevel.O0),
         ("-std=c++17", Lang.Cxx, Std.Cxx17, CompilerStage.AllStages, OptLevel.O0),
     ],
 )
@@ -110,6 +159,7 @@ def test_cxx(flags, lang, std, stage, opt):
         "name": cxx.__class__.__name__,
         "wrapped_tool": cxx.wrapped_tool(),
         "args": flags,
+        "cwd": str(cxx.cwd),
         "lang": lang.name,
         "std": std.name,
         "stage": stage.name,
@@ -138,6 +188,7 @@ def test_cpp(flags, lang, std):
         "name": cpp.__class__.__name__,
         "wrapped_tool": cpp.wrapped_tool(),
         "args": flags,
+        "cwd": str(cpp.cwd),
         "lang": lang.name,
         "std": std.name,
     }
@@ -152,6 +203,7 @@ def test_ld():
         "name": ld.__class__.__name__,
         "wrapped_tool": ld.wrapped_tool(),
         "args": [],
+        "cwd": str(ld.cwd),
     }
 
 
@@ -164,4 +216,5 @@ def test_as():
         "name": as_.__class__.__name__,
         "wrapped_tool": as_.wrapped_tool(),
         "args": [],
+        "cwd": str(as_.cwd),
     }
