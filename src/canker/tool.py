@@ -418,6 +418,12 @@ class CompilerTool(Tool, StdMixin, OptMixin):
         Returns:
             A `canker.enums.CompilerStage` value representing the stage that this tool is on
         """
+
+        # TODO(ww): Refactor this entire method. Both GCC and Clang can actually
+        # run multiple stages per invocation, e.g. `-x c foo.c -x c++ bar.cpp`,
+        # so we should model this as "stages" instead. This, in turn, will require
+        # us to reevaluate our output guesswork below.
+
         if len(self.args) == 0:
             return CompilerStage.Unknown
 
