@@ -28,7 +28,7 @@ TOOL_ENV_MAP = {
     "CXX": "c++",
     "CPP": "cpp",
     "LD": "ld",
-    "as": "as",
+    "AS": "as",
 }
 
 TOOL_ENV_WRAPPER_MAP = {
