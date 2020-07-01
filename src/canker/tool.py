@@ -17,7 +17,7 @@ logger = logging.getLogger(__name__)
 
 CANKER_TOOL_MAP = {
     "canker-cc": "CC",
-    "canker-cxx": "CXX",
+    "canker-c++": "CXX",
     "canker-cpp": "CPP",
     "canker-ld": "LD",
     "canker-as": "AS",
