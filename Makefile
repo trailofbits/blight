@@ -1,4 +1,5 @@
-ALL_PY_SRCS := $(shell find src -name '*.py') \
+ALL_PY_SRCS := setup.py \
+	$(shell find src -name '*.py') \
 	$(shell find test -name '*.py')
 
 .PHONY: all
