@@ -38,6 +38,17 @@ def test_tool_run(monkeypatch, tmp_path):
     assert isinstance(bench_record["elapsed"], int)
 
 
+def test_tool_args_property():
+    cpp = tool.CPP(["a", "b", "c"])
+
+    assert cpp.args == ["a", "b", "c"]
+
+    cpp.args.append("d")
+    cpp.args += ["e"]
+
+    assert cpp.args == ["a", "b", "c", "d", "e"]
+
+
 def test_tool_inputs(tmp_path):
     foo_input = (tmp_path / "foo.c").resolve()
     foo_input.touch()
@@ -76,6 +87,40 @@ def test_tool_output(tmp_path):
 
     assert tool.CC([]).outputs == []
     assert tool.CC(["-v"]).outputs == []
+
+
+def test_tool_response_file(tmp_path):
+    response_file = (tmp_path / "args").resolve()
+    response_file.write_text("-some -flags -O3")
+
+    cc = tool.CC([f"@{response_file}"])
+    assert cc.args == ["-some", "-flags", "-O3"]
+    assert cc.opt == OptLevel.O3
+
+
+def test_tool_response_file_nested(tmp_path):
+    response_file1 = (tmp_path / "args").resolve()
+    response_file1.write_text("-some -flags @args2 -more -flags")
+    response_file2 = (tmp_path / "args2").resolve()
+    response_file2.write_text("-nested -flags -O3")
+
+    cc = tool.CC([f"@{response_file1}"])
+    assert cc.args == ["-some", "-flags", "-nested", "-flags", "-O3", "-more", "-flags"]
+    assert cc.opt == OptLevel.O3
+
+
+def test_tool_response_file_invalid_file():
+    cc = tool.CC(["@/this/file/does/not/exist"])
+
+    assert cc.args == []
+
+
+def test_tool_response_file_recursion_limit(tmp_path):
+    response_file = (tmp_path / "args").resolve()
+    response_file.write_text(f"-foo @{response_file}")
+
+    cc = tool.CC([f"@{response_file}"])
+    assert cc.args == ["-foo"] * tool.RESPONSE_FILE_RECURSION_LIMIT
 
 
 @pytest.mark.parametrize(
