@@ -1,3 +1,9 @@
+"""
+Substructural typing protocols for canker.
+
+These are, generally speaking, an implementation detail.
+"""
+
 from typing import List
 
 from typing_extensions import Protocol
