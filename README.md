@@ -29,7 +29,6 @@ $ cat /tmp/demo.jsonl
 a la [Bear](https://github.com/rizsotto/Bear).
 * Supporting `cl.exe`.
 * Detailed support for non C/C++ languages.
-* Parsing arguments that are passed via `@file`.
 
 ## Contributing a new action
 

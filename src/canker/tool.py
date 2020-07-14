@@ -5,13 +5,15 @@ Encapsulations of the tools supported by canker.
 import logging
 import os
 import re
+import shlex
 import subprocess
 from pathlib import Path
 from typing import Any, Dict, List
 
 from canker.enums import CompilerStage, Lang, OptLevel, Std
 from canker.exceptions import CankerError
-from canker.util import load_actions, rindex_prefix
+from canker.protocols import ArgsProtocol, LangProtocol
+from canker.util import insert_items_at_idx, load_actions, rindex_prefix
 
 logger = logging.getLogger(__name__)
 
@@ -39,6 +41,14 @@ TOOL_ENV_WRAPPER_MAP = {
     "AS": "CANKER_WRAPPED_AS",
 }
 
+RESPONSE_FILE_RECURSION_LIMIT = 64
+"""
+Response files can contain further `@file` arguments, because of course they can.
+
+Neither clang nor GCC is explicit in their documentation about their recursion limits,
+if they have any. We choose an arbitrary limit here.
+"""
+
 
 class Tool:
     """
@@ -60,7 +70,7 @@ class Tool:
     def __init__(self, args):
         if self.__class__ == Tool:
             raise NotImplementedError(f"can't instantiate {self.__class__.__name__} directly")
-        self.args = args
+        self._args = args
         self._cwd = Path(os.getcwd()).resolve()
         self._actions = load_actions()
 
@@ -94,6 +104,14 @@ class Tool:
             "args": self.args,
             "cwd": str(self._cwd),
         }
+
+    @property
+    def args(self):
+        return self._args
+
+    @args.setter
+    def args(self, args_):
+        self._args = args_
 
     @property
     def cwd(self) -> Path:
@@ -178,11 +196,8 @@ class LangMixin:
     those that change their behavior based on the language that they're used with.
     """
 
-    # NOTE(ww): Makes mypy happy when referencing self.args below.
-    args: List[str]
-
     @property
-    def lang(self) -> Lang:
+    def lang(self: ArgsProtocol) -> Lang:
         """
         Returns:
             A `canker.enums.Lang` value representing the tool's language
@@ -223,7 +238,7 @@ class StdMixin(LangMixin):
     """
 
     @property
-    def std(self) -> Std:
+    def std(self: LangProtocol) -> Std:
         """
         Returns:
             A `canker.enums.Std` value representing the tool's standard
@@ -353,11 +368,8 @@ class OptMixin:
     A mixin for tools that have an optimization level.
     """
 
-    # NOTE(ww): Makes mypy happy when referencing self.args below.
-    args: List[str]
-
     @property
-    def opt(self) -> OptLevel:
+    def opt(self: ArgsProtocol) -> OptLevel:
         """
         Returns:
             A `canker.enums.OptLevel` value representing the optimization level
@@ -400,7 +412,72 @@ class OptMixin:
         return OptLevel.O0
 
 
-class CompilerTool(Tool, StdMixin, OptMixin):
+class ResponseFileMixin:
+    """
+    A mixin for tools that support the `@file` syntax for adding command-line arguments
+    via an input file.
+
+    These appear to originate from Windows and are called "response files" there, hence
+    the name of this mixin.
+    """
+
+    def _expand_response_file(self, response_file, working_dir, level):
+        if level >= RESPONSE_FILE_RECURSION_LIMIT:
+            logger.debug(f"recursion limit exceeded: {response_file} in {working_dir}")
+            return []
+
+        response_file = Path(response_file[1:])
+
+        # Non-absolute response files are resolved relative to `working_dir`, which
+        # begins at the CWD initially and changes to the parent directory of the
+        # including file for nested response files.
+        if not response_file.is_absolute():
+            response_file = working_dir / response_file
+
+        if not response_file.is_file():
+            logger.debug(f"response file {response_file} does not exist")
+            # TODO(ww): Instead of returning empty here, maybe return `@response_file`?
+            return []
+
+        args = shlex.split(response_file.read_text())
+        response_files = [(idx, arg) for (idx, arg) in enumerate(args) if arg.startswith("@")]
+        for idx, nested_rf in response_files:
+            args = insert_items_at_idx(
+                args,
+                idx,
+                self._expand_response_file(nested_rf, response_file.parent.resolve(), level + 1),
+            )
+
+        return args
+
+    @property
+    def args(self):
+        """
+        Overrides the behavior of `Tool.args`, expanding any response file arguments
+        in a depth-first manner.
+        """
+
+        response_files = [
+            (idx, arg) for (idx, arg) in enumerate(super().args) if arg.startswith("@")
+        ]
+        expanded_args = super().args
+        for idx, response_file in response_files:
+            expanded_args = insert_items_at_idx(
+                expanded_args, idx, self._expand_response_file(response_file, self.cwd, 0),
+            )
+
+        self._args = expanded_args
+        return self._args
+
+    @args.setter
+    def args(self, args_):
+        self._args = args_
+
+
+# NOTE(ww): The funny mixin order here (`ResponseFileMixin` before `Tool`) and elsewhere
+# is because Python defines its class hierarchy from right to left. `ResponseFileMixin`
+# therefore needs to come first in order to properly override `args`.
+class CompilerTool(ResponseFileMixin, Tool, StdMixin, OptMixin):
     """
     Represents a generic (C or C++) compiler frontend.
 
@@ -522,7 +599,7 @@ class CPP(Tool, StdMixin):
         }
 
 
-class LD(Tool):
+class LD(ResponseFileMixin, Tool):
     """
     Represents the linker.
     """
@@ -554,7 +631,7 @@ class LD(Tool):
         return f"<LD {self.wrapped_tool()}>"
 
 
-class AS(Tool):
+class AS(ResponseFileMixin, Tool):
     """
     Represents the assembler.
     """

@@ -7,7 +7,7 @@ import fcntl
 import os
 import shlex
 import sys
-from typing import Any, Optional, Sequence
+from typing import Any, List, Optional, Sequence
 
 from canker.exceptions import CankerError
 
@@ -51,6 +51,31 @@ def rindex_prefix(items: Sequence[str], prefix: str) -> Optional[int]:
         if item.startswith(prefix):
             return len(items) - idx - 1
     return None
+
+
+def insert_items_at_idx(parent_items: Sequence[Any], idx: int, items: Sequence[Any]) -> List[Any]:
+    """
+    Inserts `items` at `idx` in `parent_items`.
+
+    Args:
+        parent_items (sequence of any): The parent sequence to insert within
+        idx (int): The index to insert at
+        items (sequence of any): The items to insert
+
+    Returns:
+        A new list containing both the parent and inserted items
+    """
+
+    def _insert_items_at_idx(parent_items, idx, items):
+        for pidx, item in enumerate(parent_items):
+            if pidx != idx:
+                print(item)
+                yield item
+            else:
+                for item in items:
+                    yield item
+
+    return list(_insert_items_at_idx(parent_items, idx, items))
 
 
 @contextlib.contextmanager
