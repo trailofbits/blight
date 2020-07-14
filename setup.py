@@ -19,6 +19,7 @@ setup(
     long_description=long_description,
     long_description_content_type="text/markdown",
     url="https://github.com/trailofbits/canker",
+    project_urls={"Documentation": "https://trailofbits.github.io/canker/"},
     packages=find_packages(where="src"),
     package_dir={"": "src"},
     entry_points={
@@ -33,10 +34,7 @@ setup(
     },
     platforms="any",
     python_requires=">=3.7",
-    install_requires=[
-        "click ~= 7.1",
-        "typing_extensions",
-    ],
+    install_requires=["click ~= 7.1", "typing_extensions"],
     extras_require={
         "dev": [
             "flake8",
@@ -49,5 +47,5 @@ setup(
             "pdoc3",
             "mypy",
         ]
-    }
+    },
 )
