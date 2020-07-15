@@ -485,7 +485,7 @@ class DefinesMixin:
         """
         Returns a dictionary of indices for undefined macros. This is used in
         `defines` to ensure that we don't incorrectly report a subsequently undefined
-        macro as defined.
+        macro as defined. Only the rightmost index of each undefined macro is saved.
 
         Returns:
             A dict of `name: index` for each undefined macro.
