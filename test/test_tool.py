@@ -124,6 +124,30 @@ def test_tool_response_file_recursion_limit(tmp_path):
 
 
 @pytest.mark.parametrize(
+    ("flags", "defines", "undefines"),
+    [
+        ("-Dfoo -Dbar -Dbaz", [("foo", "1"), ("bar", "1"), ("baz", "1")], {},),
+        ("-Dfoo -Ufoo -Dbar", [("bar", "1")], {"foo": 1},),
+        ("-Dfoo -Dbar -Ufoo", [("bar", "1")], {"foo": 2},),
+        ("-Ufoo -Dfoo", [("foo", "1")], {"foo": 0},),
+        ("-U foo -Dfoo", [("foo", "1")], {"foo": 0},),
+        ("-Ufoo -D foo", [("foo", "1")], {"foo": 0},),
+        ("-Dkey=value", [("key", "value")], {},),
+        ("-Dkey=value=x", [("key", "value=x")], {},),
+        ("-Dkey='value'", [("key", "value")], {},),
+        ("-Dkey='value=x'", [("key", "value=x")], {},),
+        ("-D'FOO(x)=x+1'", [("FOO(x)", "x+1")], {},),
+        ("-D 'FOO(x)=x+1'", [("FOO(x)", "x+1")], {},),
+    ],
+)
+def test_defines_mixin(flags, defines, undefines):
+    cc = tool.CC(shlex.split(flags))
+
+    assert cc.defines == defines
+    assert cc.indexed_undefines == undefines
+
+
+@pytest.mark.parametrize(
     ("flags", "lang", "std", "stage", "opt"),
     [
         ("", Lang.C, Std.GnuUnknown, CompilerStage.Unknown, OptLevel.O0),

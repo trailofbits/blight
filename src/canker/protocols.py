@@ -4,7 +4,7 @@ Substructural typing protocols for canker.
 These are, generally speaking, an implementation detail.
 """
 
-from typing import List
+from typing import Dict, List
 
 from typing_extensions import Protocol
 
@@ -17,11 +17,13 @@ class ArgsProtocol(Protocol):
         ...  # pragma: no cover
 
 
-class LangProtocol(Protocol):
-    # NOTE(ww): This is a little silly, but neither inheriting from `ArgsProtocol`
-    # nor `self: ArgsProtocol` for `lang` works.
-    args: List[str]
-
+class LangProtocol(ArgsProtocol, Protocol):
     @property
     def lang(self) -> Lang:
+        ...  # pragma: no cover
+
+
+class IndexedUndefinesProtocol(ArgsProtocol, Protocol):
+    @property
+    def indexed_undefines(self) -> Dict[str, int]:
         ...  # pragma: no cover

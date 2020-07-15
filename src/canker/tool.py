@@ -8,11 +8,11 @@ import re
 import shlex
 import subprocess
 from pathlib import Path
-from typing import Any, Dict, List
+from typing import Any, Dict, List, Tuple
 
 from canker.enums import CompilerStage, Lang, OptLevel, Std
 from canker.exceptions import CankerError
-from canker.protocols import ArgsProtocol, LangProtocol
+from canker.protocols import ArgsProtocol, IndexedUndefinesProtocol, LangProtocol
 from canker.util import insert_items_at_idx, load_actions, rindex_prefix
 
 logger = logging.getLogger(__name__)
@@ -474,10 +474,81 @@ class ResponseFileMixin:
         self._args = args_
 
 
+class DefinesMixin:
+    """
+    A mixin for tools that support the `-Dname[=value]` and `-Uname` syntaxes for defining
+    and undefining C preprocessor macros.
+    """
+
+    @property
+    def indexed_undefines(self: IndexedUndefinesProtocol) -> Dict[str, int]:
+        """
+        Returns a dictionary of indices for undefined macros. This is used in
+        `defines` to ensure that we don't incorrectly report a subsequently undefined
+        macro as defined.
+
+        Returns:
+            A dict of `name: index` for each undefined macro.
+        """
+        indexed_undefines = {}
+        for idx, arg in enumerate(self.args):
+            if not arg.startswith("-U"):
+                continue
+
+            # Both `-Uname` and `-U name` work in GCC and Clang.
+            if arg == "-U":
+                undefine = self.args[idx + 1]
+            else:
+                undefine = arg[2:]
+
+            indexed_undefines[undefine] = idx
+
+        return indexed_undefines
+
+    @property
+    def defines(self: IndexedUndefinesProtocol) -> List[Tuple[str, str]]:
+        """
+        The list of **effective** defines for this tool invocation. An "effective"
+        define is one that is not canceled out by a subsequent undefine.
+
+        Returns:
+            A list of tuples of (name, value) for each effectively defined macro.
+        """
+        defines = []
+        for idx, arg in enumerate(self.args):
+            if not arg.startswith("-D"):
+                continue
+
+            # Both `-Dname[=value]` and `-D name[=value]` work in GCC and Clang.
+            if arg == "-D":
+                define = self.args[idx + 1]
+            else:
+                define = arg[2:]
+
+            components = define.split("=", 1)
+            name = components[0]
+            if len(components) == 1:
+                # NOTE(ww): 1 is the default macro value.
+                # It's actually an integer at the preprocessor level, but we model everything
+                # as strings here to avoid complicating things.
+                value = "1"
+            else:
+                value = components[1]
+
+            # Is this macro subsequently undefined? If so, don't include it in
+            # the defines list.
+            if self.indexed_undefines.get(name, -1) > idx:
+                continue
+
+            defines.append((name, value))
+
+        return defines
+
+
 # NOTE(ww): The funny mixin order here (`ResponseFileMixin` before `Tool`) and elsewhere
 # is because Python defines its class hierarchy from right to left. `ResponseFileMixin`
 # therefore needs to come first in order to properly override `args`.
-class CompilerTool(ResponseFileMixin, Tool, StdMixin, OptMixin):
+class CompilerTool(ResponseFileMixin, Tool, StdMixin, OptMixin, DefinesMixin):
     """
     Represents a generic (C or C++) compiler frontend.
 
@@ -583,7 +654,7 @@ class CXX(CompilerTool):
         return f"<CXX {self.wrapped_tool()} {self.lang} {self.std} {self.stage}>"
 
 
-class CPP(Tool, StdMixin):
+class CPP(Tool, StdMixin, DefinesMixin):
     """
     Represents the C preprocessor tool.
     """
