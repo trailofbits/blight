@@ -11,7 +11,7 @@ from pathlib import Path
 from typing import Any, Dict, List, Tuple
 
 from canker.enums import CompilerStage, Lang, OptLevel, Std
-from canker.exceptions import CankerError
+from canker.exceptions import BuildError, CankerError
 from canker.protocols import ArgsProtocol, IndexedUndefinesProtocol, LangProtocol
 from canker.util import insert_items_at_idx, load_actions, rindex_prefix
 
@@ -88,7 +88,9 @@ class Tool:
         """
         self._before_run()
 
-        subprocess.run([self.wrapped_tool(), *self.args])
+        status = subprocess.run([self.wrapped_tool(), *self.args])
+        if status.returncode != 0:
+            raise BuildError(f"{self.wrapped_tool()} exited with status code {status.returncode}")
 
         self._after_run()
 
