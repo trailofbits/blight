@@ -9,3 +9,11 @@ class CankerError(ValueError):
     """
 
     pass
+
+
+class BuildError(CankerError):
+    """
+    Raised whenever a wrapped tool fails.
+    """
+
+    pass

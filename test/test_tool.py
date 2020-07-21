@@ -6,7 +6,7 @@ import pytest
 
 from canker import tool
 from canker.enums import CompilerStage, Lang, OptLevel, Std
-from canker.exceptions import CankerError
+from canker.exceptions import BuildError, CankerError
 
 
 def test_tool_doesnt_instantiate():
@@ -23,6 +23,12 @@ def test_tool_missing_wrapped_tool(monkeypatch):
     monkeypatch.delenv("CANKER_WRAPPED_CC")
     with pytest.raises(CankerError):
         tool.CC.wrapped_tool()
+
+
+def test_tool_fails(monkeypatch):
+    monkeypatch.setenv("CANKER_WRAPPED_CC", "false")
+    with pytest.raises(BuildError):
+        tool.CC([]).run()
 
 
 def test_tool_run(monkeypatch, tmp_path):
