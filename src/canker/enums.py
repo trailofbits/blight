@@ -48,6 +48,11 @@ class Lang(enum.Enum):
     Models the known languages for a tool.
     """
 
+    # TODO(ww): Maybe add each of the following:
+    # * Asm (assembly)
+    # * PreprocessedC (C that's already gone through the preprocessor)
+    # * PreprocessedCxx (C++ that's already gone through the preprocessor)
+
     C = enum.auto()
     """
     The C programming language.
