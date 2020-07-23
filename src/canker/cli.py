@@ -10,7 +10,7 @@ import canker.tool
 from canker.exceptions import CankerError
 from canker.util import die
 
-logging.basicConfig(level=os.environ.get("LOGLEVEL", "INFO").upper())
+logging.basicConfig(level=os.environ.get("CANKER_LOGLEVEL", "INFO").upper())
 
 
 def _export(variable, value):
