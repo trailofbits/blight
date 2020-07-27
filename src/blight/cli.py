@@ -6,11 +6,11 @@ import sys
 
 import click
 
-import canker.tool
-from canker.exceptions import CankerError
-from canker.util import die
+import blight.tool
+from blight.exceptions import BlightError
+from blight.util import die
 
-logging.basicConfig(level=os.environ.get("CANKER_LOGLEVEL", "INFO").upper())
+logging.basicConfig(level=os.environ.get("BLIGHT_LOGLEVEL", "INFO").upper())
 
 
 def _export(variable, value):
@@ -18,12 +18,12 @@ def _export(variable, value):
 
 
 def _export_guess_wrapped():
-    for variable, tool in canker.tool.TOOL_ENV_MAP.items():
+    for variable, tool in blight.tool.TOOL_ENV_MAP.items():
         tool_path = shutil.which(tool)
         if tool_path is None:
             die(f"Couldn't locate {tool} on the $PATH")
 
-        _export(f"CANKER_WRAPPED_{variable}", tool_path)
+        _export(f"BLIGHT_WRAPPED_{variable}", tool_path)
 
 
 @click.command()
@@ -34,21 +34,21 @@ def env(guess_wrapped):
     if guess_wrapped:
         _export_guess_wrapped()
 
-    for variable, tool in canker.tool.TOOL_ENV_MAP.items():
-        _export(variable, f"canker-{tool}")
+    for variable, tool in blight.tool.TOOL_ENV_MAP.items():
+        _export(variable, f"blight-{tool}")
 
 
 def tool():
     # NOTE(ww): Specifically *not* a click command!
     wrapped_basename = os.path.basename(sys.argv[0])
 
-    tool_classname = canker.tool.CANKER_TOOL_MAP.get(wrapped_basename)
+    tool_classname = blight.tool.BLIGHT_TOOL_MAP.get(wrapped_basename)
     if tool_classname is None:
-        die(f"Unknown canker wrapper requested: {wrapped_basename}")
+        die(f"Unknown blight wrapper requested: {wrapped_basename}")
 
-    tool_class = getattr(canker.tool, tool_classname)
+    tool_class = getattr(blight.tool, tool_classname)
     tool = tool_class(sys.argv[1:])
     try:
         tool.run()
-    except CankerError as e:
+    except BlightError as e:
         die(str(e))

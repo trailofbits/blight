@@ -1,6 +1,6 @@
 import pytest
 
-from canker import action, tool
+from blight import action, tool
 
 
 @pytest.mark.parametrize(

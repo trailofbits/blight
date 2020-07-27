@@ -1,5 +1,5 @@
 """
-Actions supported by canker.
+Actions supported by blight.
 """
 
 from .benchmark import Benchmark  # noqa: F401

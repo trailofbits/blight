@@ -6,8 +6,8 @@ import json
 import time
 from pathlib import Path
 
-from canker.action import Action
-from canker.util import flock_append
+from blight.action import Action
+from blight.util import flock_append
 
 
 class Benchmark(Action):

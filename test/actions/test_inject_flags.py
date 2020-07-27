@@ -1,7 +1,7 @@
 import shlex
 
-from canker.actions import InjectFlags
-from canker.tool import CC, CXX
+from blight.actions import InjectFlags
+from blight.tool import CC, CXX
 
 
 def test_inject_flags():

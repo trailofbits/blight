@@ -4,9 +4,9 @@ import shutil
 
 import pytest
 
-from canker import tool
-from canker.enums import CompilerStage, Lang, OptLevel, Std
-from canker.exceptions import BuildError, CankerError
+from blight import tool
+from blight.enums import CompilerStage, Lang, OptLevel, Std
+from blight.exceptions import BlightError, BuildError
 
 
 def test_tool_doesnt_instantiate():
@@ -20,21 +20,21 @@ def test_compilertool_doesnt_instantiate():
 
 
 def test_tool_missing_wrapped_tool(monkeypatch):
-    monkeypatch.delenv("CANKER_WRAPPED_CC")
-    with pytest.raises(CankerError):
+    monkeypatch.delenv("BLIGHT_WRAPPED_CC")
+    with pytest.raises(BlightError):
         tool.CC.wrapped_tool()
 
 
 def test_tool_fails(monkeypatch):
-    monkeypatch.setenv("CANKER_WRAPPED_CC", "false")
+    monkeypatch.setenv("BLIGHT_WRAPPED_CC", "false")
     with pytest.raises(BuildError):
         tool.CC([]).run()
 
 
 def test_tool_run(monkeypatch, tmp_path):
     bench_output = tmp_path / "bench.jsonl"
-    monkeypatch.setenv("CANKER_ACTIONS", "Benchmark")
-    monkeypatch.setenv("CANKER_ACTION_BENCHMARK", f"output={bench_output}")
+    monkeypatch.setenv("BLIGHT_ACTIONS", "Benchmark")
+    monkeypatch.setenv("BLIGHT_ACTION_BENCHMARK", f"output={bench_output}")
 
     cc = tool.CC(["-v"])
     cc.run()

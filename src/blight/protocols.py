@@ -1,5 +1,5 @@
 """
-Substructural typing protocols for canker.
+Substructural typing protocols for blight.
 
 These are, generally speaking, an implementation detail.
 """
@@ -8,7 +8,7 @@ from typing import Dict, List
 
 from typing_extensions import Protocol
 
-from canker.enums import Lang
+from blight.enums import Lang
 
 
 class ArgsProtocol(Protocol):

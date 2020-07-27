@@ -1,8 +1,8 @@
 """
-The different actions supported by canker.
+The different actions supported by blight.
 """
 
-import canker.tool
+import blight.tool
 
 
 class Action:
@@ -21,7 +21,7 @@ class Action:
         Invoked right before the underlying tool is run.
 
         Args:
-            tool (`canker.tool.Tool`): The tool about to run
+            tool (`blight.tool.Tool`): The tool about to run
         """
         pass
 
@@ -34,7 +34,7 @@ class Action:
         Invoked right after the underlying tool is run.
 
         Args:
-            tool (`canker.tool.Tool`): The tool that just ran
+            tool (`blight.tool.Tool`): The tool that just ran
         """
         pass
 
@@ -45,57 +45,57 @@ class Action:
 
 class CCAction(Action):
     """
-    A `cc` action, run whenever the tool is a `canker.tool.CC` instance.
+    A `cc` action, run whenever the tool is a `blight.tool.CC` instance.
     """
 
     def _should_run_on(self, tool):
-        return isinstance(tool, canker.tool.CC)
+        return isinstance(tool, blight.tool.CC)
 
 
 class CXXAction(Action):
     """
-    A `c++` action, run whenever the tool is a `canker.tool.CXX` instance.
+    A `c++` action, run whenever the tool is a `blight.tool.CXX` instance.
     """
 
     def _should_run_on(self, tool):
-        return isinstance(tool, canker.tool.CXX)
+        return isinstance(tool, blight.tool.CXX)
 
 
 class CompilerAction(CCAction, CXXAction):
     """
-    A generic compiler action, run whenever the tool is a `canker.tool.CC`
-    or `canker.tool.CXX` instance.
+    A generic compiler action, run whenever the tool is a `blight.tool.CC`
+    or `blight.tool.CXX` instance.
 
     **NOTE:** Action writers should generally prefer this over `CCAction` and `CXXAction`,
     as messy builds may use `cc` to compile C++ sources (via `-x c`) and vice versa.
     """
 
     def _should_run_on(self, tool):
-        return isinstance(tool, canker.tool.CC) or isinstance(tool, canker.tool.CXX)
+        return isinstance(tool, blight.tool.CC) or isinstance(tool, blight.tool.CXX)
 
 
 class CPPAction(Action):
     """
-    A `cpp` action, run whenever the tool is a `canker.tool.CPP` instance.
+    A `cpp` action, run whenever the tool is a `blight.tool.CPP` instance.
     """
 
     def _should_run_on(self, tool):
-        return isinstance(tool, canker.tool.CPP)
+        return isinstance(tool, blight.tool.CPP)
 
 
 class LDAction(Action):
     """
-    An `ld` action, run whenever the tool is a `canker.tool.LD` instance.
+    An `ld` action, run whenever the tool is a `blight.tool.LD` instance.
     """
 
     def _should_run_on(self, tool):
-        return isinstance(tool, canker.tool.LD)
+        return isinstance(tool, blight.tool.LD)
 
 
 class ASAction(Action):
     """
-    An `as` action, run whenever the tool is a `canker.tool.AS` instance.
+    An `as` action, run whenever the tool is a `blight.tool.AS` instance.
     """
 
     def _should_run_on(self, tool):
-        return isinstance(tool, canker.tool.AS)
+        return isinstance(tool, blight.tool.AS)
