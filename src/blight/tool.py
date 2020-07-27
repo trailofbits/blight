@@ -11,7 +11,7 @@ from pathlib import Path
 from typing import Any, Dict, List, Tuple
 
 from blight.enums import CompilerStage, Lang, OptLevel, Std
-from blight.exceptions import BuildError, BlightError
+from blight.exceptions import BlightError, BuildError
 from blight.protocols import ArgsProtocol, IndexedUndefinesProtocol, LangProtocol
 from blight.util import insert_items_at_idx, load_actions, rindex_prefix
 

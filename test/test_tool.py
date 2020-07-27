@@ -6,7 +6,7 @@ import pytest
 
 from blight import tool
 from blight.enums import CompilerStage, Lang, OptLevel, Std
-from blight.exceptions import BuildError, BlightError
+from blight.exceptions import BlightError, BuildError
 
 
 def test_tool_doesnt_instantiate():
