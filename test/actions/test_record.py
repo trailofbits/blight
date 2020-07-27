@@ -1,8 +1,8 @@
 import json
 import shutil
 
-from canker.actions import Record
-from canker.tool import CC
+from blight.actions import Record
+from blight.tool import CC
 
 
 def test_record(tmp_path):

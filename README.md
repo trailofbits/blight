@@ -1,17 +1,17 @@
-canker
+blight
 ======
 
-![CI](https://github.com/trailofbits/canker/workflows/CI/badge.svg)
+![CI](https://github.com/trailofbits/blight/workflows/CI/badge.svg)
 
-`canker` is a catch-all compile tool wrapper.
+`blight` is a catch-all compile tool wrapper.
 
 ## Usage
 
 ```bash
-$ pip3 install canker
-$ eval $(canker-env --guess-wrapped)
-$ export CANKER_ACTIONS="Record"
-$ export CANKER_ACTION_RECORD="output=/tmp/demo.jsonl"
+$ pip3 install blight
+$ eval $(blight-env --guess-wrapped)
+$ export BLIGHT_ACTIONS="Record"
+$ export BLIGHT_ACTION_RECORD="output=/tmp/demo.jsonl"
 $ cd /your/project && make
 $ cat /tmp/demo.jsonl
 ```
@@ -32,13 +32,13 @@ a la [Bear](https://github.com/rizsotto/Bear).
 
 ## Contributing a new action
 
-New canker actions are easy to write. For example, the following prints a message before every `ld`
+New blight actions are easy to write. For example, the following prints a message before every `ld`
 invocation:
 
 ```python
-# src/canker/actions/printld.py
+# src/blight/actions/printld.py
 
-from canker.action import LDAction
+from blight.action import LDAction
 
 
 class PrintLD(LDAction):
@@ -47,24 +47,21 @@ class PrintLD(LDAction):
 ```
 
 ```python
-# src/canker/actions/__init__.py
+# src/blight/actions/__init__.py
 
-# bring PrintLD into canker.actions so that `CANKER_ACTIONS` can find it
+# bring PrintLD into blight.actions so that `BLIGHT_ACTIONS` can find it
 from printld import PrintLD  # noqa: F401
 ```
 
 ```bash
-$ eval $(canker-env --guess-wrapped)
-$ export CANKER_ACTIONS="PrintLD"
+$ eval $(blight-env --guess-wrapped)
+$ export BLIGHT_ACTIONS="PrintLD"
 $ make
 ```
 
-Check out canker's [API documentation](https://trailofbits.github.io/canker) for more details,
+Check out blight's [API documentation](https://trailofbits.github.io/blight) for more details,
 including the kinds of available actions.
 
 ## The name?
 
-My phone autocorrected "CMake" to "canker" once.
-
-Canker is cognate with cancer, which is appropriate for both build systems and tools
-that instrument build systems (like canker does).
+Build systems and tools that instrument build systems are a blight on my productivity.

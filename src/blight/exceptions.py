@@ -1,9 +1,9 @@
 """
-Exceptions for canker.
+Exceptions for blight.
 """
 
 
-class CankerError(ValueError):
+class BlightError(ValueError):
     """
     Raised whenever an internal condition isn't met.
     """
@@ -11,7 +11,7 @@ class CankerError(ValueError):
     pass
 
 
-class BuildError(CankerError):
+class BuildError(BlightError):
     """
     Raised whenever a wrapped tool fails.
     """

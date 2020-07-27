@@ -3,14 +3,14 @@
 from setuptools import find_packages, setup
 
 version = {}
-with open("./src/canker/version.py") as f:
+with open("./src/blight/version.py") as f:
     exec(f.read(), version)
 
 with open("./README.md") as f:
     long_description = f.read()
 
 setup(
-    name="canker",
+    name="blight",
     version=version["__version__"],
     license="Apache-2.0",
     author="William Woodruff",
@@ -18,18 +18,18 @@ setup(
     description="A catch-all compile-tool wrapper",
     long_description=long_description,
     long_description_content_type="text/markdown",
-    url="https://github.com/trailofbits/canker",
-    project_urls={"Documentation": "https://trailofbits.github.io/canker/"},
+    url="https://github.com/trailofbits/blight",
+    project_urls={"Documentation": "https://trailofbits.github.io/blight/"},
     packages=find_packages(where="src"),
     package_dir={"": "src"},
     entry_points={
         "console_scripts": [
-            "canker-env = canker.cli:env",
-            "canker-cc = canker.cli:tool",
-            "canker-c++ = canker.cli:tool",
-            "canker-cpp = canker.cli:tool",
-            "canker-ld = canker.cli:tool",
-            "canker-as = canker.cli:tool",
+            "blight-env = blight.cli:env",
+            "blight-cc = blight.cli:tool",
+            "blight-c++ = blight.cli:tool",
+            "blight-cpp = blight.cli:tool",
+            "blight-ld = blight.cli:tool",
+            "blight-as = blight.cli:tool",
         ],
     },
     platforms="any",

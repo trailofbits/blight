@@ -5,8 +5,8 @@ The `InjectFlags` action.
 import logging
 import shlex
 
-from canker.action import CompilerAction
-from canker.enums import Lang
+from blight.action import CompilerAction
+from blight.enums import Lang
 
 logger = logging.getLogger(__name__)
 
@@ -21,13 +21,13 @@ class InjectFlags(CompilerAction):
     For example:
 
     ```bash
-    export CANKER_WRAPPED_CC=clang
-    export CANKER_ACTIONS="InjectFlags"
-    export CANKER_ACTION_INJECTFLAGS="CFLAGS='-g -O0' CPPFLAGS='-DWHATEVER'"
-    make CC=canker-cc
+    export BLIGHT_WRAPPED_CC=clang
+    export BLIGHT_ACTIONS="InjectFlags"
+    export BLIGHT_ACTION_INJECTFLAGS="CFLAGS='-g -O0' CPPFLAGS='-DWHATEVER'"
+    make CC=blight-cc
     ```
 
-    will cause canker to add `-g -O0 -DWHATEVER` to each `clang` invocation
+    will cause blight to add `-g -O0 -DWHATEVER` to each `clang` invocation
     (unless it's a C++ invocation, e.g. via `-x c++`).
     """
 

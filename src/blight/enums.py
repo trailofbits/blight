@@ -1,5 +1,5 @@
 """
-Enumerations for canker.
+Enumerations for blight.
 """
 
 import enum

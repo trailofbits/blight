@@ -25,14 +25,14 @@ lint:
 .ONESHELL:
 test:
 	. env/bin/activate
-	pytest --cov=canker test/
+	pytest --cov=blight test/
 	python -m coverage report -m --fail-under 100
 
 .PHONY: doc
 .ONESHELL:
 doc:
 	. env/bin/activate
-	PYTHONWARNINGS='error::UserWarning' pdoc --force --html canker
+	PYTHONWARNINGS='error::UserWarning' pdoc --force --html blight
 
 .PHONY: package
 .ONESHELL:

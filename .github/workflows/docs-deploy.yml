@@ -27,6 +27,6 @@ jobs:
         uses: peaceiris/actions-gh-pages@v3.6.1
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./html/canker
+          publish_dir: ./html/blight
           publish_branch: gh-pages
           force_orphan: true

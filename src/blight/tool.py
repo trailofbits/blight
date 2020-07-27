@@ -1,5 +1,5 @@
 """
-Encapsulations of the tools supported by canker.
+Encapsulations of the tools supported by blight.
 """
 
 import logging
@@ -10,19 +10,19 @@ import subprocess
 from pathlib import Path
 from typing import Any, Dict, List, Tuple
 
-from canker.enums import CompilerStage, Lang, OptLevel, Std
-from canker.exceptions import BuildError, CankerError
-from canker.protocols import ArgsProtocol, IndexedUndefinesProtocol, LangProtocol
-from canker.util import insert_items_at_idx, load_actions, rindex_prefix
+from blight.enums import CompilerStage, Lang, OptLevel, Std
+from blight.exceptions import BuildError, BlightError
+from blight.protocols import ArgsProtocol, IndexedUndefinesProtocol, LangProtocol
+from blight.util import insert_items_at_idx, load_actions, rindex_prefix
 
 logger = logging.getLogger(__name__)
 
-CANKER_TOOL_MAP = {
-    "canker-cc": "CC",
-    "canker-c++": "CXX",
-    "canker-cpp": "CPP",
-    "canker-ld": "LD",
-    "canker-as": "AS",
+BLIGHT_TOOL_MAP = {
+    "blight-cc": "CC",
+    "blight-c++": "CXX",
+    "blight-cpp": "CPP",
+    "blight-ld": "LD",
+    "blight-as": "AS",
 }
 
 TOOL_ENV_MAP = {
@@ -34,11 +34,11 @@ TOOL_ENV_MAP = {
 }
 
 TOOL_ENV_WRAPPER_MAP = {
-    "CC": "CANKER_WRAPPED_CC",
-    "CXX": "CANKER_WRAPPED_CXX",
-    "CPP": "CANKER_WRAPPED_CPP",
-    "LD": "CANKER_WRAPPED_LD",
-    "AS": "CANKER_WRAPPED_AS",
+    "CC": "BLIGHT_WRAPPED_CC",
+    "CXX": "BLIGHT_WRAPPED_CXX",
+    "CPP": "BLIGHT_WRAPPED_CPP",
+    "LD": "BLIGHT_WRAPPED_LD",
+    "AS": "BLIGHT_WRAPPED_AS",
 }
 
 RESPONSE_FILE_RECURSION_LIMIT = 64
@@ -52,7 +52,7 @@ if they have any. We choose an arbitrary limit here.
 
 class Tool:
     """
-    Represents a generic tool wrapped by canker.
+    Represents a generic tool wrapped by blight.
 
     `Tool` instances cannot be created directory; a specific subclass must be used.
     """
@@ -60,11 +60,11 @@ class Tool:
     @classmethod
     def wrapped_tool(cls) -> str:
         """
-        Returns the executable name or path of the tool that this canker tool wraps.
+        Returns the executable name or path of the tool that this blight tool wraps.
         """
         wrapped_tool = os.getenv(TOOL_ENV_WRAPPER_MAP[cls.__name__])
         if wrapped_tool is None:
-            raise CankerError(f"No wrapped tool found for {TOOL_ENV_MAP[cls.__name__]}")
+            raise BlightError(f"No wrapped tool found for {TOOL_ENV_MAP[cls.__name__]}")
         return wrapped_tool
 
     def __init__(self, args):
@@ -202,7 +202,7 @@ class LangMixin:
     def lang(self: ArgsProtocol) -> Lang:
         """
         Returns:
-            A `canker.enums.Lang` value representing the tool's language
+            A `blight.enums.Lang` value representing the tool's language
         """
         x_lang_map = {
             "c": Lang.C,
@@ -243,7 +243,7 @@ class StdMixin(LangMixin):
     def std(self: LangProtocol) -> Std:
         """
         Returns:
-            A `canker.enums.Std` value representing the tool's standard
+            A `blight.enums.Std` value representing the tool's standard
         """
 
         # First, a special case: if -ansi is present, we're in
@@ -374,7 +374,7 @@ class OptMixin:
     def opt(self: ArgsProtocol) -> OptLevel:
         """
         Returns:
-            A `canker.enums.OptLevel` value representing the optimization level
+            A `blight.enums.OptLevel` value representing the optimization level
         """
 
         opt_flag_map = {
@@ -566,7 +566,7 @@ class CompilerTool(ResponseFileMixin, Tool, StdMixin, OptMixin, DefinesMixin):
     def stage(self) -> CompilerStage:
         """
         Returns:
-            A `canker.enums.CompilerStage` value representing the stage that this tool is on
+            A `blight.enums.CompilerStage` value representing the stage that this tool is on
         """
 
         # TODO(ww): Refactor this entire method. Both GCC and Clang can actually

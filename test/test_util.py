@@ -1,8 +1,8 @@
 import pytest
 
-from canker import util
-from canker.actions import Record
-from canker.exceptions import CankerError
+from blight import util
+from blight.actions import Record
+from blight.exceptions import BlightError
 
 
 def test_die():
@@ -17,8 +17,8 @@ def test_rindex():
 
 
 def test_load_actions(monkeypatch):
-    monkeypatch.setenv("CANKER_ACTIONS", "Record")
-    monkeypatch.setenv("CANKER_ACTION_RECORD", "key=value")
+    monkeypatch.setenv("BLIGHT_ACTIONS", "Record")
+    monkeypatch.setenv("BLIGHT_ACTION_RECORD", "key=value")
 
     actions = util.load_actions()
     assert len(actions) == 1
@@ -27,14 +27,14 @@ def test_load_actions(monkeypatch):
 
 
 def test_load_actions_nonexistent(monkeypatch):
-    monkeypatch.setenv("CANKER_ACTIONS", "ThisActionDoesNotExist")
+    monkeypatch.setenv("BLIGHT_ACTIONS", "ThisActionDoesNotExist")
 
-    with pytest.raises(CankerError):
+    with pytest.raises(BlightError):
         util.load_actions()
 
 
 def test_load_actions_empty_config(monkeypatch):
-    monkeypatch.setenv("CANKER_ACTIONS", "Record")
+    monkeypatch.setenv("BLIGHT_ACTIONS", "Record")
 
     actions = util.load_actions()
     assert len(actions) == 1

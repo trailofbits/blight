@@ -5,8 +5,8 @@ The `Record` action.
 import json
 from pathlib import Path
 
-from canker.action import Action
-from canker.util import flock_append
+from blight.action import Action
+from blight.util import flock_append
 
 
 class Record(Action):

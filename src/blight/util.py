@@ -1,5 +1,5 @@
 """
-Helper utilities for canker.
+Helper utilities for blight.
 """
 
 import contextlib
@@ -9,7 +9,7 @@ import shlex
 import sys
 from typing import Any, List, Optional, Sequence
 
-from canker.exceptions import CankerError
+from blight.exceptions import BlightError
 
 
 def die(message):
@@ -100,25 +100,25 @@ def flock_append(filename):
 
 def load_actions():
     """
-    Loads any canker actions requested via the environment.
+    Loads any blight actions requested via the environment.
 
-    Each action is loaded from the `CANKER_ACTIONS` environment variable,
+    Each action is loaded from the `BLIGHT_ACTIONS` environment variable,
     separated by colons.
 
     For example, the following loads the `Record` and `Benchmark` actions:
 
     ```bash
-    CANKER_ACTIONS="Record:Benchmark"
+    BLIGHT_ACTIONS="Record:Benchmark"
     ```
 
     Each action additionally receives a configuration dictionary from
-    `CANKER_ACTION_{UPPERCASE_NAME}`. The contents of each of these variables
+    `BLIGHT_ACTION_{UPPERCASE_NAME}`. The contents of each of these variables
     is shell-quoted, in `key=value` format.
 
     For example, the following:
 
     ```bash
-    CANKER_ACTION_RECORD="output=/tmp/whatever.jsonl"
+    BLIGHT_ACTION_RECORD="output=/tmp/whatever.jsonl"
     ```
 
     yields the following configuration dictionary:
@@ -128,21 +128,21 @@ def load_actions():
     ```
 
     Returns:
-        A list of `canker.action.Action`s.
+        A list of `blight.action.Action`s.
     """
-    import canker.actions
+    import blight.actions
 
-    action_names = os.getenv("CANKER_ACTIONS")
+    action_names = os.getenv("BLIGHT_ACTIONS")
     if action_names is None:
         return []
 
     actions = []
     for action_name in action_names.split(":"):
-        action_class = getattr(canker.actions, action_name, None)
+        action_class = getattr(blight.actions, action_name, None)
         if action_class is None:
-            raise CankerError(f"Unknown action: {action_name}")
+            raise BlightError(f"Unknown action: {action_name}")
 
-        action_config = os.getenv(f"CANKER_ACTION_{action_name.upper()}", None)
+        action_config = os.getenv(f"BLIGHT_ACTION_{action_name.upper()}", None)
         if action_config is not None:
             action_config = shlex.split(action_config)
             action_config = dict(c.split("=") for c in action_config)

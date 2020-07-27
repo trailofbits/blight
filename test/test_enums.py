@@ -1,4 +1,4 @@
-from canker import enums
+from blight import enums
 
 
 def test_optlevel_predictates():
