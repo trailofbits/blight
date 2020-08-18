@@ -19,6 +19,7 @@ class OutputKind(enum.Enum):
 
     This enumeration is not exhaustive.
     """
+
     Object: str = "object"
     SharedLibrary: str = "shared"
     StaticLibrary: str = "static"
