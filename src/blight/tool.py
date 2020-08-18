@@ -25,13 +25,7 @@ BLIGHT_TOOL_MAP = {
     "blight-as": "AS",
 }
 
-TOOL_ENV_MAP = {
-    "CC": "cc",
-    "CXX": "c++",
-    "CPP": "cpp",
-    "LD": "ld",
-    "AS": "as",
-}
+TOOL_ENV_MAP = {"CC": "cc", "CXX": "c++", "CPP": "cpp", "LD": "ld", "AS": "as"}
 
 TOOL_ENV_WRAPPER_MAP = {
     "CC": "BLIGHT_WRAPPED_CC",
@@ -204,12 +198,7 @@ class LangMixin:
         Returns:
             A `blight.enums.Lang` value representing the tool's language
         """
-        x_lang_map = {
-            "c": Lang.C,
-            "c-header": Lang.C,
-            "c++": Lang.Cxx,
-            "c++-header": Lang.Cxx,
-        }
+        x_lang_map = {"c": Lang.C, "c-header": Lang.C, "c++": Lang.Cxx, "c++-header": Lang.Cxx}
 
         # First, check for `-x lang`. This overrides the language determined by
         # the frontend's binary name (e.g. `g++`).
@@ -465,7 +454,7 @@ class ResponseFileMixin:
         expanded_args = super().args
         for idx, response_file in response_files:
             expanded_args = insert_items_at_idx(
-                expanded_args, idx, self._expand_response_file(response_file, self.cwd, 0),
+                expanded_args, idx, self._expand_response_file(response_file, self.cwd, 0)
             )
 
         self._args = expanded_args
@@ -665,11 +654,7 @@ class CPP(Tool, StdMixin, DefinesMixin):
         return f"<CPP {self.wrapped_tool()} {self.lang} {self.std}>"
 
     def asdict(self) -> Dict[str, Any]:
-        return {
-            **super().asdict(),
-            "lang": self.lang.name,
-            "std": self.std.name,
-        }
+        return {**super().asdict(), "lang": self.lang.name, "std": self.std.name}
 
 
 class LD(ResponseFileMixin, Tool):
