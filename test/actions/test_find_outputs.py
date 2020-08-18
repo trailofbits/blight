@@ -1,6 +1,7 @@
 import json
 
 from blight.actions import FindOutputs
+from blight.actions.find_outputs import OutputKind
 from blight.tool import CC
 
 
@@ -12,7 +13,7 @@ def test_find_outputs(tmp_path):
     find_outputs.before_run(cc)
 
     outputs = json.loads(output.read_text())["outputs"]
-    assert outputs["executable"] == [str(cc.cwd / "foo")]
+    assert outputs[OutputKind.Executable.value] == [str(cc.cwd / "foo")]
 
 
 def test_find_outputs_multiple(tmp_path):
@@ -26,7 +27,9 @@ def test_find_outputs_multiple(tmp_path):
     find_outputs.before_run(cc)
 
     outputs = json.loads(output.read_text())["outputs"]
-    assert outputs["object"] == [str(cc.cwd / fake_c.with_suffix(".o").name) for fake_c in fake_cs]
+    assert outputs[OutputKind.Object.value] == [
+        str(cc.cwd / fake_c.with_suffix(".o").name) for fake_c in fake_cs
+    ]
 
 
 def test_find_outputs_handles_a_out(tmp_path):
@@ -37,4 +40,4 @@ def test_find_outputs_handles_a_out(tmp_path):
     find_outputs.before_run(cc)
 
     outputs = json.loads(output.read_text())["outputs"]
-    assert outputs["executable"] == [str(cc.cwd / "a.out")]
+    assert outputs[OutputKind.Executable.value] == [str(cc.cwd / "a.out")]
