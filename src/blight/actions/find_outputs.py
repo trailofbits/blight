@@ -27,11 +27,6 @@ class OutputKind(enum.Enum):
     Unknown: str = "unknown"
 
 
-"""
-A mapping of common output suffixes to their (expected) file kinds.
-
-This mapping is not exhaustive.
-"""
 OUTPUT_SUFFIX_KIND_MAP = {
     ".o": OutputKind.Object,
     ".obj": OutputKind.Object,
@@ -48,6 +43,11 @@ OUTPUT_SUFFIX_KIND_MAP = {
     ".ko": OutputKind.KernelModule,
     ".sys": OutputKind.KernelModule,
 }
+"""
+A mapping of common output suffixes to their (expected) file kinds.
+
+This mapping is not exhaustive.
+"""
 
 
 class FindOutputs(Action):
