@@ -39,7 +39,7 @@ setup(
         "dev": [
             "flake8",
             "black",
-            "isort[pyproject]",
+            "isort",
             "pytest",
             "pytest-cov",
             "coverage[toml]",
