@@ -55,9 +55,9 @@ def env(guess_wrapped, swizzle_path):
 
     if swizzle_path:
         _swizzle_path()
-    else:
-        for variable, tool in blight.tool.TOOL_ENV_MAP.items():
-            _export(variable, f"blight-{tool}")
+
+    for variable, tool in blight.tool.TOOL_ENV_MAP.items():
+        _export(variable, f"blight-{tool}")
 
 
 def tool():
