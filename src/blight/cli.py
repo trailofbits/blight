@@ -43,8 +43,7 @@ def _swizzle_path():
         st = os.stat(blight_path)
         os.chmod(blight_path, st.st_mode | stat.S_IEXEC)
 
-        _export(variable, blight_path)
-        _export(f"BLIGHT_WRAPPED_{variable}", tool_path)
+    _export("PATH", f"{blight_dir}:$PATH")
 
 
 @click.command()
@@ -60,9 +59,9 @@ def env(guess_wrapped, swizzle_path):
 
     if swizzle_path:
         _swizzle_path()
-
-    for variable, tool in blight.tool.TOOL_ENV_MAP.items():
-        _export(variable, f"blight-{tool}")
+    else:
+        for variable, tool in blight.tool.TOOL_ENV_MAP.items():
+            _export(variable, f"blight-{tool}")
 
 
 def tool():
