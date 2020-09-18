@@ -44,7 +44,9 @@ def _swizzle_path():
 
 
 @click.command()
-@click.option("--guess-wrapped", help="Attempt to guess the appropriate programs to wrap", is_flag=True)
+@click.option(
+    "--guess-wrapped", help="Attempt to guess the appropriate programs to wrap", is_flag=True
+)
 @click.option("--swizzle-path", help="Wrap via PATH swizzling", is_flag=True)
 def env(guess_wrapped, swizzle_path):
     if guess_wrapped:
