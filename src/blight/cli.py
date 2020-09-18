@@ -33,10 +33,6 @@ def _swizzle_path():
         os.mkdir(blight_dir)
 
     for variable, tool in blight.tool.TOOL_ENV_MAP.items():
-        tool_path = shutil.which(tool)
-        if tool_path is None:
-            die(f"Couldn't locate {tool} on the $PATH")
-
         blight_path = f"{blight_dir}/{tool}"
         with open(blight_path, "w+") as shim_script:
             shim_script.write(f'blight-{tool} "${{@}}"\n')
