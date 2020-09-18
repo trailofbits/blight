@@ -1,9 +1,10 @@
 import logging
 import os
-import stat
 import shlex
 import shutil
+import stat
 import sys
+import tempfile
 
 import click
 
@@ -28,9 +29,7 @@ def _export_guess_wrapped():
 
 
 def _swizzle_path():
-    blight_dir = f"/tmp/blight-XXX"
-    if not os.path.isdir(blight_dir):
-        os.mkdir(blight_dir)
+    blight_dir = tempfile.mkdtemp(suffix="blight-XXX")
 
     for variable, tool in blight.tool.TOOL_ENV_MAP.items():
         blight_path = f"{blight_dir}/{tool}"
