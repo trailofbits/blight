@@ -5,6 +5,7 @@ import shutil
 import stat
 import sys
 import tempfile
+from pathlib import Path
 
 import click
 
@@ -29,14 +30,15 @@ def _export_guess_wrapped():
 
 
 def _swizzle_path():
-    blight_dir = tempfile.mkdtemp(suffix="blight-XXX")
+    blight_dir = Path(tempfile.mkdtemp(suffix="blight-XXX"))
 
     for variable, tool in blight.tool.TOOL_ENV_MAP.items():
-        blight_path = f"{blight_dir}/{tool}"
-        with open(blight_path, "w+") as shim_script:
-            shim_script.write(f'blight-{tool} "${{@}}"\n')
-        st = os.stat(blight_path)
-        os.chmod(blight_path, st.st_mode | stat.S_IEXEC)
+        shim_path = blight_dir / tool
+        with open(shim_path, "w+") as io:
+            io.write(f'blight-{tool} "${{@}}"\n')
+        
+        st = os.stat(shim_path)
+        os.chmod(shim_path, st.st_mode | stat.S_IEXEC)
 
     _export("PATH", f"{blight_dir}:$PATH")
 
