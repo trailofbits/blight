@@ -28,16 +28,16 @@ def _export_guess_wrapped():
 
 
 def _swizzle_path():
+    blight_dir = f"/tmp/blight-XXX"
+    if not os.path.isdir(blight_dir):
+        os.mkdir(blight_dir)
+        
     for variable, tool in blight.tool.TOOL_ENV_MAP.items():
         tool_path = shutil.which(tool)
         if tool_path is None:
             die(f"Couldn't locate {tool} on the $PATH")
 
-        blight_path = f"/tmp/blight-{variable}"
-        if not os.path.isdir(blight_path):
-            os.mkdir(blight_path)
-        
-        blight_path = f"{blight_path}/{tool}"
+        blight_path = f"{blight_dir}/{tool}"
         with open(blight_path, "w+") as shim_script:
             shim_script.write(f"blight-{tool} \"${{@}}\"\n")
         st = os.stat(blight_path)
@@ -60,9 +60,9 @@ def env(guess_wrapped, swizzle_path):
 
     if swizzle_path:
         _swizzle_path()
-    else:
-        for variable, tool in blight.tool.TOOL_ENV_MAP.items():
-            _export(variable, f"blight-{tool}")
+
+    for variable, tool in blight.tool.TOOL_ENV_MAP.items():
+        _export(variable, f"blight-{tool}")
 
 
 def tool():
