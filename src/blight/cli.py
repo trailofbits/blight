@@ -16,8 +16,10 @@ from blight.util import die
 logging.basicConfig(level=os.environ.get("BLIGHT_LOGLEVEL", "INFO").upper())
 
 
-def _export(variable, value):
-    print(f"export {variable}={shlex.quote(value)}")
+def _export(variable, value, *, quote=True):
+    if quote:
+        value = shlex.quote(value)
+    print(f"export {variable}={value}")
 
 
 def _export_guess_wrapped():
@@ -30,7 +32,7 @@ def _export_guess_wrapped():
 
 
 def _swizzle_path():
-    blight_dir = Path(tempfile.mkdtemp(suffix="blight-XXX"))
+    blight_dir = Path(tempfile.mkdtemp(prefix="blight"))
 
     for variable, tool in blight.tool.TOOL_ENV_MAP.items():
         shim_path = blight_dir / tool
@@ -40,7 +42,8 @@ def _swizzle_path():
         st = shim_path.stat()
         shim_path.chmod(st.st_mode | stat.S_IEXEC)
 
-    _export("PATH", f"{blight_dir}:$PATH")
+    # NOTE(ww): No quotation, to allow $PATH to expand.
+    _export("PATH", f"{blight_dir}:$PATH", quote=False)
 
 
 @click.command()
