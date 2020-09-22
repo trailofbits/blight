@@ -37,8 +37,8 @@ def _swizzle_path():
         with open(shim_path, "w+") as io:
             io.write(f'blight-{tool} "${{@}}"\n')
 
-        st = os.stat(shim_path)
-        os.chmod(shim_path, st.st_mode | stat.S_IEXEC)
+        st = shim_path.stat()
+        shim_path.chmod(st.st_mode | stat.S_IEXEC)
 
     _export("PATH", f"{blight_dir}:$PATH")
 
