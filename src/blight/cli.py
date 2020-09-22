@@ -2,7 +2,10 @@ import logging
 import os
 import shlex
 import shutil
+import stat
 import sys
+import tempfile
+from pathlib import Path
 
 import click
 
@@ -13,8 +16,10 @@ from blight.util import die
 logging.basicConfig(level=os.environ.get("BLIGHT_LOGLEVEL", "INFO").upper())
 
 
-def _export(variable, value):
-    print(f"export {variable}={shlex.quote(value)}")
+def _export(variable, value, *, quote=True):
+    if quote:
+        value = shlex.quote(value)
+    print(f"export {variable}={value}")
 
 
 def _export_guess_wrapped():
@@ -26,13 +31,32 @@ def _export_guess_wrapped():
         _export(f"BLIGHT_WRAPPED_{variable}", tool_path)
 
 
+def _swizzle_path():
+    blight_dir = Path(tempfile.mkdtemp(prefix="blight"))
+
+    for variable, tool in blight.tool.TOOL_ENV_MAP.items():
+        shim_path = blight_dir / tool
+        with open(shim_path, "w+") as io:
+            io.write(f'blight-{tool} "${{@}}"\n')
+
+        st = shim_path.stat()
+        shim_path.chmod(st.st_mode | stat.S_IEXEC)
+
+    # NOTE(ww): No quotation, to allow $PATH to expand.
+    _export("PATH", f"{blight_dir}:$PATH", quote=False)
+
+
 @click.command()
 @click.option(
     "--guess-wrapped", help="Attempt to guess the appropriate programs to wrap", is_flag=True
 )
-def env(guess_wrapped):
+@click.option("--swizzle-path", help="Wrap via PATH swizzling", is_flag=True)
+def env(guess_wrapped, swizzle_path):
     if guess_wrapped:
         _export_guess_wrapped()
+
+    if swizzle_path:
+        _swizzle_path()
 
     for variable, tool in blight.tool.TOOL_ENV_MAP.items():
         _export(variable, f"blight-{tool}")
