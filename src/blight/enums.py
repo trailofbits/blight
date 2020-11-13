@@ -81,6 +81,58 @@ class Std(enum.Enum):
         """
         return self in [Std.CUnknown, Std.CxxUnknown, Std.GnuUnknown, Std.GnuxxUnknown, Std.Unknown]
 
+    def is_cstd(self) -> bool:
+        """
+        Returns:
+            `True` if the standard is a C standard
+        """
+        return self in [
+            Std.C89,
+            Std.C94,
+            Std.C99,
+            Std.C11,
+            Std.C17,
+            Std.C2x,
+            Std.Gnu89,
+            Std.Gnu99,
+            Std.Gnu11,
+            Std.Gnu17,
+            Std.Gnu2x,
+            Std.CUnknown,
+            Std.GnuUnknown,
+        ]
+
+    def is_cxxstd(self) -> bool:
+        """
+        Returns:
+            `True` if the standard is a C++ standard
+        """
+        return self in [
+            Std.Cxx03,
+            Std.Cxx11,
+            Std.Cxx14,
+            Std.Cxx17,
+            Std.Cxx2a,
+            Std.Gnuxx03,
+            Std.Gnuxx11,
+            Std.Gnuxx14,
+            Std.Gnuxx17,
+            Std.Gnuxx2a,
+            Std.CxxUnknown,
+            Std.GnuxxUnknown,
+        ]
+
+    def lang(self) -> Lang:
+        """
+        Returns: a `Lang` corresponding to this `Std`.
+        """
+        if self.is_cstd():
+            return Lang.C
+        elif self.is_cxxstd():
+            return Lang.Cxx
+        else:
+            return Lang.Unknown
+
     C89 = enum.auto()
     """
     C89 (a.k.a. C90, iso9899:1990)
