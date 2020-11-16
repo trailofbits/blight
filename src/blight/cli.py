@@ -16,6 +16,7 @@ from blight.util import die
 logging.basicConfig(level=os.environ.get("BLIGHT_LOGLEVEL", "INFO").upper())
 
 # A mapping of shim name -> blight-{tool} for shim generation.
+# fmt: off
 SHIM_MAP = {
     # Standard build tool names.
     "cc": "cc",
@@ -35,6 +36,7 @@ SHIM_MAP = {
     "clang++": "c++",
     "lld": "ld",
 }
+# fmt: on
 
 
 def _export(variable, value, *, quote=True):
