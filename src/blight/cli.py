@@ -37,10 +37,10 @@ def _swizzle_path():
     for variable, tool in blight.tool.TOOL_ENV_MAP.items():
         shim_path = blight_dir / tool
         with open(shim_path, "w+") as io:
-            io.write(f'blight-{tool} "${{@}}"\n')
+            print("#!/bin/sh", file=io)
+            print(f"blight-{tool} \"${{@}}\"", file=io)
 
-        st = shim_path.stat()
-        shim_path.chmod(st.st_mode | stat.S_IEXEC)
+        shim_path.chmod(shim_path.stat().st_mode | stat.S_IEXEC)
 
     # NOTE(ww): No quotation, to allow $PATH to expand.
     _export("PATH", f"{blight_dir}:$PATH", quote=False)
