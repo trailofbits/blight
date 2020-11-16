@@ -99,3 +99,12 @@ class ASAction(Action):
 
     def _should_run_on(self, tool):
         return isinstance(tool, blight.tool.AS)
+
+
+class ARAction(Action):
+    """
+    An `ar` action, run whenever the tool is a `blight.tool.AR` instance.
+    """
+
+    def _should_run_on(self, tool):
+        return isinstance(tool, blight.tool.AR)

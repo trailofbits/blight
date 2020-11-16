@@ -23,9 +23,10 @@ BLIGHT_TOOL_MAP = {
     "blight-cpp": "CPP",
     "blight-ld": "LD",
     "blight-as": "AS",
+    "blight-ar": "AR",
 }
 
-TOOL_ENV_MAP = {"CC": "cc", "CXX": "c++", "CPP": "cpp", "LD": "ld", "AS": "as"}
+TOOL_ENV_MAP = {"CC": "cc", "CXX": "c++", "CPP": "cpp", "LD": "ld", "AS": "as", "AR": "ar"}
 
 TOOL_ENV_WRAPPER_MAP = {
     "CC": "BLIGHT_WRAPPED_CC",
@@ -33,6 +34,7 @@ TOOL_ENV_WRAPPER_MAP = {
     "CPP": "BLIGHT_WRAPPED_CPP",
     "LD": "BLIGHT_WRAPPED_LD",
     "AS": "BLIGHT_WRAPPED_AS",
+    "AR": "BLIGHT_WRAPPED_AR",
 }
 
 RESPONSE_FILE_RECURSION_LIMIT = 64
@@ -728,3 +730,12 @@ class AS(ResponseFileMixin, Tool):
 
     def __repr__(self) -> str:
         return f"<AS {self.wrapped_tool()}>"
+
+
+class AR(Tool):
+    """
+    Represents the archiver.
+    """
+
+    def __repr__(self) -> str:
+        return f"<AR {self.wrapped_tool()}>"

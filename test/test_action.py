@@ -13,6 +13,7 @@ from blight import action, tool
         (action.CPPAction, tool.CC, False),
         (action.LDAction, tool.CC, False),
         (action.ASAction, tool.CC, False),
+        (action.ARAction, tool.CC, False),
     ],
 )
 def test_should_run_on(action_class, tool_class, should_run_on):
