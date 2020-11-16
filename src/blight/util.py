@@ -53,6 +53,21 @@ def rindex_prefix(items: Sequence[str], prefix: str) -> Optional[int]:
     return None
 
 
+def ritem_prefix(items: Sequence[str], prefix: str) -> Optional[str]:
+    """
+    Args:
+        items (sequence of str): The items to search
+        prefix (str): The prefix to find
+
+    Returns:
+        The rightmost element that starts with `prefix`, or `None`
+    """
+    for item in reversed(items):
+        if item.startswith(prefix):
+            return item
+    return None
+
+
 def insert_items_at_idx(parent_items: Sequence[Any], idx: int, items: Sequence[Any]) -> List[Any]:
     """
     Inserts `items` at `idx` in `parent_items`.

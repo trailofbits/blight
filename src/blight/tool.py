@@ -10,10 +10,10 @@ import subprocess
 from pathlib import Path
 from typing import Any, Dict, List, Tuple
 
-from blight.enums import CompilerStage, Lang, OptLevel, Std
+from blight.enums import CodeModel, CompilerStage, Lang, OptLevel, Std
 from blight.exceptions import BlightError, BuildError
 from blight.protocols import ArgsProtocol, IndexedUndefinesProtocol, LangProtocol
-from blight.util import insert_items_at_idx, load_actions, rindex_prefix
+from blight.util import insert_items_at_idx, load_actions, rindex_prefix, ritem_prefix
 
 logger = logging.getLogger(__name__)
 
@@ -536,10 +536,42 @@ class DefinesMixin:
         return defines
 
 
+class CodeModelMixin:
+    """
+    A mixin for tools that support the `-mcmodel=MODEL` syntax for declaring their
+    code model.
+    """
+
+    @property
+    def code_model(self: ArgsProtocol):
+        """
+        Returns:
+            A `blight.enums.CodeModel` value representing the tool's code model
+        """
+        code_model_map = {
+            "-mcmodel=small": CodeModel.Small,
+            "-mcmodel=medlow": CodeModel.Small,
+            "-mcmodel=medium": CodeModel.Medium,
+            "-mcmodel=medany": CodeModel.Medium,
+            "-mcmodel=large": CodeModel.Large,
+            "-mcmodel=kernel": CodeModel.Kernel,
+        }
+
+        # NOTE(ww): Both Clang and GCC seem to default to the "small" code model
+        # when none is specified, at least on x86-64. But this might not be consistent
+        # across architectures, so maybe we should return `CodeModel.Unknown` here
+        # instead.
+        code_model = ritem_prefix(self.args, "-mcmodel=")
+        if code_model is None:
+            return CodeModel.Small
+
+        return code_model_map.get(code_model, CodeModel.Unknown)
+
+
 # NOTE(ww): The funny mixin order here (`ResponseFileMixin` before `Tool`) and elsewhere
 # is because Python defines its class hierarchy from right to left. `ResponseFileMixin`
 # therefore needs to come first in order to properly override `args`.
-class CompilerTool(ResponseFileMixin, Tool, StdMixin, OptMixin, DefinesMixin):
+class CompilerTool(ResponseFileMixin, Tool, StdMixin, OptMixin, DefinesMixin, CodeModelMixin):
     """
     Represents a generic (C or C++) compiler frontend.
 

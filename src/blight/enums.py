@@ -334,3 +334,34 @@ class OptLevel(enum.Enum):
     """
     An unknown optimization level.
     """
+
+
+class CodeModel(enum.Enum):
+    """
+    Models the known machine code models.
+    """
+
+    Small = enum.auto()
+    """
+    The `small` machine code model (also `medlow` in Clang).
+    """
+
+    Medium = enum.auto()
+    """
+    The `medium` machine code model (also `medany` in Clang).
+    """
+
+    Large = enum.auto()
+    """
+    The `large` machine code model.
+    """
+
+    Kernel = enum.auto()
+    """
+    The `kernel` machine code model.
+    """
+
+    Unknown = enum.auto()
+    """
+    An unknown machine code model.
+    """
