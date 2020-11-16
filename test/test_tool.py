@@ -5,7 +5,7 @@ import shutil
 import pytest
 
 from blight import tool
-from blight.enums import CompilerStage, Lang, OptLevel, Std
+from blight.enums import CodeModel, CompilerStage, Lang, OptLevel, Std
 from blight.exceptions import BlightError, BuildError
 
 
@@ -151,6 +151,26 @@ def test_defines_mixin(flags, defines, undefines):
 
     assert cc.defines == defines
     assert cc.indexed_undefines == undefines
+
+
+@pytest.mark.parametrize(
+    ("flags", "code_model"),
+    [
+        ("", CodeModel.Small),
+        ("-mcmodel", CodeModel.Small),
+        ("-mcmodel=small", CodeModel.Small),
+        ("-mcmodel=medlow", CodeModel.Small),
+        ("-mcmodel=medium", CodeModel.Medium),
+        ("-mcmodel=medany", CodeModel.Medium),
+        ("-mcmodel=large", CodeModel.Large),
+        ("-mcmodel=kernel", CodeModel.Kernel),
+        ("-mcmodel=unknown", CodeModel.Unknown),
+    ],
+)
+def test_codemodel_mixin(flags, code_model):
+    cc = tool.CC(shlex.split(flags))
+
+    assert cc.code_model == code_model
 
 
 @pytest.mark.parametrize(
