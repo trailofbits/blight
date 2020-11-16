@@ -329,3 +329,16 @@ def test_as():
         "args": [],
         "cwd": str(as_.cwd),
     }
+
+
+def test_ar():
+    ar = tool.AR([])
+
+    assert ar.wrapped_tool() == shutil.which("ar")
+    assert repr(ar) == f"<AR {ar.wrapped_tool()}>"
+    assert ar.asdict() == {
+        "name": ar.__class__.__name__,
+        "wrapped_tool": ar.wrapped_tool(),
+        "args": [],
+        "cwd": str(ar.cwd),
+    }
