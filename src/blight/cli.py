@@ -15,6 +15,27 @@ from blight.util import die
 
 logging.basicConfig(level=os.environ.get("BLIGHT_LOGLEVEL", "INFO").upper())
 
+# A mapping of shim name -> blight-{tool} for shim generation.
+SHIM_MAP = {
+    # Standard build tool names.
+    "cc": "cc",
+    "c++": "c++",
+    "cpp": "cpp",
+    "ld": "ld",
+    "as": "as",
+
+    # GNU shims.
+    "gcc": "cc",
+    "g++": "c++",
+    "gold": "ld",
+    "gas": "as",
+
+    # Clang shims.
+    "clang": "cc",
+    "clang++": "c++",
+    "lld": "ld",
+}
+
 
 def _export(variable, value, *, quote=True):
     if quote:
@@ -34,8 +55,8 @@ def _export_guess_wrapped():
 def _swizzle_path():
     blight_dir = Path(tempfile.mkdtemp(prefix="blight"))
 
-    for variable, tool in blight.tool.TOOL_ENV_MAP.items():
-        shim_path = blight_dir / tool
+    for shim, tool in SHIM_MAP.items():
+        shim_path = blight_dir / shim
         with open(shim_path, "w+") as io:
             print("#!/bin/sh", file=io)
             print(f'blight-{tool} "${{@}}"', file=io)
