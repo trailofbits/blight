@@ -450,6 +450,9 @@ class ResponseFileMixin:
         in a depth-first manner.
         """
 
+        # TODO(ww): Maybe don't override `args` here, and instead make it `expanded_response_args`
+        # or similar.
+
         response_files = [
             (idx, arg) for (idx, arg) in enumerate(super().args) if arg.startswith("@")
         ]
