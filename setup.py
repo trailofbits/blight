@@ -30,6 +30,7 @@ setup(
             "blight-cpp = blight.cli:tool",
             "blight-ld = blight.cli:tool",
             "blight-as = blight.cli:tool",
+            "blight-ar = blight.cli:tool",
         ]
     },
     platforms="any",
