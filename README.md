@@ -3,7 +3,7 @@ blight
 
 ![CI](https://github.com/trailofbits/blight/workflows/CI/badge.svg)
 
-`blight` is a catch-all compile tool wrapper.
+`blight` is a framework for wrapping and instrumenting build tools.
 
 ## Usage
 
