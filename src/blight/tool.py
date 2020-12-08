@@ -67,6 +67,7 @@ class Tool:
         if self.__class__ == Tool:
             raise NotImplementedError(f"can't instantiate {self.__class__.__name__} directly")
         self._args = args
+        self._env = dict(os.environ)
         self._cwd = Path(os.getcwd()).resolve()
         self._actions = load_actions()
 
@@ -101,6 +102,7 @@ class Tool:
             "wrapped_tool": self.wrapped_tool(),
             "args": self.args,
             "cwd": str(self._cwd),
+            "env": self._env,
         }
 
     @property
