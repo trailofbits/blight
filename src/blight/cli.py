@@ -39,6 +39,10 @@ SHIM_MAP = {
 # fmt: on
 
 
+def _unset(variable):
+    print(f"unset {variable}")
+
+
 def _export(variable, value, *, quote=True):
     if quote:
         value = shlex.quote(value)
@@ -74,7 +78,8 @@ def _swizzle_path():
     "--guess-wrapped", help="Attempt to guess the appropriate programs to wrap", is_flag=True
 )
 @click.option("--swizzle-path", help="Wrap via PATH swizzling", is_flag=True)
-def env(guess_wrapped, swizzle_path):
+@click.option("--unset", help="Unset the tool variables instead of setting them", is_flag=True)
+def env(unset, guess_wrapped, swizzle_path):
     if guess_wrapped:
         _export_guess_wrapped()
 
@@ -82,7 +87,10 @@ def env(guess_wrapped, swizzle_path):
         _swizzle_path()
 
     for variable, tool in blight.tool.TOOL_ENV_MAP.items():
-        _export(variable, f"blight-{tool}")
+        if unset:
+            _unset(variable)
+        else:
+            _export(variable, f"blight-{tool}")
 
 
 def tool():
