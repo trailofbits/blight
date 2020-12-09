@@ -32,6 +32,16 @@ def test_tool_fails(monkeypatch):
         tool.CC([]).run()
 
 
+def test_tool_env_filters_swizzle_path(monkeypatch):
+    path = os.getenv("PATH")
+    monkeypatch.setenv("PATH", f"/tmp/does-not-exist-{tool.SWIZZLE_SENTINEL}:{path}")
+
+    cc = tool.CC(["-v"])
+
+    env = cc.asdict()["env"]
+    assert tool.SWIZZLE_SENTINEL not in env["PATH"]
+
+
 def test_tool_run(monkeypatch, tmp_path):
     bench_output = tmp_path / "bench.jsonl"
     monkeypatch.setenv("BLIGHT_ACTIONS", "Benchmark")
