@@ -59,7 +59,7 @@ def _export_guess_wrapped():
 
 
 def _swizzle_path():
-    blight_dir = Path(tempfile.mkdtemp(prefix="blight"))
+    blight_dir = Path(tempfile.mkdtemp(suffix=blight.tool.SWIZZLE_SENTINEL))
 
     for shim, tool in SHIM_MAP.items():
         shim_path = blight_dir / shim

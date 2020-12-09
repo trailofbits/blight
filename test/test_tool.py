@@ -1,4 +1,5 @@
 import json
+import os
 import shlex
 import shutil
 
@@ -229,6 +230,7 @@ def test_cc(flags, lang, std, stage, opt):
         "std": std.name,
         "stage": stage.name,
         "opt": opt.name,
+        "env": dict(os.environ),
     }
 
 
@@ -259,6 +261,7 @@ def test_cxx(flags, lang, std, stage, opt):
         "std": std.name,
         "stage": stage.name,
         "opt": opt.name,
+        "env": dict(os.environ),
     }
 
 
@@ -286,6 +289,7 @@ def test_cpp(flags, lang, std):
         "cwd": str(cpp.cwd),
         "lang": lang.name,
         "std": std.name,
+        "env": dict(os.environ),
     }
 
 
@@ -299,6 +303,7 @@ def test_ld():
         "wrapped_tool": ld.wrapped_tool(),
         "args": [],
         "cwd": str(ld.cwd),
+        "env": dict(os.environ),
     }
 
 
@@ -328,6 +333,7 @@ def test_as():
         "wrapped_tool": as_.wrapped_tool(),
         "args": [],
         "cwd": str(as_.cwd),
+        "env": dict(os.environ),
     }
 
 
@@ -341,4 +347,5 @@ def test_ar():
         "wrapped_tool": ar.wrapped_tool(),
         "args": [],
         "cwd": str(ar.cwd),
+        "env": dict(os.environ),
     }
