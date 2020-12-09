@@ -17,6 +17,8 @@ from blight.util import insert_items_at_idx, load_actions, rindex_prefix, ritem_
 
 logger = logging.getLogger(__name__)
 
+SWIZZLE_SENTINEL = "@blight-swizzle@"
+
 BLIGHT_TOOL_MAP = {
     "blight-cc": "CC",
     "blight-c++": "CXX",
@@ -67,8 +69,20 @@ class Tool:
         if self.__class__ == Tool:
             raise NotImplementedError(f"can't instantiate {self.__class__.__name__} directly")
         self._args = args
+        self._env = self._fixup_env()
         self._cwd = Path(os.getcwd()).resolve()
         self._actions = load_actions()
+
+    def _fixup_env(self):
+        """
+        Fixes up `os.environ` to remove any references to blight's swizzled paths,
+        if any are present.
+        """
+        env = dict(os.environ)
+        paths = env.get("PATH", "").split(os.pathsep)
+        paths = [p for p in paths if not Path(p).name.endswith(SWIZZLE_SENTINEL)]
+        env["PATH"] = os.pathsep.join(paths)
+        return env
 
     def _before_run(self):
         for action in self._actions:
@@ -101,6 +115,7 @@ class Tool:
             "wrapped_tool": self.wrapped_tool(),
             "args": self.args,
             "cwd": str(self._cwd),
+            "env": self._env,
         }
 
     @property

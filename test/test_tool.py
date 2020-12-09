@@ -1,4 +1,5 @@
 import json
+import os
 import shlex
 import shutil
 
@@ -29,6 +30,16 @@ def test_tool_fails(monkeypatch):
     monkeypatch.setenv("BLIGHT_WRAPPED_CC", "false")
     with pytest.raises(BuildError):
         tool.CC([]).run()
+
+
+def test_tool_env_filters_swizzle_path(monkeypatch):
+    path = os.getenv("PATH")
+    monkeypatch.setenv("PATH", f"/tmp/does-not-exist-{tool.SWIZZLE_SENTINEL}:{path}")
+
+    cc = tool.CC(["-v"])
+
+    env = cc.asdict()["env"]
+    assert tool.SWIZZLE_SENTINEL not in env["PATH"]
 
 
 def test_tool_run(monkeypatch, tmp_path):
@@ -229,6 +240,7 @@ def test_cc(flags, lang, std, stage, opt):
         "std": std.name,
         "stage": stage.name,
         "opt": opt.name,
+        "env": dict(os.environ),
     }
 
 
@@ -259,6 +271,7 @@ def test_cxx(flags, lang, std, stage, opt):
         "std": std.name,
         "stage": stage.name,
         "opt": opt.name,
+        "env": dict(os.environ),
     }
 
 
@@ -286,6 +299,7 @@ def test_cpp(flags, lang, std):
         "cwd": str(cpp.cwd),
         "lang": lang.name,
         "std": std.name,
+        "env": dict(os.environ),
     }
 
 
@@ -299,6 +313,7 @@ def test_ld():
         "wrapped_tool": ld.wrapped_tool(),
         "args": [],
         "cwd": str(ld.cwd),
+        "env": dict(os.environ),
     }
 
 
@@ -328,6 +343,7 @@ def test_as():
         "wrapped_tool": as_.wrapped_tool(),
         "args": [],
         "cwd": str(as_.cwd),
+        "env": dict(os.environ),
     }
 
 
@@ -341,4 +357,5 @@ def test_ar():
         "wrapped_tool": ar.wrapped_tool(),
         "args": [],
         "cwd": str(ar.cwd),
+        "env": dict(os.environ),
     }
