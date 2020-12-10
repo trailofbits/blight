@@ -10,14 +10,12 @@ import subprocess
 from pathlib import Path
 from typing import Any, Dict, List, Tuple
 
+from blight import util
 from blight.enums import CodeModel, CompilerStage, Lang, OptLevel, Std
 from blight.exceptions import BlightError, BuildError
 from blight.protocols import ArgsProtocol, IndexedUndefinesProtocol, LangProtocol
-from blight.util import insert_items_at_idx, load_actions, rindex_prefix, ritem_prefix
 
 logger = logging.getLogger(__name__)
-
-SWIZZLE_SENTINEL = "@blight-swizzle@"
 
 BLIGHT_TOOL_MAP = {
     "blight-cc": "CC",
@@ -71,7 +69,7 @@ class Tool:
         self._args = args
         self._env = self._fixup_env()
         self._cwd = Path(os.getcwd()).resolve()
-        self._actions = load_actions()
+        self._actions = util.load_actions()
 
     def _fixup_env(self):
         """
@@ -79,9 +77,7 @@ class Tool:
         if any are present.
         """
         env = dict(os.environ)
-        paths = env.get("PATH", "").split(os.pathsep)
-        paths = [p for p in paths if not Path(p).name.endswith(SWIZZLE_SENTINEL)]
-        env["PATH"] = os.pathsep.join(paths)
+        env["PATH"] = util.unswizzled_path()
         return env
 
     def _before_run(self):
@@ -192,7 +188,7 @@ class Tool:
             A list of `str`, each of which is an output
         """
 
-        o_flag_index = rindex_prefix(self.args, "-o")
+        o_flag_index = util.rindex_prefix(self.args, "-o")
         if o_flag_index is None:
             return []
 
@@ -219,7 +215,7 @@ class LangMixin:
 
         # First, check for `-x lang`. This overrides the language determined by
         # the frontend's binary name (e.g. `g++`).
-        x_flag_index = rindex_prefix(self.args, "-x")
+        x_flag_index = util.rindex_prefix(self.args, "-x")
         if x_flag_index is not None:
             if self.args[x_flag_index] == "-x":
                 # TODO(ww): Maybe bounds check.
@@ -265,7 +261,7 @@ class StdMixin(LangMixin):
 
         # Experimentally, both GCC and clang respect the last -std=XXX flag passed.
         # See: https://stackoverflow.com/questions/40563269/passing-multiple-std-switches-to-g
-        std_flag_index = rindex_prefix(self.args, "-std=")
+        std_flag_index = util.rindex_prefix(self.args, "-std=")
 
         # No -std=XXX flags? The tool is operating in its default standard mode,
         # which is determined by its language.
@@ -450,7 +446,7 @@ class ResponseFileMixin:
         args = shlex.split(response_file.read_text())
         response_files = [(idx, arg) for (idx, arg) in enumerate(args) if arg.startswith("@")]
         for idx, nested_rf in response_files:
-            args = insert_items_at_idx(
+            args = util.insert_items_at_idx(
                 args,
                 idx,
                 self._expand_response_file(nested_rf, response_file.parent.resolve(), level + 1),
@@ -473,7 +469,7 @@ class ResponseFileMixin:
         ]
         expanded_args = super().args
         for idx, response_file in response_files:
-            expanded_args = insert_items_at_idx(
+            expanded_args = util.insert_items_at_idx(
                 expanded_args, idx, self._expand_response_file(response_file, self.cwd, 0)
             )
 
@@ -581,7 +577,7 @@ class CodeModelMixin:
         # when none is specified, at least on x86-64. But this might not be consistent
         # across architectures, so maybe we should return `CodeModel.Unknown` here
         # instead.
-        code_model = ritem_prefix(self.args, "-mcmodel=")
+        code_model = util.ritem_prefix(self.args, "-mcmodel=")
         if code_model is None:
             return CodeModel.Small
 
@@ -726,7 +722,7 @@ class LD(ResponseFileMixin, Tool):
 
         # The GNU linker additionally supports --output=OUTFILE and
         # --output OUTFILE. Handle them here.
-        output_flag_index = rindex_prefix(self.args, "--output")
+        output_flag_index = util.rindex_prefix(self.args, "--output")
         if output_flag_index is None:
             return ["a.out"]
 

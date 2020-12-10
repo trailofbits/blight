@@ -11,7 +11,7 @@ import click
 
 import blight.tool
 from blight.exceptions import BlightError
-from blight.util import die
+from blight.util import die, unswizzled_path
 
 logging.basicConfig(level=os.environ.get("BLIGHT_LOGLEVEL", "INFO").upper())
 
@@ -43,9 +43,8 @@ def _unset(variable):
     print(f"unset {variable}")
 
 
-def _export(variable, value, *, quote=True):
-    if quote:
-        value = shlex.quote(value)
+def _export(variable, value):
+    value = shlex.quote(value)
     print(f"export {variable}={value}")
 
 
@@ -69,8 +68,7 @@ def _swizzle_path():
 
         shim_path.chmod(shim_path.stat().st_mode | stat.S_IEXEC)
 
-    # NOTE(ww): No quotation, to allow $PATH to expand.
-    _export("PATH", f"{blight_dir}:$PATH", quote=False)
+    _export("PATH", f"{blight_dir}:{unswizzled_path()}")
 
 
 @click.command()
