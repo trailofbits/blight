@@ -7,9 +7,12 @@ import fcntl
 import os
 import shlex
 import sys
+from pathlib import Path
 from typing import Any, List, Optional, Sequence
 
 from blight.exceptions import BlightError
+
+SWIZZLE_SENTINEL = "@blight-swizzle@"
 
 
 def die(message):
@@ -111,6 +114,16 @@ def flock_append(filename):
             yield io
         finally:
             fcntl.flock(io, fcntl.LOCK_UN)
+
+
+def unswizzled_path() -> str:
+    """
+    Returns a version of the current `$PATH` with any blight shim paths removed.
+    """
+    paths = os.getenv("PATH", "").split(os.pathsep)
+    paths = [p for p in paths if not Path(p).name.endswith(SWIZZLE_SENTINEL)]
+
+    return os.pathsep.join(paths)
 
 
 def load_actions():

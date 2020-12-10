@@ -5,7 +5,7 @@ import shutil
 
 import pytest
 
-from blight import tool
+from blight import tool, util
 from blight.enums import CodeModel, CompilerStage, Lang, OptLevel, Std
 from blight.exceptions import BlightError, BuildError
 
@@ -34,12 +34,12 @@ def test_tool_fails(monkeypatch):
 
 def test_tool_env_filters_swizzle_path(monkeypatch):
     path = os.getenv("PATH")
-    monkeypatch.setenv("PATH", f"/tmp/does-not-exist-{tool.SWIZZLE_SENTINEL}:{path}")
+    monkeypatch.setenv("PATH", f"/tmp/does-not-exist-{util.SWIZZLE_SENTINEL}:{path}")
 
     cc = tool.CC(["-v"])
 
     env = cc.asdict()["env"]
-    assert tool.SWIZZLE_SENTINEL not in env["PATH"]
+    assert util.SWIZZLE_SENTINEL not in env["PATH"]
 
 
 def test_tool_run(monkeypatch, tmp_path):
