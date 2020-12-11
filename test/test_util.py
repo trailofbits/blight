@@ -18,12 +18,12 @@ def test_rindex():
 
 def test_load_actions(monkeypatch):
     monkeypatch.setenv("BLIGHT_ACTIONS", "Record")
-    monkeypatch.setenv("BLIGHT_ACTION_RECORD", "key=value")
+    monkeypatch.setenv("BLIGHT_ACTION_RECORD", "key=value key2='a=b'")
 
     actions = util.load_actions()
     assert len(actions) == 1
     assert actions[0].__class__ == Record
-    assert actions[0]._config == {"key": "value"}
+    assert actions[0]._config == {"key": "value", "key2": "a=b"}
 
 
 def test_load_actions_nonexistent(monkeypatch):

@@ -173,7 +173,7 @@ def load_actions():
         action_config = os.getenv(f"BLIGHT_ACTION_{action_name.upper()}", None)
         if action_config is not None:
             action_config = shlex.split(action_config)
-            action_config = dict(c.split("=") for c in action_config)
+            action_config = dict(c.split("=", 1) for c in action_config)
         else:
             action_config = {}
 
