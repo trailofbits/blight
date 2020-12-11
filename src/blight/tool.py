@@ -362,6 +362,7 @@ class StdMixin(LangMixin):
             "-std=c++1z": Std.Cxx17,
             # C++20 (presumptive) flags.
             "-std=c++2a": Std.Cxx2a,
+            "-std=c++20": Std.Cxx2a,
             # GNU++03 flags.
             "-std=gnu++98": Std.Gnuxx03,
             "-std=gnu++03": Std.Gnuxx03,
@@ -376,6 +377,7 @@ class StdMixin(LangMixin):
             "-std=gnu++1z": Std.Gnuxx17,
             # GNU++20 (presumptive) flags.
             "-std=gnu++2a": Std.Gnuxx2a,
+            "-std=gnu++20": Std.Gnuxx2a,
         }
 
         std = std_flag_map.get(last_std_flag)

@@ -210,7 +210,7 @@ class Std(enum.Enum):
 
     Cxx2a = enum.auto()
     """
-    C++2a
+    C++2a (a.k.a. C++20)
     """
 
     Gnuxx03 = enum.auto()
@@ -235,7 +235,7 @@ class Std(enum.Enum):
 
     Gnuxx2a = enum.auto()
     """
-    GNU C++2a
+    GNU C++2a (a.k.a. GNU C++20)
     """
 
     CUnknown = enum.auto()
