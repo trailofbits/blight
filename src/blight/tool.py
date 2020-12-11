@@ -13,7 +13,7 @@ from typing import Any, Dict, List, Tuple
 from blight import util
 from blight.enums import CodeModel, CompilerStage, Lang, OptLevel, Std
 from blight.exceptions import BlightError, BuildError
-from blight.protocols import ArgsProtocol, IndexedUndefinesProtocol, LangProtocol
+from blight.protocols import CanonicalizedArgsProtocol, IndexedUndefinesProtocol, LangProtocol
 
 logger = logging.getLogger(__name__)
 
@@ -50,6 +50,26 @@ class Tool:
     """
     Represents a generic tool wrapped by blight.
 
+    Every `Tool` has two views of its supplied arguments:
+
+    * An "effective" view, provided by `Tool.args`
+    * A "canonicalized" view, provided by `Tool.canonicalized_args`
+
+    The "effective" view is used to invoke the underlying wrapped tool. It should
+    never differ from the original arguments supplied to the invocation, **except**
+    for when a user configures an action that **intentionally** modifies the
+    arguments.
+
+    The "canonicalized" view is used to model the behavior of the underlying wrapped
+    tool. Specific `Tool` subclasses may specialize the canonicalized view to improve
+    modeling fidelity. For example, tools that support the `@file` syntax (see
+    `ResponseFileMixin`) for expanding arguments may augment `canonicalized_args`
+    to reflect a fully expanded and normalized version of the original arguments.
+
+    The "canonicalized" view always derives directly from the "effective" view:
+    any modifications made to the "effective" arguments by an action will be
+    propagated to the "canonicalized" arguments.
+
     `Tool` instances cannot be created directory; a specific subclass must be used.
     """
 
@@ -67,6 +87,7 @@ class Tool:
         if self.__class__ == Tool:
             raise NotImplementedError(f"can't instantiate {self.__class__.__name__} directly")
         self._args = args
+        self._canonicalized_args = args.copy()
         self._env = self._fixup_env()
         self._cwd = Path(os.getcwd()).resolve()
         self._actions = util.load_actions()
@@ -110,6 +131,7 @@ class Tool:
             "name": self.__class__.__name__,
             "wrapped_tool": self.wrapped_tool(),
             "args": self.args,
+            "canonicalized_args": self.canonicalized_args,
             "cwd": str(self._cwd),
             "env": self._env,
         }
@@ -121,6 +143,19 @@ class Tool:
     @args.setter
     def args(self, args_):
         self._args = args_
+
+        # NOTE(ww): Modifying the effective arguments also propagates
+        # those changes to the canonicalized arguments. This shouldn't be a problem,
+        # since mixins that specialize `canonicalized_args` call
+        # `super.canonicalized_args` to get the most recent copy.
+        self._canonicalized_args = args_.copy()
+
+    @property
+    def canonicalized_args(self):
+        # NOTE(ww): `canonicalized_args` doesn't need an explicit setter property,
+        # since all specializations of it are expected to modify the underlying
+        # list.
+        return self._canonicalized_args
 
     @property
     def cwd(self) -> Path:
@@ -151,7 +186,7 @@ class Tool:
         # * Then, look for arguments that are files in the tool's current
         #   directory.
         inputs = []
-        for idx, arg in enumerate(self.args):
+        for idx, arg in enumerate(self.canonicalized_args):
             if arg.startswith("-") or arg.startswith("@"):
                 if arg == "-":
                     inputs.append(arg)
@@ -168,7 +203,7 @@ class Tool:
             # -flag=filename form, but -aux-info does it without the "=".
             # Similarly, we need to make sure not to catch an output flag's
             # argument here.
-            if idx == 0 or self.args[idx - 1] not in ["-aux-info", "-o"]:
+            if idx == 0 or self.canonicalized_args[idx - 1] not in ["-aux-info", "-o"]:
                 inputs.append(arg)
 
         return inputs
@@ -188,15 +223,15 @@ class Tool:
             A list of `str`, each of which is an output
         """
 
-        o_flag_index = util.rindex_prefix(self.args, "-o")
+        o_flag_index = util.rindex_prefix(self.canonicalized_args, "-o")
         if o_flag_index is None:
             return []
 
-        if self.args[o_flag_index] == "-o":
-            return [self.args[o_flag_index + 1]]
+        if self.canonicalized_args[o_flag_index] == "-o":
+            return [self.canonicalized_args[o_flag_index + 1]]
 
         # NOTE(ww): Outputs like -ofoo. Gross, but valid according to GCC.
-        return [self.args[o_flag_index][2:]]
+        return [self.canonicalized_args[o_flag_index][2:]]
 
 
 class LangMixin:
@@ -206,7 +241,7 @@ class LangMixin:
     """
 
     @property
-    def lang(self: ArgsProtocol) -> Lang:
+    def lang(self: CanonicalizedArgsProtocol) -> Lang:
         """
         Returns:
             A `blight.enums.Lang` value representing the tool's language
@@ -215,14 +250,14 @@ class LangMixin:
 
         # First, check for `-x lang`. This overrides the language determined by
         # the frontend's binary name (e.g. `g++`).
-        x_flag_index = util.rindex_prefix(self.args, "-x")
+        x_flag_index = util.rindex_prefix(self.canonicalized_args, "-x")
         if x_flag_index is not None:
-            if self.args[x_flag_index] == "-x":
+            if self.canonicalized_args[x_flag_index] == "-x":
                 # TODO(ww): Maybe bounds check.
-                x_lang = self.args[x_flag_index + 1]
+                x_lang = self.canonicalized_args[x_flag_index + 1]
             else:
                 # NOTE(ww): -xc and -xc++ both work, at least on GCC.
-                x_lang = self.args[x_flag_index][2:]
+                x_lang = self.canonicalized_args[x_flag_index][2:]
             return x_lang_map.get(x_lang, Lang.Unknown)
 
         # No `-x lang` means that we're operating in the frontend's default mode.
@@ -250,7 +285,7 @@ class StdMixin(LangMixin):
 
         # First, a special case: if -ansi is present, we're in
         # C89 mode for C code and C++03 mode for C++ code.
-        if "-ansi" in self.args:
+        if "-ansi" in self.canonicalized_args:
             if self.lang == Lang.C:
                 return Std.C89
             elif self.lang == Lang.Cxx:
@@ -261,7 +296,7 @@ class StdMixin(LangMixin):
 
         # Experimentally, both GCC and clang respect the last -std=XXX flag passed.
         # See: https://stackoverflow.com/questions/40563269/passing-multiple-std-switches-to-g
-        std_flag_index = util.rindex_prefix(self.args, "-std=")
+        std_flag_index = util.rindex_prefix(self.canonicalized_args, "-std=")
 
         # No -std=XXX flags? The tool is operating in its default standard mode,
         # which is determined by its language.
@@ -274,7 +309,7 @@ class StdMixin(LangMixin):
                 logger.debug(f"no -std= flag and unknown language: {self.lang}")
                 return Std.Unknown
 
-        last_std_flag = self.args[std_flag_index]
+        last_std_flag = self.canonicalized_args[std_flag_index]
         std_flag_map = {
             # C89 flags.
             "-std=c89": Std.C89,
@@ -373,7 +408,7 @@ class OptMixin:
     """
 
     @property
-    def opt(self: ArgsProtocol) -> OptLevel:
+    def opt(self: CanonicalizedArgsProtocol) -> OptLevel:
         """
         Returns:
             A `blight.enums.OptLevel` value representing the optimization level
@@ -393,7 +428,7 @@ class OptMixin:
 
         # The last optimization flag takes precedence, so iterate over the arguments
         # in reverse order.
-        for arg in reversed(self.args):
+        for arg in reversed(self.canonicalized_args):
             opt = opt_flag_map.get(arg)
             if opt is not None:
                 return opt
@@ -455,30 +490,25 @@ class ResponseFileMixin:
         return args
 
     @property
-    def args(self):
+    def canonicalized_args(self):
         """
-        Overrides the behavior of `Tool.args`, expanding any response file arguments
+        Overrides the behavior of `Tool.canonicalized_args`, expanding any response file arguments
         in a depth-first manner.
         """
 
-        # TODO(ww): Maybe don't override `args` here, and instead make it `expanded_response_args`
-        # or similar.
-
         response_files = [
-            (idx, arg) for (idx, arg) in enumerate(super().args) if arg.startswith("@")
+            (idx, arg)
+            for (idx, arg) in enumerate(super().canonicalized_args)
+            if arg.startswith("@")
         ]
-        expanded_args = super().args
+        expanded_args = super().canonicalized_args
         for idx, response_file in response_files:
             expanded_args = util.insert_items_at_idx(
                 expanded_args, idx, self._expand_response_file(response_file, self.cwd, 0)
             )
 
-        self._args = expanded_args
-        return self._args
-
-    @args.setter
-    def args(self, args_):
-        self._args = args_
+        self._canonicalized_args = expanded_args
+        return self._canonicalized_args
 
 
 class DefinesMixin:
@@ -498,13 +528,13 @@ class DefinesMixin:
             A dict of `name: index` for each undefined macro.
         """
         indexed_undefines = {}
-        for idx, arg in enumerate(self.args):
+        for idx, arg in enumerate(self.canonicalized_args):
             if not arg.startswith("-U"):
                 continue
 
             # Both `-Uname` and `-U name` work in GCC and Clang.
             if arg == "-U":
-                undefine = self.args[idx + 1]
+                undefine = self.canonicalized_args[idx + 1]
             else:
                 undefine = arg[2:]
 
@@ -522,13 +552,13 @@ class DefinesMixin:
             A list of tuples of (name, value) for each effectively defined macro.
         """
         defines = []
-        for idx, arg in enumerate(self.args):
+        for idx, arg in enumerate(self.canonicalized_args):
             if not arg.startswith("-D"):
                 continue
 
             # Both `-Dname[=value]` and `-D name[=value]` work in GCC and Clang.
             if arg == "-D":
-                define = self.args[idx + 1]
+                define = self.canonicalized_args[idx + 1]
             else:
                 define = arg[2:]
 
@@ -559,7 +589,7 @@ class CodeModelMixin:
     """
 
     @property
-    def code_model(self: ArgsProtocol):
+    def code_model(self: CanonicalizedArgsProtocol):
         """
         Returns:
             A `blight.enums.CodeModel` value representing the tool's code model
@@ -577,7 +607,7 @@ class CodeModelMixin:
         # when none is specified, at least on x86-64. But this might not be consistent
         # across architectures, so maybe we should return `CodeModel.Unknown` here
         # instead.
-        code_model = util.ritem_prefix(self.args, "-mcmodel=")
+        code_model = util.ritem_prefix(self.canonicalized_args, "-mcmodel=")
         if code_model is None:
             return CodeModel.Small
 
@@ -586,7 +616,7 @@ class CodeModelMixin:
 
 # NOTE(ww): The funny mixin order here (`ResponseFileMixin` before `Tool`) and elsewhere
 # is because Python defines its class hierarchy from right to left. `ResponseFileMixin`
-# therefore needs to come first in order to properly override `args`.
+# therefore needs to come first in order to properly override `canonicalized_args`.
 class CompilerTool(ResponseFileMixin, Tool, StdMixin, OptMixin, DefinesMixin, CodeModelMixin):
     """
     Represents a generic (C or C++) compiler frontend.
@@ -611,7 +641,7 @@ class CompilerTool(ResponseFileMixin, Tool, StdMixin, OptMixin, DefinesMixin, Co
         # so we should model this as "stages" instead. This, in turn, will require
         # us to reevaluate our output guesswork below.
 
-        if len(self.args) == 0:
+        if len(self.canonicalized_args) == 0:
             return CompilerStage.Unknown
 
         stage_flag_map = {
@@ -625,7 +655,7 @@ class CompilerTool(ResponseFileMixin, Tool, StdMixin, OptMixin, DefinesMixin, Co
         }
 
         for flag, stage in stage_flag_map.items():
-            if flag in self.args:
+            if flag in self.canonicalized_args:
                 return stage
 
         # TODO(ww): Handle header precompilation here. GCC doesn't seem to
@@ -722,16 +752,16 @@ class LD(ResponseFileMixin, Tool):
 
         # The GNU linker additionally supports --output=OUTFILE and
         # --output OUTFILE. Handle them here.
-        output_flag_index = util.rindex_prefix(self.args, "--output")
+        output_flag_index = util.rindex_prefix(self.canonicalized_args, "--output")
         if output_flag_index is None:
             return ["a.out"]
 
         # Split option form.
-        if self.args[output_flag_index] == "--output":
-            return [self.args[output_flag_index + 1]]
+        if self.canonicalized_args[output_flag_index] == "--output":
+            return [self.canonicalized_args[output_flag_index + 1]]
 
         # Assignment form.
-        return [self.args[output_flag_index].split("=")[1]]
+        return [self.canonicalized_args[output_flag_index].split("=")[1]]
 
     def __repr__(self) -> str:
         return f"<LD {self.wrapped_tool()}>"

@@ -17,13 +17,19 @@ class ArgsProtocol(Protocol):
         ...  # pragma: no cover
 
 
-class LangProtocol(ArgsProtocol, Protocol):
+class CanonicalizedArgsProtocol(ArgsProtocol, Protocol):
+    @property
+    def canonicalized_args(self) -> List[str]:
+        ...  # pragma: no cover
+
+
+class LangProtocol(CanonicalizedArgsProtocol, Protocol):
     @property
     def lang(self) -> Lang:
         ...  # pragma: no cover
 
 
-class IndexedUndefinesProtocol(ArgsProtocol, Protocol):
+class IndexedUndefinesProtocol(CanonicalizedArgsProtocol, Protocol):
     @property
     def indexed_undefines(self) -> Dict[str, int]:
         ...  # pragma: no cover
