@@ -111,7 +111,8 @@ def test_tool_response_file(tmp_path):
     response_file.write_text("-some -flags -O3")
 
     cc = tool.CC([f"@{response_file}"])
-    assert cc.args == ["-some", "-flags", "-O3"]
+    assert cc.args == [f"@{response_file}"]
+    assert cc.canonicalized_args == ["-some", "-flags", "-O3"]
     assert cc.opt == OptLevel.O3
 
 
@@ -122,14 +123,24 @@ def test_tool_response_file_nested(tmp_path):
     response_file2.write_text("-nested -flags -O3")
 
     cc = tool.CC([f"@{response_file1}"])
-    assert cc.args == ["-some", "-flags", "-nested", "-flags", "-O3", "-more", "-flags"]
+    assert cc.args == [f"@{response_file1}"]
+    assert cc.canonicalized_args == [
+        "-some",
+        "-flags",
+        "-nested",
+        "-flags",
+        "-O3",
+        "-more",
+        "-flags",
+    ]
     assert cc.opt == OptLevel.O3
 
 
 def test_tool_response_file_invalid_file():
     cc = tool.CC(["@/this/file/does/not/exist"])
 
-    assert cc.args == []
+    assert cc.args == ["@/this/file/does/not/exist"]
+    assert cc.canonicalized_args == []
 
 
 def test_tool_response_file_recursion_limit(tmp_path):
@@ -137,7 +148,8 @@ def test_tool_response_file_recursion_limit(tmp_path):
     response_file.write_text(f"-foo @{response_file}")
 
     cc = tool.CC([f"@{response_file}"])
-    assert cc.args == ["-foo"] * tool.RESPONSE_FILE_RECURSION_LIMIT
+    assert cc.args == [f"@{response_file}"]
+    assert cc.canonicalized_args == ["-foo"] * tool.RESPONSE_FILE_RECURSION_LIMIT
 
 
 @pytest.mark.parametrize(
@@ -235,6 +247,7 @@ def test_cc(flags, lang, std, stage, opt):
         "name": cc.__class__.__name__,
         "wrapped_tool": cc.wrapped_tool(),
         "args": flags,
+        "canonicalized_args": flags,
         "cwd": str(cc.cwd),
         "lang": lang.name,
         "std": std.name,
@@ -266,6 +279,7 @@ def test_cxx(flags, lang, std, stage, opt):
         "name": cxx.__class__.__name__,
         "wrapped_tool": cxx.wrapped_tool(),
         "args": flags,
+        "canonicalized_args": flags,
         "cwd": str(cxx.cwd),
         "lang": lang.name,
         "std": std.name,
@@ -296,6 +310,7 @@ def test_cpp(flags, lang, std):
         "name": cpp.__class__.__name__,
         "wrapped_tool": cpp.wrapped_tool(),
         "args": flags,
+        "canonicalized_args": flags,
         "cwd": str(cpp.cwd),
         "lang": lang.name,
         "std": std.name,
@@ -312,6 +327,7 @@ def test_ld():
         "name": ld.__class__.__name__,
         "wrapped_tool": ld.wrapped_tool(),
         "args": [],
+        "canonicalized_args": [],
         "cwd": str(ld.cwd),
         "env": dict(os.environ),
     }
@@ -342,6 +358,7 @@ def test_as():
         "name": as_.__class__.__name__,
         "wrapped_tool": as_.wrapped_tool(),
         "args": [],
+        "canonicalized_args": [],
         "cwd": str(as_.cwd),
         "env": dict(os.environ),
     }
@@ -356,6 +373,7 @@ def test_ar():
         "name": ar.__class__.__name__,
         "wrapped_tool": ar.wrapped_tool(),
         "args": [],
+        "canonicalized_args": [],
         "cwd": str(ar.cwd),
         "env": dict(os.environ),
     }
