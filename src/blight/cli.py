@@ -24,6 +24,8 @@ SHIM_MAP = {
     "cpp": "cpp",
     "ld": "ld",
     "as": "as",
+    "ar": "ar",
+    "strip": "strip",
 
     # GNU shims.
     "gcc": "cc",
