@@ -11,3 +11,4 @@ def blight_env(monkeypatch):
     monkeypatch.setenv("BLIGHT_WRAPPED_LD", shutil.which("ld"))
     monkeypatch.setenv("BLIGHT_WRAPPED_AS", shutil.which("as"))
     monkeypatch.setenv("BLIGHT_WRAPPED_AR", shutil.which("ar"))
+    monkeypatch.setenv("BLIGHT_WRAPPED_STRIP", shutil.which("strip"))

@@ -108,3 +108,12 @@ class ARAction(Action):
 
     def _should_run_on(self, tool):
         return isinstance(tool, blight.tool.AR)
+
+
+class STRIPAction(Action):
+    """
+    A `strip` action, run whenever the tool is a `blight.tool.STRIP` instance.
+    """
+
+    def _should_run_on(self, tool):
+        return isinstance(tool, blight.tool.STRIP)

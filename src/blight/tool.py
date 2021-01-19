@@ -797,10 +797,10 @@ class AR(Tool):
         return f"<AR {self.wrapped_tool()}>"
 
 
-class Strip(ResponseFileMixin, Tool):
+class STRIP(ResponseFileMixin, Tool):
     """
     Represents the stripping tool.
     """
 
     def __repr__(self) -> str:
-        return f"<Strip {self.wrapped_tool()}>"
+        return f"<STRIP {self.wrapped_tool()}>"
