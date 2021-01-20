@@ -17,3 +17,12 @@ class BuildError(BlightError):
     """
 
     pass
+
+
+class SkipRun(BlightError):
+    """
+    A special error that `before_run` actions can raise to tell the underlying
+    tool not to actually run.
+    """
+
+    pass

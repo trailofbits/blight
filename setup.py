@@ -31,6 +31,7 @@ setup(
             "blight-ld = blight.cli:tool",
             "blight-as = blight.cli:tool",
             "blight-ar = blight.cli:tool",
+            "blight-strip = blight.cli:tool",
         ]
     },
     platforms="any",

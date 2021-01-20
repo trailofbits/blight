@@ -24,6 +24,8 @@ SHIM_MAP = {
     "cpp": "cpp",
     "ld": "ld",
     "as": "as",
+    "ar": "ar",
+    "strip": "strip",
 
     # GNU shims.
     "gcc": "cc",
@@ -37,12 +39,6 @@ SHIM_MAP = {
     "lld": "ld",
 }
 # fmt: on
-
-
-# A collection of program names for stub generation.
-STUBS = {
-    "strip",
-}
 
 
 def _unset(variable):
@@ -74,11 +70,13 @@ def _swizzle_path(stubs):
 
         shim_path.chmod(shim_path.stat().st_mode | stat.S_IEXEC)
 
-    for stub in STUBS.items():
+    for stub in stubs:
         stub_path = blight_dir / stub
         with open(stub_path, "w+") as io:
             print("#!/bin/sh", file=io)
             print("true", file=io)
+
+        stub_path.chmod(stub_path.stat().st_mode | stat.S_IEXEC)
 
     _export("PATH", f"{blight_dir}:{unswizzled_path()}")
 
@@ -88,16 +86,14 @@ def _swizzle_path(stubs):
     "--guess-wrapped", help="Attempt to guess the appropriate programs to wrap", is_flag=True
 )
 @click.option("--swizzle-path", help="Wrap via PATH swizzling", is_flag=True)
-@click.option(
-    "--stubs", help="Stub destructive unmodeled commands out while swizzling", is_flag=True
-)
+@click.option("--stub", help="Stub a command out while swizzling", multiple=True)
 @click.option("--unset", help="Unset the tool variables instead of setting them", is_flag=True)
-def env(unset, guess_wrapped, swizzle_path, stubs):
+def env(unset, guess_wrapped, swizzle_path, stub):
     if guess_wrapped:
         _export_guess_wrapped()
 
     if swizzle_path:
-        _swizzle_path(stubs)
+        _swizzle_path(stub)
 
     for variable, tool in blight.tool.TOOL_ENV_MAP.items():
         if unset:

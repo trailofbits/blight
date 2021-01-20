@@ -377,3 +377,18 @@ def test_ar():
         "cwd": str(ar.cwd),
         "env": dict(os.environ),
     }
+
+
+def test_strip():
+    strip = tool.STRIP([])
+
+    assert strip.wrapped_tool() == shutil.which("strip")
+    assert repr(strip) == f"<STRIP {strip.wrapped_tool()}>"
+    assert strip.asdict() == {
+        "name": strip.__class__.__name__,
+        "wrapped_tool": strip.wrapped_tool(),
+        "args": [],
+        "canonicalized_args": [],
+        "cwd": str(strip.cwd),
+        "env": dict(os.environ),
+    }
