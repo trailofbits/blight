@@ -12,7 +12,7 @@ from typing import Any, Dict, List, Tuple
 
 from blight import util
 from blight.enums import CodeModel, CompilerStage, Lang, OptLevel, Std
-from blight.exceptions import BlightError, BuildError
+from blight.exceptions import BlightError, BuildError, SkipRun
 from blight.protocols import CanonicalizedArgsProtocol, IndexedUndefinesProtocol, LangProtocol
 
 logger = logging.getLogger(__name__)
@@ -101,6 +101,7 @@ class Tool:
         self._env = self._fixup_env()
         self._cwd = Path(os.getcwd()).resolve()
         self._actions = util.load_actions()
+        self._skip_run = False
 
     def _fixup_env(self):
         """
@@ -113,11 +114,14 @@ class Tool:
 
     def _before_run(self):
         for action in self._actions:
-            action._before_run(self)
+            try:
+                action._before_run(self)
+            except SkipRun:
+                self._skip_run = True
 
     def _after_run(self):
         for action in self._actions:
-            action._after_run(self)
+            action._after_run(self, run_skipped=self._skip_run)
 
     def run(self):
         """
@@ -125,9 +129,12 @@ class Tool:
         """
         self._before_run()
 
-        status = subprocess.run([self.wrapped_tool(), *self.args])
-        if status.returncode != 0:
-            raise BuildError(f"{self.wrapped_tool()} exited with status code {status.returncode}")
+        if not self._skip_run:
+            status = subprocess.run([self.wrapped_tool(), *self.args])
+            if status.returncode != 0:
+                raise BuildError(
+                    f"{self.wrapped_tool()} exited with status code {status.returncode}"
+                )
 
         self._after_run()
 

@@ -10,8 +10,13 @@ from blight.util import flock_append
 
 
 class Record(Action):
-    def before_run(self, tool):
+    def after_run(self, tool, run_skipped):
         record_file = Path(self._config["output"])
 
+        # TODO(ww): Restructure this dictionary; it should be more like:
+        # { run: {...}, tool: {...}}
+        tool_record = tool.asdict()
+        tool_record["run_skipped"] = run_skipped
+
         with flock_append(record_file) as io:
-            print(json.dumps(tool.asdict()), file=io)
+            print(json.dumps(tool_record), file=io)
