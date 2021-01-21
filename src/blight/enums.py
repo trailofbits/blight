@@ -5,6 +5,7 @@ Enumerations for blight.
 import enum
 
 
+@enum.unique
 class CompilerStage(enum.Enum):
     """
     Models the known stages that a compiler tool can be in.
@@ -43,6 +44,7 @@ class CompilerStage(enum.Enum):
     """
 
 
+@enum.unique
 class Lang(enum.Enum):
     """
     Models the known languages for a tool.
@@ -69,6 +71,7 @@ class Lang(enum.Enum):
     """
 
 
+@enum.unique
 class Std(enum.Enum):
     """
     Models the various language standards for a tool.
@@ -264,6 +267,7 @@ class Std(enum.Enum):
     """
 
 
+@enum.unique
 class OptLevel(enum.Enum):
     """
     Models the known optimization levels.
@@ -336,6 +340,7 @@ class OptLevel(enum.Enum):
     """
 
 
+@enum.unique
 class CodeModel(enum.Enum):
     """
     Models the known machine code models.
