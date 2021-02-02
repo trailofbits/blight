@@ -50,13 +50,13 @@ def _export(variable, value):
     print(f"export {variable}={value}")
 
 
-def _export_guess_wrapped():
+def _guess_wrapped():
     for variable, tool in blight.tool.TOOL_ENV_MAP.items():
         tool_path = shutil.which(tool)
         if tool_path is None:
             die(f"Couldn't locate {tool} on the $PATH")
 
-        _export(f"BLIGHT_WRAPPED_{variable}", tool_path)
+        yield (f"BLIGHT_WRAPPED_{variable}", tool_path)
 
 
 def _swizzle_path(stubs):
@@ -78,7 +78,7 @@ def _swizzle_path(stubs):
 
         stub_path.chmod(stub_path.stat().st_mode | stat.S_IEXEC)
 
-    _export("PATH", f"{blight_dir}:{unswizzled_path()}")
+    return f"{blight_dir}:{unswizzled_path()}"
 
 
 @click.command()
@@ -86,20 +86,45 @@ def _swizzle_path(stubs):
     "--guess-wrapped", help="Attempt to guess the appropriate programs to wrap", is_flag=True
 )
 @click.option("--swizzle-path", help="Wrap via PATH swizzling", is_flag=True)
-@click.option("--stub", help="Stub a command out while swizzling", multiple=True)
+@click.option("--stub", "stubs", help="Stub a command out while swizzling", multiple=True)
 @click.option("--unset", help="Unset the tool variables instead of setting them", is_flag=True)
-def env(unset, guess_wrapped, swizzle_path, stub):
+def env(unset, guess_wrapped, swizzle_path, stubs):
     if guess_wrapped:
-        _export_guess_wrapped()
+        for (variable, value) in _guess_wrapped():
+            _export(variable, value)
 
     if swizzle_path:
-        _swizzle_path(stub)
+        _export("PATH", _swizzle_path(stubs))
 
     for variable, tool in blight.tool.TOOL_ENV_MAP.items():
         if unset:
             _unset(variable)
         else:
             _export(variable, f"blight-{tool}")
+
+
+@click.command()
+@click.option(
+    "--guess-wrapped", help="Attempt to guess the appropriate programs to wrap", is_flag=True
+)
+@click.option("--swizzle-path", help="Wrap via PATH swizzling", is_flag=True)
+@click.option("--stub", "stubs", help="Stub a command out while swizzling", multiple=True)
+@click.argument("target")
+@click.argument("args", nargs=-1)
+def exec_(guess_wrapped, swizzle_path, stubs, target, args):
+    env = dict(os.environ)
+
+    if guess_wrapped:
+        env.update({variable: value for (variable, value) in _guess_wrapped()})
+
+    if swizzle_path:
+        env["PATH"] = _swizzle_path(stubs)
+
+    env.update(
+        {variable: f"blight-{tool}" for (variable, tool) in blight.tool.TOOL_ENV_MAP.items()}
+    )
+
+    os.execvpe(target, [target, *args], env)
 
 
 def tool():

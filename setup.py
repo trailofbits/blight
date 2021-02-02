@@ -25,6 +25,7 @@ setup(
     entry_points={
         "console_scripts": [
             "blight-env = blight.cli:env",
+            "blight-exec = blight.cli:exec_",
             "blight-cc = blight.cli:tool",
             "blight-c++ = blight.cli:tool",
             "blight-cpp = blight.cli:tool",
