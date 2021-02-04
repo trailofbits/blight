@@ -130,7 +130,7 @@ class Tool:
         self._before_run()
 
         if not self._skip_run:
-            status = subprocess.run([self.wrapped_tool(), *self.args])
+            status = subprocess.run([self.wrapped_tool(), *self.args], env=self._env)
             if status.returncode != 0:
                 raise BuildError(
                     f"{self.wrapped_tool()} exited with status code {status.returncode}"
