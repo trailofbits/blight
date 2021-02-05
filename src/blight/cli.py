@@ -91,7 +91,8 @@ def _swizzle_path(stubs):
 def env(unset, guess_wrapped, swizzle_path, stubs):
     if guess_wrapped:
         for (variable, value) in _guess_wrapped():
-            _export(variable, value)
+            if variable not in os.environ:
+                _export(variable, value)
 
     if swizzle_path:
         _export("PATH", _swizzle_path(stubs))
@@ -115,7 +116,9 @@ def exec_(guess_wrapped, swizzle_path, stubs, target, args):
     env = dict(os.environ)
 
     if guess_wrapped:
-        env.update({variable: value for (variable, value) in _guess_wrapped()})
+        env.update(
+            {variable: value for (variable, value) in _guess_wrapped() if variable not in env}
+        )
 
     if swizzle_path:
         env["PATH"] = _swizzle_path(stubs)
