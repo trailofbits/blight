@@ -37,7 +37,11 @@ setup(
     },
     platforms="any",
     python_requires=">=3.7",
-    install_requires=["click ~= 7.1", "typing_extensions"],
+    install_requires=[
+        "click ~= 7.1",
+        "typing_extensions",
+        "pydantic ~= 1.7",
+    ],
     extras_require={
         "dev": [
             "flake8",
