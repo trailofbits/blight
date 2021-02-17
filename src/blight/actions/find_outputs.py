@@ -124,7 +124,7 @@ class FindOutputs(Action):
 
         self._outputs = outputs
 
-    def after_run(self, tool):
+    def after_run(self, tool, *, run_skipped=False):
         store = self._config.get("store")
         if store is not None:
             store = Path(store)
