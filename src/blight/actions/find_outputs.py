@@ -132,7 +132,7 @@ class FindOutputs(Action):
 
             for output in self._outputs:
                 if not output.path.exists():
-                    logger.warning(f"{tool=}'s output ({output.path}) does not exist")
+                    logger.warning(f"tool={tool}'s output ({output.path}) does not exist")
                     continue
 
                 # Outputs aren't guaranteed to have unique basenames and subsequent
