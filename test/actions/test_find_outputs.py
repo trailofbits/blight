@@ -87,6 +87,7 @@ def test_find_outputs_store(tmp_path):
             "store_path": str(dummy_foo_o_store),
         }
     ]
+    assert dummy_foo_o_store.read_bytes() == contents
 
 
 def test_find_outputs_store_output_does_not_exist(tmp_path):
