@@ -3,17 +3,23 @@ The `FindOutputs` action.
 """
 
 import enum
-import json
-from collections import defaultdict
+import hashlib
+import logging
+import shutil
 from pathlib import Path
+from typing import List, Optional
+
+from pydantic import BaseModel
 
 from blight.action import Action
-from blight.tool import CC, CXX, LD
+from blight.tool import CC, CXX, LD, Tool
 from blight.util import flock_append
+
+logger = logging.getLogger(__name__)
 
 
 @enum.unique
-class OutputKind(enum.Enum):
+class OutputKind(str, enum.Enum):
     """
     A collection of common output kinds for build tools.
 
@@ -26,6 +32,55 @@ class OutputKind(enum.Enum):
     Executable: str = "executable"
     KernelModule: str = "kernel"
     Unknown: str = "unknown"
+
+
+class Output(BaseModel):
+    """
+    Represents a single output from a tool.
+    """
+
+    kind: OutputKind
+    """
+    The kind of output.
+    """
+
+    path: Path
+    """
+    The path to the output, as created by the tool.
+
+    **NOTE**: This path may not actually exist, as a build system may arbitrarily
+    choose to rename or relocate any outputs produced by individual tools.
+    """
+
+    store_path: Optional[Path]
+    """
+    An optional stable path to the output, as preserved by the `FindOutputs` action.
+
+    `store_path` is only present if the `store=/some/dir/` setting is passed in the
+    `FindActions` configuration **and** the tool actually produces the expected output.
+    """
+
+
+class OutputsRecord(BaseModel):
+    """
+    Represents a single `FindOuputs` record. Each record contains a representation
+    of the tool invocation that produced the outputs, as well as the list of `Output`s
+    associated with the invocation.
+    """
+
+    tool: Tool
+    """
+    The `Tool` invocation.
+    """
+
+    outputs: List[Output]
+    """
+    A list of `Output`s.
+    """
+
+    class Config:
+        arbitrary_types_allowed = True
+        json_encoders = {Tool: lambda t: t.asdict()}
 
 
 OUTPUT_SUFFIX_KIND_MAP = {
@@ -53,24 +108,44 @@ This mapping is not exhaustive.
 
 class FindOutputs(Action):
     def before_run(self, tool):
-        output_map = defaultdict(list)
+        outputs = []
         for output in tool.outputs:
-            output = Path(output)
-            if not output.is_absolute():
-                output = tool.cwd / output
+            output_path = Path(output)
+            if not output_path.is_absolute():
+                output_path = tool.cwd / output_path
 
-            # Special case: a.out is produced by both the linker
-            # and compiler tools by default.
-            if output.name == "a.out" and tool.__class__ in [CC, CXX, LD]:
-                output_map[OutputKind.Executable.value].append(str(output))
+            # Special case: a.out is produced by both the linker and compiler tools by default.
+            if output_path.name == "a.out" and tool.__class__ in [CC, CXX, LD]:
+                kind = OutputKind.Executable
             else:
-                kind = OUTPUT_SUFFIX_KIND_MAP.get(output.suffix, OutputKind.Unknown)
-                output_map[kind.value].append(str(output))
+                kind = OUTPUT_SUFFIX_KIND_MAP.get(output_path.suffix, OutputKind.Unknown)
 
-        output = Path(self._config["output"])
-        with flock_append(output) as io:
-            outputs_record = {"tool": tool.asdict(), "outputs": output_map}
-            print(json.dumps(outputs_record), file=io)
+            outputs.append(Output(kind=kind, path=output_path))
 
-    # TODO(ww): Could do after_run here and check whether each output
-    # in output_map was actually created.
+        self._outputs = outputs
+
+    def after_run(self, tool):
+        store = self._config.get("store")
+        if store is not None:
+            store = Path(store)
+            store.mkdir(parents=True, exist_ok=True)
+
+            for output in self._outputs:
+                if not output.path.exists():
+                    logger.warning(f"tool={tool}'s output ({output.path}) does not exist")
+                    continue
+
+                # Outputs aren't guaranteed to have unique basenames and subsequent
+                # steps in the build system could even modify a particular output
+                # in-place, so we give each output a `store_path` based on a hash
+                # of its content.
+                content_hash = hashlib.sha256(output.path.read_bytes()).hexdigest()
+                store_path = store / f"{output.path.name}-{content_hash}"
+                if not store_path.exists():
+                    shutil.copy(output.path, store_path)
+                output.store_path = store_path
+
+        outputs_record = OutputsRecord(tool=tool, outputs=self._outputs)
+        output_path = Path(self._config["output"])
+        with flock_append(output_path) as io:
+            print(outputs_record.json(), file=io)
