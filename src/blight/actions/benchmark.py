@@ -7,14 +7,15 @@ import time
 from pathlib import Path
 
 from blight.action import Action
+from blight.tool import Tool
 from blight.util import flock_append
 
 
 class Benchmark(Action):
-    def before_run(self, tool):
+    def before_run(self, tool: Tool) -> None:
         self._start_nanos = time.monotonic_ns()
 
-    def after_run(self, tool, *, run_skipped):
+    def after_run(self, tool: Tool, *, run_skipped: bool = False) -> None:
         elapsed = (time.monotonic_ns() - self._start_nanos) // 1000
 
         bench_file = Path(self._config["output"])
