@@ -93,7 +93,7 @@ class Tool:
             raise BlightError(f"No wrapped tool found for {TOOL_ENV_MAP[cls.__name__]}")
         return wrapped_tool
 
-    def __init__(self, args):
+    def __init__(self, args: List[str]) -> None:
         if self.__class__ == Tool:
             raise NotImplementedError(f"can't instantiate {self.__class__.__name__} directly")
         self._args = args
@@ -103,7 +103,7 @@ class Tool:
         self._actions = util.load_actions()
         self._skip_run = False
 
-    def _fixup_env(self):
+    def _fixup_env(self) -> Dict[str, str]:
         """
         Fixes up `os.environ` to remove any references to blight's swizzled paths,
         if any are present.
@@ -112,18 +112,18 @@ class Tool:
         env["PATH"] = util.unswizzled_path()
         return env
 
-    def _before_run(self):
+    def _before_run(self) -> None:
         for action in self._actions:
             try:
                 action._before_run(self)
             except SkipRun:
                 self._skip_run = True
 
-    def _after_run(self):
+    def _after_run(self) -> None:
         for action in self._actions:
             action._after_run(self, run_skipped=self._skip_run)
 
-    def run(self):
+    def run(self) -> None:
         """
         Runs the wrapped tool with the original arguments.
         """
@@ -154,11 +154,11 @@ class Tool:
         }
 
     @property
-    def args(self):
+    def args(self) -> List[str]:
         return self._args
 
     @args.setter
-    def args(self, args_):
+    def args(self, args_: List[str]) -> None:
         self._args = args_
 
         # NOTE(ww): Modifying the effective arguments also propagates
@@ -168,7 +168,7 @@ class Tool:
         self._canonicalized_args = args_.copy()
 
     @property
-    def canonicalized_args(self):
+    def canonicalized_args(self) -> List[str]:
         # NOTE(ww): `canonicalized_args` doesn't need an explicit setter property,
         # since all specializations of it are expected to modify the underlying
         # list.
@@ -479,12 +479,12 @@ class ResponseFileMixin:
     the name of this mixin.
     """
 
-    def _expand_response_file(self, response_file, working_dir, level):
+    def _expand_response_file(
+        self, response_file: Path, working_dir: Path, level: int
+    ) -> List[str]:
         if level >= RESPONSE_FILE_RECURSION_LIMIT:
             logger.debug(f"recursion limit exceeded: {response_file} in {working_dir}")
             return []
-
-        response_file = Path(response_file[1:])
 
         # Non-absolute response files are resolved relative to `working_dir`, which
         # begins at the CWD initially and changes to the parent directory of the
@@ -503,13 +503,15 @@ class ResponseFileMixin:
             args = util.insert_items_at_idx(
                 args,
                 idx,
-                self._expand_response_file(nested_rf, response_file.parent.resolve(), level + 1),
+                self._expand_response_file(
+                    Path(nested_rf[1:]), response_file.parent.resolve(), level + 1
+                ),
             )
 
         return args
 
     @property
-    def canonicalized_args(self):
+    def canonicalized_args(self) -> List[str]:
         """
         Overrides the behavior of `Tool.canonicalized_args`, expanding any response file arguments
         in a depth-first manner.
@@ -523,7 +525,7 @@ class ResponseFileMixin:
         expanded_args = super().canonicalized_args
         for idx, response_file in response_files:
             expanded_args = util.insert_items_at_idx(
-                expanded_args, idx, self._expand_response_file(response_file, self.cwd, 0)
+                expanded_args, idx, self._expand_response_file(Path(response_file[1:]), self.cwd, 0)
             )
 
         self._canonicalized_args = expanded_args
