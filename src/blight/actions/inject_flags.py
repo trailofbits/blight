@@ -7,6 +7,7 @@ import shlex
 
 from blight.action import CompilerAction
 from blight.enums import Lang
+from blight.tool import CompilerTool
 
 logger = logging.getLogger(__name__)
 
@@ -31,7 +32,10 @@ class InjectFlags(CompilerAction):
     (unless it's a C++ invocation, e.g. via `-x c++`).
     """
 
-    def before_run(self, tool):
+    # NOTE(ww): type ignore here because mypy thinks this is a Liskov
+    # substitution principle violation -- it can't see that `CompilerAction`
+    # is safely specialized for `CompilerTool`.
+    def before_run(self, tool: CompilerTool) -> None:  # type: ignore
         cflags = shlex.split(self._config.get("CFLAGS", ""))
         cxxflags = shlex.split(self._config.get("CXXFLAGS", ""))
         cppflags = shlex.split(self._config.get("CPPFLAGS", ""))
