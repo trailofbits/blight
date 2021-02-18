@@ -19,7 +19,7 @@ class Action:
     def _should_run_on(self, tool: Tool) -> bool:
         return True
 
-    def before_run(self, tool: Tool):  # pragma: no cover
+    def before_run(self, tool: Tool) -> None:  # pragma: no cover
         """
         Invoked right before the underlying tool is run.
 
@@ -28,11 +28,11 @@ class Action:
         """
         pass
 
-    def _before_run(self, tool: Tool):
+    def _before_run(self, tool: Tool) -> None:
         if self._should_run_on(tool):
             self.before_run(tool)
 
-    def after_run(self, tool: Tool, *, run_skipped=False):  # pragma: no cover
+    def after_run(self, tool: Tool, *, run_skipped: bool = False):  # pragma: no cover
         """
         Invoked right after the underlying tool is run.
 
@@ -41,7 +41,7 @@ class Action:
         """
         pass
 
-    def _after_run(self, tool: Tool, *, run_skipped=False):
+    def _after_run(self, tool: Tool, *, run_skipped=False) -> None:
         if self._should_run_on(tool):
             self.after_run(tool, run_skipped=run_skipped)
 
