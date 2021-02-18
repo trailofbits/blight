@@ -517,15 +517,22 @@ class ResponseFileMixin:
         in a depth-first manner.
         """
 
+        # NOTE(ww): This method badly needs some typechecking TLC.
+        # The `super()` call to `canonicalized_args` probably needs to be handled
+        # with a `self: CanonicalizedArgsProtocol` hint, but that causes other problems
+        # related to mypy's ability to see `_expand_response_file`.
+
         response_files = [
             (idx, arg)
-            for (idx, arg) in enumerate(super().canonicalized_args)
+            for (idx, arg) in enumerate(super().canonicalized_args)  # type: ignore
             if arg.startswith("@")
         ]
-        expanded_args = super().canonicalized_args
+        expanded_args = super().canonicalized_args  # type: ignore
         for idx, response_file in response_files:
             expanded_args = util.insert_items_at_idx(
-                expanded_args, idx, self._expand_response_file(Path(response_file[1:]), self.cwd, 0)
+                expanded_args,
+                idx,
+                self._expand_response_file(Path(response_file[1:]), self.cwd, 0),  # type: ignore
             )
 
         self._canonicalized_args = expanded_args
@@ -645,7 +652,7 @@ class CompilerTool(ResponseFileMixin, Tool, StdMixin, OptMixin, DefinesMixin, Co
     Like `Tool`, `CompilerTool` cannot be instantiated directly.
     """
 
-    def __init__(self, args):
+    def __init__(self, args) -> None:
         if self.__class__ == CompilerTool:
             raise NotImplementedError(f"can't instantiate {self.__class__.__name__} directly")
         super().__init__(args)
