@@ -107,7 +107,7 @@ This mapping is not exhaustive.
 
 
 class FindOutputs(Action):
-    def before_run(self, tool):
+    def before_run(self, tool: Tool) -> None:
         outputs = []
         for output in tool.outputs:
             output_path = Path(output)
@@ -124,11 +124,11 @@ class FindOutputs(Action):
 
         self._outputs = outputs
 
-    def after_run(self, tool, *, run_skipped=False):
+    def after_run(self, tool: Tool, *, run_skipped: bool = False) -> None:
         store = self._config.get("store")
         if store is not None:
-            store = Path(store)
-            store.mkdir(parents=True, exist_ok=True)
+            store_path = Path(store)
+            store_path.mkdir(parents=True, exist_ok=True)
 
             for output in self._outputs:
                 if not output.path.exists():
@@ -140,10 +140,10 @@ class FindOutputs(Action):
                 # in-place, so we give each output a `store_path` based on a hash
                 # of its content.
                 content_hash = hashlib.sha256(output.path.read_bytes()).hexdigest()
-                store_path = store / f"{output.path.name}-{content_hash}"
-                if not store_path.exists():
-                    shutil.copy(output.path, store_path)
-                output.store_path = store_path
+                output_store_path = store_path / f"{output.path.name}-{content_hash}"
+                if not output_store_path.exists():
+                    shutil.copy(output.path, output_store_path)
+                output.store_path = output_store_path
 
         outputs_record = OutputsRecord(tool=tool, outputs=self._outputs)
         output_path = Path(self._config["output"])
