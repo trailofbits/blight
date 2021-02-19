@@ -11,7 +11,7 @@ from pathlib import Path
 from typing import Any, Dict, List, Tuple
 
 from blight import util
-from blight.enums import CodeModel, CompilerStage, Lang, OptLevel, Std
+from blight.enums import BuildTool, CodeModel, CompilerStage, Lang, OptLevel, Std
 from blight.exceptions import BlightError, BuildError, SkipRun
 from blight.protocols import CanonicalizedArgsProtocol, IndexedUndefinesProtocol, LangProtocol
 
@@ -28,13 +28,13 @@ BLIGHT_TOOL_MAP = {
 }
 
 TOOL_ENV_MAP = {
-    "CC": "cc",
-    "CXX": "c++",
-    "CPP": "cpp",
-    "LD": "ld",
-    "AS": "as",
-    "AR": "ar",
-    "STRIP": "strip",
+    "CC": BuildTool.CC.value,
+    "CXX": BuildTool.CXX.value,
+    "CPP": BuildTool.CPP.value,
+    "LD": BuildTool.LD.value,
+    "AS": BuildTool.AS.value,
+    "AR": BuildTool.AR.value,
+    "STRIP": BuildTool.STRIP.value,
 }
 
 TOOL_ENV_WRAPPER_MAP = {

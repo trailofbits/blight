@@ -6,6 +6,17 @@ import enum
 
 
 @enum.unique
+class BuildTool(str, enum.Enum):
+    CC: str = "cc"
+    CXX: str = "c++"
+    CPP: str = "cpp"
+    LD: str = "ld"
+    AS: str = "as"
+    AR: str = "ar"
+    STRIP: str = "strip"
+
+
+@enum.unique
 class CompilerStage(enum.Enum):
     """
     Models the known stages that a compiler tool can be in.

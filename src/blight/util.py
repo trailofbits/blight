@@ -8,14 +8,14 @@ import os
 import shlex
 import sys
 from pathlib import Path
-from typing import Any, List, Optional, Sequence
+from typing import Any, List, NoReturn, Optional, Sequence
 
 from blight.exceptions import BlightError
 
 SWIZZLE_SENTINEL = "@blight-swizzle@"
 
 
-def die(message):
+def die(message: str) -> NoReturn:
     """
     Aborts the program with a final message.
 
