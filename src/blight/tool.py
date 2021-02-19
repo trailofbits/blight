@@ -24,7 +24,7 @@ BLIGHT_TOOL_MAP = {
     "blight-ld": "LD",
     "blight-as": "AS",
     "blight-ar": "AR",
-    "blight-strip": "AR",
+    "blight-strip": "STRIP",
 }
 
 TOOL_ENV_MAP = {
