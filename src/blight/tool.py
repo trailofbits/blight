@@ -56,10 +56,16 @@ class Tool:
 
     @classmethod
     def build_tool(cls) -> BuildTool:
+        """
+        Returns the `BuildTool` enum associated with this `Tool`.
+        """
         return BuildTool(cls.__name__)
 
     @classmethod
     def blight_tool(cls) -> BlightTool:
+        """
+        Returns the `BlightTool` enum associated with this `Tool`.
+        """
         return cls.build_tool().blight_tool
 
     @classmethod
