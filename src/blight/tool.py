@@ -17,15 +17,6 @@ from blight.protocols import CanonicalizedArgsProtocol, IndexedUndefinesProtocol
 
 logger = logging.getLogger(__name__)
 
-BLIGHT_TOOL_MAP = {
-    "blight-cc": "CC",
-    "blight-c++": "CXX",
-    "blight-cpp": "CPP",
-    "blight-ld": "LD",
-    "blight-as": "AS",
-    "blight-ar": "AR",
-    "blight-strip": "STRIP",
-}
 
 RESPONSE_FILE_RECURSION_LIMIT = 64
 """

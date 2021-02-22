@@ -43,7 +43,7 @@ class BuildTool(str, enum.Enum):
         elif self is BuildTool.STRIP:
             return "strip"
         else:
-            assert_never(self)
+            assert_never(self)  # pragma: no cover
 
     @property
     def env(self) -> str:
@@ -66,7 +66,7 @@ class BuildTool(str, enum.Enum):
         elif self is BuildTool.STRIP:
             return BlightTool.STRIP
         else:
-            assert_never(self)
+            assert_never(self)  # pragma: no cover
 
 
 @enum.unique
@@ -103,7 +103,7 @@ class BlightTool(str, enum.Enum):
         elif self is BlightTool.STRIP:
             return BuildTool.STRIP
         else:
-            assert_never(self)
+            assert_never(self)  # pragma: no cover
 
     @property
     def env(self) -> str:
