@@ -1,6 +1,17 @@
 from blight import enums
 
 
+def test_buildtool_cmd():
+    # the cmd property is only used in `blight.cli`, so we test it exhaustively here
+    assert enums.BuildTool.CC.cmd == "cc"
+    assert enums.BuildTool.CXX.cmd == "c++"
+    assert enums.BuildTool.CPP.cmd == "cpp"
+    assert enums.BuildTool.LD.cmd == "ld"
+    assert enums.BuildTool.AS.cmd == "as"
+    assert enums.BuildTool.AR.cmd == "ar"
+    assert enums.BuildTool.STRIP.cmd == "strip"
+
+
 def test_optlevel_predictates():
     assert enums.OptLevel.OSize.for_size()
     assert enums.OptLevel.OSizeZ.for_size()

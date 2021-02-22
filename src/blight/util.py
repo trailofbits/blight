@@ -8,14 +8,14 @@ import os
 import shlex
 import sys
 from pathlib import Path
-from typing import Any, List, Optional, Sequence
+from typing import Any, List, NoReturn, Optional, Sequence
 
 from blight.exceptions import BlightError
 
 SWIZZLE_SENTINEL = "@blight-swizzle@"
 
 
-def die(message):
+def die(message: str) -> NoReturn:
     """
     Aborts the program with a final message.
 
@@ -24,6 +24,13 @@ def die(message):
     """
     print(f"Fatal: {message}", file=sys.stderr)
     sys.exit(1)
+
+
+def assert_never(x: NoReturn) -> NoReturn:
+    """
+    A hint to the typechecker that a branch can never occur.
+    """
+    assert False, f"unhandled type: {type(x).__name__}"  # pragma: no cover
 
 
 def rindex(items: Sequence[Any], needle: Any) -> Optional[int]:
