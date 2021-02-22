@@ -11,7 +11,7 @@ from pathlib import Path
 from typing import Any, Dict, List, Tuple
 
 from blight import util
-from blight.enums import BuildTool, CodeModel, CompilerStage, Lang, OptLevel, Std
+from blight.enums import BlightTool, BuildTool, CodeModel, CompilerStage, Lang, OptLevel, Std
 from blight.exceptions import BlightError, BuildError, SkipRun
 from blight.protocols import CanonicalizedArgsProtocol, IndexedUndefinesProtocol, LangProtocol
 
@@ -25,26 +25,6 @@ BLIGHT_TOOL_MAP = {
     "blight-as": "AS",
     "blight-ar": "AR",
     "blight-strip": "STRIP",
-}
-
-TOOL_ENV_MAP = {
-    "CC": BuildTool.CC.value,
-    "CXX": BuildTool.CXX.value,
-    "CPP": BuildTool.CPP.value,
-    "LD": BuildTool.LD.value,
-    "AS": BuildTool.AS.value,
-    "AR": BuildTool.AR.value,
-    "STRIP": BuildTool.STRIP.value,
-}
-
-TOOL_ENV_WRAPPER_MAP = {
-    "CC": "BLIGHT_WRAPPED_CC",
-    "CXX": "BLIGHT_WRAPPED_CXX",
-    "CPP": "BLIGHT_WRAPPED_CPP",
-    "LD": "BLIGHT_WRAPPED_LD",
-    "AS": "BLIGHT_WRAPPED_AS",
-    "AR": "BLIGHT_WRAPPED_AR",
-    "STRIP": "BLIGHT_WRAPPED_STRIP",
 }
 
 RESPONSE_FILE_RECURSION_LIMIT = 64
@@ -84,13 +64,21 @@ class Tool:
     """
 
     @classmethod
+    def build_tool(cls) -> BuildTool:
+        return BuildTool(cls.__name__)
+
+    @classmethod
+    def blight_tool(cls) -> BlightTool:
+        return cls.build_tool().blight_tool
+
+    @classmethod
     def wrapped_tool(cls) -> str:
         """
         Returns the executable name or path of the tool that this blight tool wraps.
         """
-        wrapped_tool = os.getenv(TOOL_ENV_WRAPPER_MAP[cls.__name__])
+        wrapped_tool = os.getenv(cls.blight_tool().env)
         if wrapped_tool is None:
-            raise BlightError(f"No wrapped tool found for {TOOL_ENV_MAP[cls.__name__]}")
+            raise BlightError(f"No wrapped tool found for {cls.build_tool()}")
         return wrapped_tool
 
     def __init__(self, args: List[str]) -> None:

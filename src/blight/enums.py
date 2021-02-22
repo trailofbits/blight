@@ -2,18 +2,112 @@
 Enumerations for blight.
 """
 
+from __future__ import annotations
+
 import enum
+
+from blight.util import assert_never
 
 
 @enum.unique
 class BuildTool(str, enum.Enum):
-    CC: str = "cc"
-    CXX: str = "c++"
-    CPP: str = "cpp"
-    LD: str = "ld"
-    AS: str = "as"
-    AR: str = "ar"
-    STRIP: str = "strip"
+    """
+    An enumeration of standard build tools.
+    """
+
+    CC: str = "CC"
+    CXX: str = "CXX"
+    CPP: str = "CPP"
+    LD: str = "LD"
+    AS: str = "AS"
+    AR: str = "AR"
+    STRIP: str = "STRIP"
+
+    @property
+    def cmd(self) -> str:
+        """
+        Returns the standard command associated with this tool.
+        """
+        if self is BuildTool.CC:
+            return "cc"
+        elif self is BuildTool.CXX:
+            return "c++"
+        elif self is BuildTool.CPP:
+            return "cpp"
+        elif self is BuildTool.LD:
+            return "ld"
+        elif self is BuildTool.AS:
+            return "as"
+        elif self is BuildTool.AR:
+            return "ar"
+        elif self is BuildTool.STRIP:
+            return "strip"
+        else:
+            assert_never(self)
+
+    @property
+    def env(self) -> str:
+        return self.value
+
+    @property
+    def blight_tool(self) -> BlightTool:
+        if self is BuildTool.CC:
+            return BlightTool.CC
+        elif self is BuildTool.CXX:
+            return BlightTool.CXX
+        elif self is BuildTool.CPP:
+            return BlightTool.CPP
+        elif self is BuildTool.LD:
+            return BlightTool.LD
+        elif self is BuildTool.AS:
+            return BlightTool.AS
+        elif self is BuildTool.AR:
+            return BlightTool.AR
+        elif self is BuildTool.STRIP:
+            return BlightTool.STRIP
+        else:
+            assert_never(self)
+
+
+@enum.unique
+class BlightTool(str, enum.Enum):
+    """
+    An enumeration of blight wrappers for the standard build tools.
+    """
+
+    CC: str = "blight-cc"
+    CXX: str = "blight-c++"
+    CPP: str = "blight-cpp"
+    LD: str = "blight-ld"
+    AS: str = "blight-as"
+    AR: str = "blight-ar"
+    STRIP: str = "blight-strip"
+
+    @property
+    def build_tool(self) -> BuildTool:
+        """
+        Returns the `BuildTool` corresponding to this blight wrapper tool.
+        """
+        if self is BlightTool.CC:
+            return BuildTool.CC
+        elif self is BlightTool.CXX:
+            return BuildTool.CXX
+        elif self is BlightTool.CPP:
+            return BuildTool.CPP
+        elif self is BlightTool.LD:
+            return BuildTool.LD
+        elif self is BlightTool.AS:
+            return BuildTool.AS
+        elif self is BlightTool.AR:
+            return BuildTool.AR
+        elif self is BlightTool.STRIP:
+            return BuildTool.STRIP
+        else:
+            assert_never(self)
+
+    @property
+    def env(self) -> str:
+        return f"BLIGHT_WRAPPED_{self.build_tool.env}"
 
 
 @enum.unique

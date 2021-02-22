@@ -11,7 +11,7 @@ from typing import Iterator, List, Tuple
 import click
 
 import blight.tool
-from blight.enums import BuildTool
+from blight.enums import BlightTool, BuildTool
 from blight.exceptions import BlightError
 from blight.util import die, unswizzled_path
 
@@ -23,24 +23,24 @@ logger = logging.getLogger(__name__)
 # fmt: off
 SHIM_MAP = {
     # Standard build tool names.
-    "cc": BuildTool.CC.value,
-    "c++": BuildTool.CXX.value,
-    "cpp": BuildTool.CPP.value,
-    "ld": BuildTool.LD.value,
-    "as": BuildTool.AS.value,
-    "ar": BuildTool.AR.value,
-    "strip": BuildTool.STRIP.value,
+    "cc": BuildTool.CC,
+    "c++": BuildTool.CXX,
+    "cpp": BuildTool.CPP,
+    "ld": BuildTool.LD,
+    "as": BuildTool.AS,
+    "ar": BuildTool.AR,
+    "strip": BuildTool.STRIP,
 
     # GNU shims.
-    "gcc": BuildTool.CC.value,
-    "g++": BuildTool.CXX.value,
-    "gold": BuildTool.LD.value,
-    "gas": BuildTool.AS.value,
+    "gcc": BuildTool.CC,
+    "g++": BuildTool.CXX,
+    "gold": BuildTool.LD,
+    "gas": BuildTool.AS,
 
     # Clang shims.
-    "clang": BuildTool.CC.value,
-    "clang++": BuildTool.CXX.value,
-    "lld": BuildTool.LD.value,
+    "clang": BuildTool.CC,
+    "clang++": BuildTool.CXX,
+    "lld": BuildTool.LD,
 }
 # fmt: on
 
@@ -55,12 +55,12 @@ def _export(variable: str, value: str) -> None:
 
 
 def _guess_wrapped() -> Iterator[Tuple[str, str]]:
-    for variable, tool in blight.tool.TOOL_ENV_MAP.items():
-        tool_path = shutil.which(tool)
+    for tool in BuildTool:
+        tool_path = shutil.which(tool.cmd)
         if tool_path is None:
             die(f"Couldn't locate {tool} on the $PATH")
 
-        yield (f"BLIGHT_WRAPPED_{variable}", tool_path)
+        yield (tool.blight_tool.env, tool_path)
 
 
 def _swizzle_path(stubs: List[str], shim_specs: List[str]) -> str:
@@ -70,20 +70,17 @@ def _swizzle_path(stubs: List[str], shim_specs: List[str]) -> str:
         shim_path = blight_dir / shim
         with open(shim_path, "w+") as io:
             print("#!/bin/sh", file=io)
-            print(f'blight-{tool} "${{@}}"', file=io)
+            print(f'{tool.blight_tool.value} "${{@}}"', file=io)
 
         shim_path.chmod(shim_path.stat().st_mode | stat.S_IEXEC)
 
     for shim_spec in shim_specs:
         try:
-            (shim, tool) = shim_spec.split(":", 1)
+            (shim, tool_name) = shim_spec.split(":", 1)
+            tool = BuildTool(tool_name.upper())
         except ValueError:
-            die(f"Malformatted custom shim spec: expected `shim:tool`, got {shim_spec}")
-
-        # Sanity check: our requested tool should be a valid BuildTool.
-        if tool not in list(BuildTool):
             die(
-                f"Unknown tool requested for shim: {tool} "
+                f"Malformatted custom shim spec: expected `shim:tool`, got {shim_spec} "
                 f"(supported tools: {[t.value for t in BuildTool]})"
             )
 
@@ -93,7 +90,7 @@ def _swizzle_path(stubs: List[str], shim_specs: List[str]) -> str:
         shim_path = blight_dir / shim
         with open(shim_path, "w+") as io:
             print("#!/bin/sh", file=io)
-            print(f'blight-{tool} "${{@}}"', file=io)
+            print(f'{tool.blight_tool.value} "${{@}}"', file=io)
 
         shim_path.chmod(shim_path.stat().st_mode | stat.S_IEXEC)
 
@@ -125,11 +122,11 @@ def env(unset, guess_wrapped, swizzle_path, stubs, shims):
     if swizzle_path:
         _export("PATH", _swizzle_path(stubs, shims))
 
-    for variable, tool in blight.tool.TOOL_ENV_MAP.items():
+    for tool in BuildTool:
         if unset:
-            _unset(variable)
+            _unset(tool.env)
         else:
-            _export(variable, f"blight-{tool}")
+            _export(tool.env, tool.blight_tool.value)
 
 
 @click.command()
@@ -152,9 +149,7 @@ def exec_(guess_wrapped, swizzle_path, stubs, shims, target, args):
     if swizzle_path:
         env["PATH"] = _swizzle_path(stubs, shims)
 
-    env.update(
-        {variable: f"blight-{tool}" for (variable, tool) in blight.tool.TOOL_ENV_MAP.items()}
-    )
+    env.update({tool.env: tool.blight_tool.value for tool in BuildTool})
 
     os.execvpe(target, [target, *args], env)
 
@@ -163,11 +158,12 @@ def tool():
     # NOTE(ww): Specifically *not* a click command!
     wrapped_basename = os.path.basename(sys.argv[0])
 
-    tool_classname = blight.tool.BLIGHT_TOOL_MAP.get(wrapped_basename)
-    if tool_classname is None:
+    try:
+        blight_tool = BlightTool(wrapped_basename)
+    except ValueError:
         die(f"Unknown blight wrapper requested: {wrapped_basename}")
 
-    tool_class = getattr(blight.tool, tool_classname)
+    tool_class = getattr(blight.tool, blight_tool.build_tool.value)
     tool = tool_class(sys.argv[1:])
     try:
         tool.run()
