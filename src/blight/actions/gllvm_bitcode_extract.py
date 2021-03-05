@@ -17,7 +17,7 @@ class GLLVMBitcodeExtract(CompilerAction):
     Compile and extract bitcode with GLLVM.
     """
 
-    def before_run(self, tool: CompilerTool) -> None:
+    def before_run(self, tool: CompilerTool) -> None:  # type: ignore
         if tool.lang in [Lang.C, Lang.Cxx]:
             # TODO(sonya): emits bitcode only (no binary)
             tool.args.extend(["-emit-llvm", "-c"])
