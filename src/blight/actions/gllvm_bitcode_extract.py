@@ -11,14 +11,16 @@ from blight.tool import CompilerTool
 
 logger = logging.getLogger(__name__)
 
+
 class GLLVMBitcodeExtract(CompilerAction):
     """
     Compile and extract bitcode with GLLVM.
     """
+
     def before_run(self, tool: CompilerTool) -> None:
         if tool.lang in [Lang.C, Lang.Cxx]:
-            # TODO(sonya): these flags are still wrong :|
-            tool.args.extend(["-fwhole-program-vtables", "-flto"])
+            # TODO(sonya): emits bitcode only (no binary)
+            tool.args.extend(["-emit-llvm", "-c"])
             os.environ.update(
                 {
                     "BLIGHT_WRAPPED_CC": "gclang",
@@ -27,4 +29,3 @@ class GLLVMBitcodeExtract(CompilerAction):
             )
         else:
             logger.debug("not extracting bitcode for an unknown language")
-
