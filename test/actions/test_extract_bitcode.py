@@ -34,7 +34,7 @@ def test_extract_bitcode_unknown_lang(tmp_path):
 def test_extract_bitcode_gen_flags(tmp_path):
     os.environ.update(
         {
-            "LLVM_BITCODE_GENERATION_FLAGS": "-flto -fwhole-program-vtables",
+            "LLVM_BITCODE_GENERATION_FLAGS": "-flto",
         }
     )
     bitcode_extract = BitcodeExtract({})
