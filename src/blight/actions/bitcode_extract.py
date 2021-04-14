@@ -29,7 +29,7 @@ class BitcodeExtract(CompilerAction):
                 logger.debug(
                     "not extracting bitcode with unspecified output location"
                 )  # pragma: no cover
-                return # pragma: no cover
+                return  # pragma: no cover
 
             bitcode_flags = os.getenv("LLVM_BITCODE_GENERATION_FLAGS")
             if bitcode_flags:
