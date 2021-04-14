@@ -21,21 +21,31 @@ class BitcodeExtract(CompilerAction):
     """
 
     def before_run(self, tool: CompilerTool) -> None:  # type: ignore
-        if tool.lang in [Lang.C, Lang.Cxx]:
-            for inpt in tool.inputs:
-                args: List[str]
-                if tool.outputs:
-                    args = ["-c", "-emit-llvm", "-o", inpt.split(".")[0] + ".bc", inpt]
-                else:
-                    logger.debug(
-                        "not extracting bitcode with unspecified output location"
-                    )  # pragma: no cover
-                    return  # pragma: no cover
+        store = self._config.get("store")
+        if store is not None:
+            if tool.lang in [Lang.C, Lang.Cxx]:
+                for inpt in tool.inputs:
+                    args: List[str]
+                    if tool.outputs:
+                        args = [
+                            "-c",
+                            "-emit-llvm",
+                            "-o",
+                            store + "/" + inpt.split("/")[-1].split(".")[0] + ".bc",
+                            inpt,
+                        ]
+                    else:
+                        logger.debug(
+                            "not extracting bitcode with unspecified output location"
+                        )  # pragma: no cover
+                        return  # pragma: no cover
 
-                bitcode_flags = os.getenv("LLVM_BITCODE_GENERATION_FLAGS")
-                if bitcode_flags:
-                    args.extend(bitcode_flags.split())
+                    bitcode_flags = os.getenv("LLVM_BITCODE_GENERATION_FLAGS")
+                    if bitcode_flags:
+                        args.extend(bitcode_flags.split())
 
-                subprocess.run([tool.wrapped_tool(), *args], env=tool._env)
+                    subprocess.run([tool.wrapped_tool(), *args], env=tool._env)
+            else:
+                logger.debug("not extracting bitcode for an unknown language")
         else:
-            logger.debug("not extracting bitcode for an unknown language")
+            logger.debug("not extracting bitcode to an unspecified location")  # pragma: no cover
