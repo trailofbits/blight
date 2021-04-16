@@ -18,8 +18,9 @@ logger = logging.getLogger(__name__)
 
 class BitcodeExtract(CompilerAction):
     """
-    Compile and extract bitcode. The output bitcode file will be located in the same direcory
-    as the output executable.
+    Compile and extract bitcode. The output bitcode file will be located placed in directory
+    specified by `store=/some/dir/`. The setting is passed in the `FindActions` configuration.
+    If `store` is not specified the action will error.
     """
 
     def before_run(self, tool: CompilerTool) -> None:  # type: ignore
