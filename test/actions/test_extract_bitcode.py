@@ -28,7 +28,8 @@ def test_extract_bitcode_no_specified_output(tmp_path):
 
 def test_extract_bitcode_unknown_lang(tmp_path):
     bitcode_extract = BitcodeExtract({"store": tmp_path.__str__()})
-    cc = CC(["-x", "-unknownlanguage", "-Werror"])
+    foo_path = "test/fixtures/foo.c"
+    cc = CC(["-o", "foo", "-S", foo_path])
 
     bitcode_extract.before_run(cc)
     assert not os.listdir(tmp_path)

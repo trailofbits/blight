@@ -10,7 +10,7 @@ from pathlib import Path
 from typing import List
 
 from blight.action import CompilerAction
-from blight.enums import Lang
+from blight.enums import CompilerStage
 from blight.tool import CompilerTool
 
 logger = logging.getLogger(__name__)
@@ -42,8 +42,8 @@ class BitcodeExtract(CompilerAction):
             logger.error("not extracting bitcode to an unspecified location")
             return
 
-        if tool.lang not in [Lang.C, Lang.Cxx]:
-            logger.debug("not extracting bitcode for an unknown language")
+        if tool.stage not in [CompilerStage.AllStages, CompilerStage.CompileObject]:
+            logger.debug(f"not extracting bitcode for compiler stage: {tool.stage}")
             return
 
         for inpt in tool.inputs:
