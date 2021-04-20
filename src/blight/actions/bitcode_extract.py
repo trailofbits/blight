@@ -4,7 +4,6 @@ The `BitcodeExtract` action.
 
 import hashlib
 import logging
-import os
 import subprocess
 from pathlib import Path
 from typing import List
@@ -25,13 +24,15 @@ class BitcodeExtract(CompilerAction):
 
     def before_run(self, tool: CompilerTool) -> None:  # type: ignore
         store = self._config.get("store")
+        bitcode_flags = self._config.get("llvm-bitcode-flags")
 
         if store is None:
-            logger.error("not extracting bitcode to an unspecified location")  # pragma: no cover
+            logger.error("not extracting bitcode to an unspecified location")
             return
 
         if tool.lang not in [Lang.C, Lang.Cxx]:
             logger.debug("not extracting bitcode for an unknown language")
+            return
 
         for inpt in tool.inputs:
             args: List[str]
@@ -44,7 +45,6 @@ class BitcodeExtract(CompilerAction):
                 inpt,
             ]
 
-            bitcode_flags = os.getenv("LLVM_BITCODE_GENERATION_FLAGS")
             if bitcode_flags:
                 args.extend(bitcode_flags.split())
 

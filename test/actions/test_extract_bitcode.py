@@ -34,13 +34,17 @@ def test_extract_bitcode_unknown_lang(tmp_path):
     assert not os.listdir(tmp_path)
 
 
+def test_extract_bitcode_no_store(tmp_path):
+    bitcode_extract = BitcodeExtract({})
+    foo_path = "test/fixtures/foo.c"
+    cc = CC(["-o", "foo", foo_path])
+
+    bitcode_extract.before_run(cc)
+    assert not os.listdir(tmp_path)
+
+
 def test_extract_bitcode_gen_flags(tmp_path):
-    os.environ.update(
-        {
-            "LLVM_BITCODE_GENERATION_FLAGS": "-flto",
-        }
-    )
-    bitcode_extract = BitcodeExtract({"store": tmp_path.__str__()})
+    bitcode_extract = BitcodeExtract({"store": tmp_path.__str__(), "llvm-bitcode-flags": "-flto"})
     foo_path = "test/fixtures/foo.c"
     cc = CC(["-o", "foo", foo_path])
 
