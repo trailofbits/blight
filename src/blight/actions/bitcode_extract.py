@@ -35,7 +35,7 @@ class BitcodeExtract(CompilerAction):
 
     def before_run(self, tool: CompilerTool) -> None:  # type: ignore
         store = self._config.get("store")
-        bitcode_flags = self._config.get("llvm-bitcode-flags")
+        bitcode_flags = shlex.split(self._config.get("llvm-bitcode-flags", ""))
 
         if store is None:
             logger.error("not extracting bitcode to an unspecified location")
