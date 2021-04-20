@@ -17,9 +17,20 @@ logger = logging.getLogger(__name__)
 
 class BitcodeExtract(CompilerAction):
     """
-    Compile and extract bitcode. The output bitcode file will be located placed in directory
-    specified by `store=/some/dir/`. The setting is passed in the `FindActions` configuration.
-    If `store` is not specified the action will error.
+    Action to compile and extract bitcode.
+
+    The output bitcode file will be located placed in directory specified by `store=/some/dir/`.
+    The setting is passed in the `FindActions` configuration. If `store` is not specified the
+    action will produce not output. Similarly, if `llvm-bitcode-flags` is specified the
+    corresponding flags will be passed when the bitcode is extracted.
+
+    Example:
+
+    ```bash
+    export BLIGHT_ACTIONS="BitcodeExtract"
+    BLIGHT_ACTION_BITCODEEXTRACT="store=/path/to/dst/dir llvm-bitcode-flags='-flto'"
+    make CC=blight-cc
+
     """
 
     def before_run(self, tool: CompilerTool) -> None:  # type: ignore
