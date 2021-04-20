@@ -27,8 +27,8 @@ class BitcodeExtract(CompilerAction):
         store = self._config.get("store")
 
         if store is None:
-            logger.debug("not extracting bitcode to an unspecified location")  # pragma: no cover
-            assert False  # pragma: no cover
+            logger.error("not extracting bitcode to an unspecified location")  # pragma: no cover
+            return
 
         if tool.lang not in [Lang.C, Lang.Cxx]:
             logger.debug("not extracting bitcode for an unknown language")
