@@ -56,7 +56,6 @@ class BitcodeExtract(CompilerAction):
                 inpt,
             ]
 
-            if bitcode_flags:
-                args.extend(bitcode_flags.split())
+            args.extend(bitcode_flags)
 
             subprocess.run([tool.wrapped_tool(), *args], env=tool._env)
