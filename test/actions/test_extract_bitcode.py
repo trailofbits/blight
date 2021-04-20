@@ -26,7 +26,7 @@ def test_extract_bitcode_no_specified_output(tmp_path):
     assert (tmp_path / (content_hash + ".bc")).exists()
 
 
-def test_extract_bitcode_unknown_lang(tmp_path):
+def test_extract_bitcode_wrong_stage(tmp_path):
     bitcode_extract = BitcodeExtract({"store": tmp_path.__str__()})
     foo_path = "test/fixtures/foo.c"
     cc = CC(["-o", "foo", "-S", foo_path])
