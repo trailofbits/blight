@@ -4,6 +4,7 @@ The `BitcodeExtract` action.
 
 import hashlib
 import logging
+import shlex
 import subprocess
 from pathlib import Path
 from typing import List
