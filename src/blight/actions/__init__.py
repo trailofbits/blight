@@ -3,6 +3,7 @@ Actions supported by blight.
 """
 
 from .benchmark import Benchmark  # noqa: F401
+from .cc_for_cxx import CCForCXX  # noqa: F401
 from .find_outputs import FindOutputs  # noqa: F401
 from .ignore_werror import IgnoreWerror  # noqa: F401
 from .inject_flags import InjectFlags  # noqa: F401
