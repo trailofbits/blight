@@ -18,6 +18,9 @@ from blight.util import die, unswizzled_path
 logging.basicConfig(level=os.environ.get("BLIGHT_LOGLEVEL", "INFO").upper())
 logger = logging.getLogger(__name__)
 
+# Particularly common clang version suffixes.
+CLANG_VERSION_SUFFIXES = ["3.8", "7", "9", "10", "11", "12"]
+
 # A mapping of shim name -> tool name for default shim generation.
 # Each shim will ultimately call `blight-{tool}`, completing the interposition.
 # fmt: off
@@ -39,7 +42,9 @@ SHIM_MAP = {
 
     # Clang shims.
     "clang": BuildTool.CC,
+    **{f"clang-{v}": BuildTool.CC for v in CLANG_VERSION_SUFFIXES},
     "clang++": BuildTool.CXX,
+    **{f"clang++-{v}": BuildTool.CXX for v in CLANG_VERSION_SUFFIXES},
     "lld": BuildTool.LD,
 }
 # fmt: on
