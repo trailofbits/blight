@@ -1,0 +1,614 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
+<meta name="generator" content="pdoc 0.9.2" />
+<title>blight.action API documentation</title>
+<meta name="description" content="The different actions supported by blight." />
+<link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/sanitize.min.css" integrity="sha256-PK9q560IAAa6WVRRh76LtCaI8pjTJ2z11v0miyNNjrs=" crossorigin>
+<link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/typography.min.css" integrity="sha256-7l/o7C8jubJiy74VsKTidCy1yBkRtiUGbVkYBylBqUg=" crossorigin>
+<link rel="stylesheet preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/styles/github.min.css" crossorigin>
+<style>:root{--highlight-color:#fe9}.flex{display:flex !important}body{line-height:1.5em}#content{padding:20px}#sidebar{padding:30px;overflow:hidden}#sidebar > *:last-child{margin-bottom:2cm}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:1em 0 .50em 0}h3{font-size:1.4em;margin:25px 0 10px 0}h4{margin:0;font-size:105%}h1:target,h2:target,h3:target,h4:target,h5:target,h6:target{background:var(--highlight-color);padding:.2em 0}a{color:#058;text-decoration:none;transition:color .3s ease-in-out}a:hover{color:#e82}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900}pre code{background:#f8f8f8;font-size:.8em;line-height:1.4em}code{background:#f2f2f1;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{background:#f8f8f8;border:0;border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0;padding:1ex}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{margin-top:.6em;font-weight:bold}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-weight:bold;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}dt:target .name{background:var(--highlight-color)}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source summary,.git-link-div{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase}.source summary > *{white-space:nowrap;cursor:pointer}.git-link{color:inherit;margin-left:1em}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}td{padding:0 .5em}.admonition{padding:.1em .5em;margin-bottom:1em}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
+<style media="screen and (min-width: 700px)">@media screen and (min-width:700px){#sidebar{width:30%;height:100vh;overflow:auto;position:sticky;top:0}#content{width:70%;max-width:100ch;padding:3em 4em;border-left:1px solid #ddd}pre code{font-size:1em}.item .name{font-size:1em}main{display:flex;flex-direction:row-reverse;justify-content:flex-end}.toc ul ul,#index ul{padding-left:1.5em}.toc > ul > li{margin-top:.5em}}</style>
+<style media="print">@media print{#sidebar h1{page-break-before:always}.source{display:none}}@media print{*{background:transparent !important;color:#000 !important;box-shadow:none !important;text-shadow:none !important}a[href]:after{content:" (" attr(href) ")";font-size:90%}a[href][title]:after{content:none}abbr[title]:after{content:" (" attr(title) ")"}.ir a:after,a[href^="javascript:"]:after,a[href^="#"]:after{content:""}pre,blockquote{border:1px solid #999;page-break-inside:avoid}thead{display:table-header-group}tr,img{page-break-inside:avoid}img{max-width:100% !important}@page{margin:0.5cm}p,h2,h3{orphans:3;widows:3}h1,h2,h3,h4,h5,h6{page-break-after:avoid}}</style>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/highlight.min.js" integrity="sha256-Uv3H6lx7dJmRfRvH8TH6kJD1TSK1aFcwgx+mdg3epi8=" crossorigin></script>
+<script>window.addEventListener('DOMContentLoaded', () => hljs.initHighlighting())</script>
+</head>
+<body>
+<main>
+<article id="content">
+<header>
+<h1 class="title">Module <code>blight.action</code></h1>
+</header>
+<section id="section-intro">
+<p>The different actions supported by blight.</p>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">&#34;&#34;&#34;
+The different actions supported by blight.
+&#34;&#34;&#34;
+
+from typing import Dict
+
+import blight.tool
+from blight.tool import Tool
+
+
+class Action:
+    &#34;&#34;&#34;
+    A generic action, run with every tool (both before and after the tool&#39;s execution).
+    &#34;&#34;&#34;
+
+    def __init__(self, config: Dict[str, str]):
+        self._config = config
+
+    def _should_run_on(self, tool: Tool) -&gt; bool:
+        return True
+
+    def before_run(self, tool: Tool) -&gt; None:  # pragma: no cover
+        &#34;&#34;&#34;
+        Invoked right before the underlying tool is run.
+
+        Args:
+            tool: The tool about to run
+        &#34;&#34;&#34;
+        pass
+
+    def _before_run(self, tool: Tool) -&gt; None:
+        if self._should_run_on(tool):
+            self.before_run(tool)
+
+    def after_run(self, tool: Tool, *, run_skipped: bool = False):  # pragma: no cover
+        &#34;&#34;&#34;
+        Invoked right after the underlying tool is run.
+
+        Args:
+            tool: The tool that just ran
+        &#34;&#34;&#34;
+        pass
+
+    def _after_run(self, tool: Tool, *, run_skipped=False) -&gt; None:
+        if self._should_run_on(tool):
+            self.after_run(tool, run_skipped=run_skipped)
+
+
+class CCAction(Action):
+    &#34;&#34;&#34;
+    A `cc` action, run whenever the tool is a `blight.tool.CC` instance.
+    &#34;&#34;&#34;
+
+    def _should_run_on(self, tool: Tool) -&gt; bool:
+        return isinstance(tool, blight.tool.CC)
+
+
+class CXXAction(Action):
+    &#34;&#34;&#34;
+    A `c++` action, run whenever the tool is a `blight.tool.CXX` instance.
+    &#34;&#34;&#34;
+
+    def _should_run_on(self, tool: Tool) -&gt; bool:
+        return isinstance(tool, blight.tool.CXX)
+
+
+class CompilerAction(CCAction, CXXAction):
+    &#34;&#34;&#34;
+    A generic compiler action, run whenever the tool is a `blight.tool.CC`
+    or `blight.tool.CXX` instance.
+
+    **NOTE:** Action writers should generally prefer this over `CCAction` and `CXXAction`,
+    as messy builds may use `cc` to compile C++ sources (via `-x c`) and vice versa.
+    &#34;&#34;&#34;
+
+    def _should_run_on(self, tool: Tool) -&gt; bool:
+        return isinstance(tool, blight.tool.CC) or isinstance(tool, blight.tool.CXX)
+
+
+class CPPAction(Action):
+    &#34;&#34;&#34;
+    A `cpp` action, run whenever the tool is a `blight.tool.CPP` instance.
+    &#34;&#34;&#34;
+
+    def _should_run_on(self, tool: Tool) -&gt; bool:
+        return isinstance(tool, blight.tool.CPP)
+
+
+class LDAction(Action):
+    &#34;&#34;&#34;
+    An `ld` action, run whenever the tool is a `blight.tool.LD` instance.
+    &#34;&#34;&#34;
+
+    def _should_run_on(self, tool: Tool) -&gt; bool:
+        return isinstance(tool, blight.tool.LD)
+
+
+class ASAction(Action):
+    &#34;&#34;&#34;
+    An `as` action, run whenever the tool is a `blight.tool.AS` instance.
+    &#34;&#34;&#34;
+
+    def _should_run_on(self, tool: Tool) -&gt; bool:
+        return isinstance(tool, blight.tool.AS)
+
+
+class ARAction(Action):
+    &#34;&#34;&#34;
+    An `ar` action, run whenever the tool is a `blight.tool.AR` instance.
+    &#34;&#34;&#34;
+
+    def _should_run_on(self, tool: Tool) -&gt; bool:
+        return isinstance(tool, blight.tool.AR)
+
+
+class STRIPAction(Action):
+    &#34;&#34;&#34;
+    A `strip` action, run whenever the tool is a `blight.tool.STRIP` instance.
+    &#34;&#34;&#34;
+
+    def _should_run_on(self, tool: Tool) -&gt; bool:
+        return isinstance(tool, blight.tool.STRIP)</code></pre>
+</details>
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+<h2 class="section-title" id="header-classes">Classes</h2>
+<dl>
+<dt id="blight.action.ARAction"><code class="flex name class">
+<span>class <span class="ident">ARAction</span></span>
+<span>(</span><span>config: Dict[str, str])</span>
+</code></dt>
+<dd>
+<div class="desc"><p>An <code>ar</code> action, run whenever the tool is a <code><a title="blight.tool.AR" href="tool.html#blight.tool.AR">AR</a></code> instance.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class ARAction(Action):
+    &#34;&#34;&#34;
+    An `ar` action, run whenever the tool is a `blight.tool.AR` instance.
+    &#34;&#34;&#34;
+
+    def _should_run_on(self, tool: Tool) -&gt; bool:
+        return isinstance(tool, blight.tool.AR)</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="blight.action.Action" href="#blight.action.Action">Action</a></li>
+</ul>
+<h3>Inherited members</h3>
+<ul class="hlist">
+<li><code><b><a title="blight.action.Action" href="#blight.action.Action">Action</a></b></code>:
+<ul class="hlist">
+<li><code><a title="blight.action.Action.after_run" href="#blight.action.Action.after_run">after_run</a></code></li>
+<li><code><a title="blight.action.Action.before_run" href="#blight.action.Action.before_run">before_run</a></code></li>
+</ul>
+</li>
+</ul>
+</dd>
+<dt id="blight.action.ASAction"><code class="flex name class">
+<span>class <span class="ident">ASAction</span></span>
+<span>(</span><span>config: Dict[str, str])</span>
+</code></dt>
+<dd>
+<div class="desc"><p>An <code>as</code> action, run whenever the tool is a <code><a title="blight.tool.AS" href="tool.html#blight.tool.AS">AS</a></code> instance.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class ASAction(Action):
+    &#34;&#34;&#34;
+    An `as` action, run whenever the tool is a `blight.tool.AS` instance.
+    &#34;&#34;&#34;
+
+    def _should_run_on(self, tool: Tool) -&gt; bool:
+        return isinstance(tool, blight.tool.AS)</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="blight.action.Action" href="#blight.action.Action">Action</a></li>
+</ul>
+<h3>Inherited members</h3>
+<ul class="hlist">
+<li><code><b><a title="blight.action.Action" href="#blight.action.Action">Action</a></b></code>:
+<ul class="hlist">
+<li><code><a title="blight.action.Action.after_run" href="#blight.action.Action.after_run">after_run</a></code></li>
+<li><code><a title="blight.action.Action.before_run" href="#blight.action.Action.before_run">before_run</a></code></li>
+</ul>
+</li>
+</ul>
+</dd>
+<dt id="blight.action.Action"><code class="flex name class">
+<span>class <span class="ident">Action</span></span>
+<span>(</span><span>config: Dict[str, str])</span>
+</code></dt>
+<dd>
+<div class="desc"><p>A generic action, run with every tool (both before and after the tool's execution).</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class Action:
+    &#34;&#34;&#34;
+    A generic action, run with every tool (both before and after the tool&#39;s execution).
+    &#34;&#34;&#34;
+
+    def __init__(self, config: Dict[str, str]):
+        self._config = config
+
+    def _should_run_on(self, tool: Tool) -&gt; bool:
+        return True
+
+    def before_run(self, tool: Tool) -&gt; None:  # pragma: no cover
+        &#34;&#34;&#34;
+        Invoked right before the underlying tool is run.
+
+        Args:
+            tool: The tool about to run
+        &#34;&#34;&#34;
+        pass
+
+    def _before_run(self, tool: Tool) -&gt; None:
+        if self._should_run_on(tool):
+            self.before_run(tool)
+
+    def after_run(self, tool: Tool, *, run_skipped: bool = False):  # pragma: no cover
+        &#34;&#34;&#34;
+        Invoked right after the underlying tool is run.
+
+        Args:
+            tool: The tool that just ran
+        &#34;&#34;&#34;
+        pass
+
+    def _after_run(self, tool: Tool, *, run_skipped=False) -&gt; None:
+        if self._should_run_on(tool):
+            self.after_run(tool, run_skipped=run_skipped)</code></pre>
+</details>
+<h3>Subclasses</h3>
+<ul class="hlist">
+<li><a title="blight.action.ARAction" href="#blight.action.ARAction">ARAction</a></li>
+<li><a title="blight.action.ASAction" href="#blight.action.ASAction">ASAction</a></li>
+<li><a title="blight.action.CCAction" href="#blight.action.CCAction">CCAction</a></li>
+<li><a title="blight.action.CPPAction" href="#blight.action.CPPAction">CPPAction</a></li>
+<li><a title="blight.action.CXXAction" href="#blight.action.CXXAction">CXXAction</a></li>
+<li><a title="blight.action.LDAction" href="#blight.action.LDAction">LDAction</a></li>
+<li><a title="blight.action.STRIPAction" href="#blight.action.STRIPAction">STRIPAction</a></li>
+<li><a title="blight.actions.benchmark.Benchmark" href="actions/benchmark.html#blight.actions.benchmark.Benchmark">Benchmark</a></li>
+<li><a title="blight.actions.find_outputs.FindOutputs" href="actions/find_outputs.html#blight.actions.find_outputs.FindOutputs">FindOutputs</a></li>
+<li><a title="blight.actions.record.Record" href="actions/record.html#blight.actions.record.Record">Record</a></li>
+</ul>
+<h3>Methods</h3>
+<dl>
+<dt id="blight.action.Action.after_run"><code class="name flex">
+<span>def <span class="ident">after_run</span></span>(<span>self, tool: <a title="blight.tool.Tool" href="tool.html#blight.tool.Tool">Tool</a>, *, run_skipped: bool = False)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Invoked right after the underlying tool is run.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>tool</code></strong></dt>
+<dd>The tool that just ran</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def after_run(self, tool: Tool, *, run_skipped: bool = False):  # pragma: no cover
+    &#34;&#34;&#34;
+    Invoked right after the underlying tool is run.
+
+    Args:
+        tool: The tool that just ran
+    &#34;&#34;&#34;
+    pass</code></pre>
+</details>
+</dd>
+<dt id="blight.action.Action.before_run"><code class="name flex">
+<span>def <span class="ident">before_run</span></span>(<span>self, tool: <a title="blight.tool.Tool" href="tool.html#blight.tool.Tool">Tool</a>) ‑> NoneType</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Invoked right before the underlying tool is run.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>tool</code></strong></dt>
+<dd>The tool about to run</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def before_run(self, tool: Tool) -&gt; None:  # pragma: no cover
+    &#34;&#34;&#34;
+    Invoked right before the underlying tool is run.
+
+    Args:
+        tool: The tool about to run
+    &#34;&#34;&#34;
+    pass</code></pre>
+</details>
+</dd>
+</dl>
+</dd>
+<dt id="blight.action.CCAction"><code class="flex name class">
+<span>class <span class="ident">CCAction</span></span>
+<span>(</span><span>config: Dict[str, str])</span>
+</code></dt>
+<dd>
+<div class="desc"><p>A <code>cc</code> action, run whenever the tool is a <code><a title="blight.tool.CC" href="tool.html#blight.tool.CC">CC</a></code> instance.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class CCAction(Action):
+    &#34;&#34;&#34;
+    A `cc` action, run whenever the tool is a `blight.tool.CC` instance.
+    &#34;&#34;&#34;
+
+    def _should_run_on(self, tool: Tool) -&gt; bool:
+        return isinstance(tool, blight.tool.CC)</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="blight.action.Action" href="#blight.action.Action">Action</a></li>
+</ul>
+<h3>Subclasses</h3>
+<ul class="hlist">
+<li><a title="blight.action.CompilerAction" href="#blight.action.CompilerAction">CompilerAction</a></li>
+<li><a title="blight.actions.cc_for_cxx.CCForCXX" href="actions/cc_for_cxx.html#blight.actions.cc_for_cxx.CCForCXX">CCForCXX</a></li>
+</ul>
+<h3>Inherited members</h3>
+<ul class="hlist">
+<li><code><b><a title="blight.action.Action" href="#blight.action.Action">Action</a></b></code>:
+<ul class="hlist">
+<li><code><a title="blight.action.Action.after_run" href="#blight.action.Action.after_run">after_run</a></code></li>
+<li><code><a title="blight.action.Action.before_run" href="#blight.action.Action.before_run">before_run</a></code></li>
+</ul>
+</li>
+</ul>
+</dd>
+<dt id="blight.action.CPPAction"><code class="flex name class">
+<span>class <span class="ident">CPPAction</span></span>
+<span>(</span><span>config: Dict[str, str])</span>
+</code></dt>
+<dd>
+<div class="desc"><p>A <code>cpp</code> action, run whenever the tool is a <code><a title="blight.tool.CPP" href="tool.html#blight.tool.CPP">CPP</a></code> instance.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class CPPAction(Action):
+    &#34;&#34;&#34;
+    A `cpp` action, run whenever the tool is a `blight.tool.CPP` instance.
+    &#34;&#34;&#34;
+
+    def _should_run_on(self, tool: Tool) -&gt; bool:
+        return isinstance(tool, blight.tool.CPP)</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="blight.action.Action" href="#blight.action.Action">Action</a></li>
+</ul>
+<h3>Inherited members</h3>
+<ul class="hlist">
+<li><code><b><a title="blight.action.Action" href="#blight.action.Action">Action</a></b></code>:
+<ul class="hlist">
+<li><code><a title="blight.action.Action.after_run" href="#blight.action.Action.after_run">after_run</a></code></li>
+<li><code><a title="blight.action.Action.before_run" href="#blight.action.Action.before_run">before_run</a></code></li>
+</ul>
+</li>
+</ul>
+</dd>
+<dt id="blight.action.CXXAction"><code class="flex name class">
+<span>class <span class="ident">CXXAction</span></span>
+<span>(</span><span>config: Dict[str, str])</span>
+</code></dt>
+<dd>
+<div class="desc"><p>A <code>c++</code> action, run whenever the tool is a <code><a title="blight.tool.CXX" href="tool.html#blight.tool.CXX">CXX</a></code> instance.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class CXXAction(Action):
+    &#34;&#34;&#34;
+    A `c++` action, run whenever the tool is a `blight.tool.CXX` instance.
+    &#34;&#34;&#34;
+
+    def _should_run_on(self, tool: Tool) -&gt; bool:
+        return isinstance(tool, blight.tool.CXX)</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="blight.action.Action" href="#blight.action.Action">Action</a></li>
+</ul>
+<h3>Subclasses</h3>
+<ul class="hlist">
+<li><a title="blight.action.CompilerAction" href="#blight.action.CompilerAction">CompilerAction</a></li>
+</ul>
+<h3>Inherited members</h3>
+<ul class="hlist">
+<li><code><b><a title="blight.action.Action" href="#blight.action.Action">Action</a></b></code>:
+<ul class="hlist">
+<li><code><a title="blight.action.Action.after_run" href="#blight.action.Action.after_run">after_run</a></code></li>
+<li><code><a title="blight.action.Action.before_run" href="#blight.action.Action.before_run">before_run</a></code></li>
+</ul>
+</li>
+</ul>
+</dd>
+<dt id="blight.action.CompilerAction"><code class="flex name class">
+<span>class <span class="ident">CompilerAction</span></span>
+<span>(</span><span>config: Dict[str, str])</span>
+</code></dt>
+<dd>
+<div class="desc"><p>A generic compiler action, run whenever the tool is a <code><a title="blight.tool.CC" href="tool.html#blight.tool.CC">CC</a></code>
+or <code><a title="blight.tool.CXX" href="tool.html#blight.tool.CXX">CXX</a></code> instance.</p>
+<p><strong>NOTE:</strong> Action writers should generally prefer this over <code><a title="blight.action.CCAction" href="#blight.action.CCAction">CCAction</a></code> and <code><a title="blight.action.CXXAction" href="#blight.action.CXXAction">CXXAction</a></code>,
+as messy builds may use <code>cc</code> to compile C++ sources (via <code>-x c</code>) and vice versa.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class CompilerAction(CCAction, CXXAction):
+    &#34;&#34;&#34;
+    A generic compiler action, run whenever the tool is a `blight.tool.CC`
+    or `blight.tool.CXX` instance.
+
+    **NOTE:** Action writers should generally prefer this over `CCAction` and `CXXAction`,
+    as messy builds may use `cc` to compile C++ sources (via `-x c`) and vice versa.
+    &#34;&#34;&#34;
+
+    def _should_run_on(self, tool: Tool) -&gt; bool:
+        return isinstance(tool, blight.tool.CC) or isinstance(tool, blight.tool.CXX)</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="blight.action.CCAction" href="#blight.action.CCAction">CCAction</a></li>
+<li><a title="blight.action.CXXAction" href="#blight.action.CXXAction">CXXAction</a></li>
+<li><a title="blight.action.Action" href="#blight.action.Action">Action</a></li>
+</ul>
+<h3>Subclasses</h3>
+<ul class="hlist">
+<li><a title="blight.actions.ignore_werror.IgnoreWerror" href="actions/ignore_werror.html#blight.actions.ignore_werror.IgnoreWerror">IgnoreWerror</a></li>
+<li><a title="blight.actions.inject_flags.InjectFlags" href="actions/inject_flags.html#blight.actions.inject_flags.InjectFlags">InjectFlags</a></li>
+</ul>
+<h3>Inherited members</h3>
+<ul class="hlist">
+<li><code><b><a title="blight.action.CCAction" href="#blight.action.CCAction">CCAction</a></b></code>:
+<ul class="hlist">
+<li><code><a title="blight.action.CCAction.after_run" href="#blight.action.Action.after_run">after_run</a></code></li>
+<li><code><a title="blight.action.CCAction.before_run" href="#blight.action.Action.before_run">before_run</a></code></li>
+</ul>
+</li>
+</ul>
+</dd>
+<dt id="blight.action.LDAction"><code class="flex name class">
+<span>class <span class="ident">LDAction</span></span>
+<span>(</span><span>config: Dict[str, str])</span>
+</code></dt>
+<dd>
+<div class="desc"><p>An <code>ld</code> action, run whenever the tool is a <code><a title="blight.tool.LD" href="tool.html#blight.tool.LD">LD</a></code> instance.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class LDAction(Action):
+    &#34;&#34;&#34;
+    An `ld` action, run whenever the tool is a `blight.tool.LD` instance.
+    &#34;&#34;&#34;
+
+    def _should_run_on(self, tool: Tool) -&gt; bool:
+        return isinstance(tool, blight.tool.LD)</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="blight.action.Action" href="#blight.action.Action">Action</a></li>
+</ul>
+<h3>Inherited members</h3>
+<ul class="hlist">
+<li><code><b><a title="blight.action.Action" href="#blight.action.Action">Action</a></b></code>:
+<ul class="hlist">
+<li><code><a title="blight.action.Action.after_run" href="#blight.action.Action.after_run">after_run</a></code></li>
+<li><code><a title="blight.action.Action.before_run" href="#blight.action.Action.before_run">before_run</a></code></li>
+</ul>
+</li>
+</ul>
+</dd>
+<dt id="blight.action.STRIPAction"><code class="flex name class">
+<span>class <span class="ident">STRIPAction</span></span>
+<span>(</span><span>config: Dict[str, str])</span>
+</code></dt>
+<dd>
+<div class="desc"><p>A <code>strip</code> action, run whenever the tool is a <code><a title="blight.tool.STRIP" href="tool.html#blight.tool.STRIP">STRIP</a></code> instance.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class STRIPAction(Action):
+    &#34;&#34;&#34;
+    A `strip` action, run whenever the tool is a `blight.tool.STRIP` instance.
+    &#34;&#34;&#34;
+
+    def _should_run_on(self, tool: Tool) -&gt; bool:
+        return isinstance(tool, blight.tool.STRIP)</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="blight.action.Action" href="#blight.action.Action">Action</a></li>
+</ul>
+<h3>Subclasses</h3>
+<ul class="hlist">
+<li><a title="blight.actions.skip_strip.SkipStrip" href="actions/skip_strip.html#blight.actions.skip_strip.SkipStrip">SkipStrip</a></li>
+</ul>
+<h3>Inherited members</h3>
+<ul class="hlist">
+<li><code><b><a title="blight.action.Action" href="#blight.action.Action">Action</a></b></code>:
+<ul class="hlist">
+<li><code><a title="blight.action.Action.after_run" href="#blight.action.Action.after_run">after_run</a></code></li>
+<li><code><a title="blight.action.Action.before_run" href="#blight.action.Action.before_run">before_run</a></code></li>
+</ul>
+</li>
+</ul>
+</dd>
+</dl>
+</section>
+</article>
+<nav id="sidebar">
+<h1>Index</h1>
+<div class="toc">
+<ul></ul>
+</div>
+<ul id="index">
+<li><h3>Super-module</h3>
+<ul>
+<li><code><a title="blight" href="index.html">blight</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-classes">Classes</a></h3>
+<ul>
+<li>
+<h4><code><a title="blight.action.ARAction" href="#blight.action.ARAction">ARAction</a></code></h4>
+</li>
+<li>
+<h4><code><a title="blight.action.ASAction" href="#blight.action.ASAction">ASAction</a></code></h4>
+</li>
+<li>
+<h4><code><a title="blight.action.Action" href="#blight.action.Action">Action</a></code></h4>
+<ul class="">
+<li><code><a title="blight.action.Action.after_run" href="#blight.action.Action.after_run">after_run</a></code></li>
+<li><code><a title="blight.action.Action.before_run" href="#blight.action.Action.before_run">before_run</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="blight.action.CCAction" href="#blight.action.CCAction">CCAction</a></code></h4>
+</li>
+<li>
+<h4><code><a title="blight.action.CPPAction" href="#blight.action.CPPAction">CPPAction</a></code></h4>
+</li>
+<li>
+<h4><code><a title="blight.action.CXXAction" href="#blight.action.CXXAction">CXXAction</a></code></h4>
+</li>
+<li>
+<h4><code><a title="blight.action.CompilerAction" href="#blight.action.CompilerAction">CompilerAction</a></code></h4>
+</li>
+<li>
+<h4><code><a title="blight.action.LDAction" href="#blight.action.LDAction">LDAction</a></code></h4>
+</li>
+<li>
+<h4><code><a title="blight.action.STRIPAction" href="#blight.action.STRIPAction">STRIPAction</a></code></h4>
+</li>
+</ul>
+</li>
+</ul>
+</nav>
+</main>
+<footer id="footer">
+<p>Generated by <a href="https://pdoc3.github.io/pdoc"><cite>pdoc</cite> 0.9.2</a>.</p>
+</footer>
+</body>
+</html>

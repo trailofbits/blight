@@ -1,0 +1,1773 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
+<meta name="generator" content="pdoc 0.9.2" />
+<title>blight.enums API documentation</title>
+<meta name="description" content="Enumerations for blight." />
+<link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/sanitize.min.css" integrity="sha256-PK9q560IAAa6WVRRh76LtCaI8pjTJ2z11v0miyNNjrs=" crossorigin>
+<link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/typography.min.css" integrity="sha256-7l/o7C8jubJiy74VsKTidCy1yBkRtiUGbVkYBylBqUg=" crossorigin>
+<link rel="stylesheet preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/styles/github.min.css" crossorigin>
+<style>:root{--highlight-color:#fe9}.flex{display:flex !important}body{line-height:1.5em}#content{padding:20px}#sidebar{padding:30px;overflow:hidden}#sidebar > *:last-child{margin-bottom:2cm}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:1em 0 .50em 0}h3{font-size:1.4em;margin:25px 0 10px 0}h4{margin:0;font-size:105%}h1:target,h2:target,h3:target,h4:target,h5:target,h6:target{background:var(--highlight-color);padding:.2em 0}a{color:#058;text-decoration:none;transition:color .3s ease-in-out}a:hover{color:#e82}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900}pre code{background:#f8f8f8;font-size:.8em;line-height:1.4em}code{background:#f2f2f1;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{background:#f8f8f8;border:0;border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0;padding:1ex}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{margin-top:.6em;font-weight:bold}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-weight:bold;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}dt:target .name{background:var(--highlight-color)}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source summary,.git-link-div{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase}.source summary > *{white-space:nowrap;cursor:pointer}.git-link{color:inherit;margin-left:1em}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}td{padding:0 .5em}.admonition{padding:.1em .5em;margin-bottom:1em}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
+<style media="screen and (min-width: 700px)">@media screen and (min-width:700px){#sidebar{width:30%;height:100vh;overflow:auto;position:sticky;top:0}#content{width:70%;max-width:100ch;padding:3em 4em;border-left:1px solid #ddd}pre code{font-size:1em}.item .name{font-size:1em}main{display:flex;flex-direction:row-reverse;justify-content:flex-end}.toc ul ul,#index ul{padding-left:1.5em}.toc > ul > li{margin-top:.5em}}</style>
+<style media="print">@media print{#sidebar h1{page-break-before:always}.source{display:none}}@media print{*{background:transparent !important;color:#000 !important;box-shadow:none !important;text-shadow:none !important}a[href]:after{content:" (" attr(href) ")";font-size:90%}a[href][title]:after{content:none}abbr[title]:after{content:" (" attr(title) ")"}.ir a:after,a[href^="javascript:"]:after,a[href^="#"]:after{content:""}pre,blockquote{border:1px solid #999;page-break-inside:avoid}thead{display:table-header-group}tr,img{page-break-inside:avoid}img{max-width:100% !important}@page{margin:0.5cm}p,h2,h3{orphans:3;widows:3}h1,h2,h3,h4,h5,h6{page-break-after:avoid}}</style>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/highlight.min.js" integrity="sha256-Uv3H6lx7dJmRfRvH8TH6kJD1TSK1aFcwgx+mdg3epi8=" crossorigin></script>
+<script>window.addEventListener('DOMContentLoaded', () => hljs.initHighlighting())</script>
+</head>
+<body>
+<main>
+<article id="content">
+<header>
+<h1 class="title">Module <code>blight.enums</code></h1>
+</header>
+<section id="section-intro">
+<p>Enumerations for blight.</p>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">&#34;&#34;&#34;
+Enumerations for blight.
+&#34;&#34;&#34;
+
+from __future__ import annotations
+
+import enum
+
+from blight.util import assert_never
+
+
+@enum.unique
+class BuildTool(str, enum.Enum):
+    &#34;&#34;&#34;
+    An enumeration of standard build tools.
+    &#34;&#34;&#34;
+
+    CC: str = &#34;CC&#34;
+    CXX: str = &#34;CXX&#34;
+    CPP: str = &#34;CPP&#34;
+    LD: str = &#34;LD&#34;
+    AS: str = &#34;AS&#34;
+    AR: str = &#34;AR&#34;
+    STRIP: str = &#34;STRIP&#34;
+
+    @property
+    def cmd(self) -&gt; str:
+        &#34;&#34;&#34;
+        Returns the standard command associated with this tool.
+        &#34;&#34;&#34;
+        if self is BuildTool.CC:
+            return &#34;cc&#34;
+        elif self is BuildTool.CXX:
+            return &#34;c++&#34;
+        elif self is BuildTool.CPP:
+            return &#34;cpp&#34;
+        elif self is BuildTool.LD:
+            return &#34;ld&#34;
+        elif self is BuildTool.AS:
+            return &#34;as&#34;
+        elif self is BuildTool.AR:
+            return &#34;ar&#34;
+        elif self is BuildTool.STRIP:
+            return &#34;strip&#34;
+        else:
+            assert_never(self)  # pragma: no cover
+
+    @property
+    def env(self) -&gt; str:
+        return self.value
+
+    @property
+    def blight_tool(self) -&gt; BlightTool:
+        if self is BuildTool.CC:
+            return BlightTool.CC
+        elif self is BuildTool.CXX:
+            return BlightTool.CXX
+        elif self is BuildTool.CPP:
+            return BlightTool.CPP
+        elif self is BuildTool.LD:
+            return BlightTool.LD
+        elif self is BuildTool.AS:
+            return BlightTool.AS
+        elif self is BuildTool.AR:
+            return BlightTool.AR
+        elif self is BuildTool.STRIP:
+            return BlightTool.STRIP
+        else:
+            assert_never(self)  # pragma: no cover
+
+
+@enum.unique
+class BlightTool(str, enum.Enum):
+    &#34;&#34;&#34;
+    An enumeration of blight wrappers for the standard build tools.
+    &#34;&#34;&#34;
+
+    CC: str = &#34;blight-cc&#34;
+    CXX: str = &#34;blight-c++&#34;
+    CPP: str = &#34;blight-cpp&#34;
+    LD: str = &#34;blight-ld&#34;
+    AS: str = &#34;blight-as&#34;
+    AR: str = &#34;blight-ar&#34;
+    STRIP: str = &#34;blight-strip&#34;
+
+    @property
+    def build_tool(self) -&gt; BuildTool:
+        &#34;&#34;&#34;
+        Returns the `BuildTool` corresponding to this blight wrapper tool.
+        &#34;&#34;&#34;
+        if self is BlightTool.CC:
+            return BuildTool.CC
+        elif self is BlightTool.CXX:
+            return BuildTool.CXX
+        elif self is BlightTool.CPP:
+            return BuildTool.CPP
+        elif self is BlightTool.LD:
+            return BuildTool.LD
+        elif self is BlightTool.AS:
+            return BuildTool.AS
+        elif self is BlightTool.AR:
+            return BuildTool.AR
+        elif self is BlightTool.STRIP:
+            return BuildTool.STRIP
+        else:
+            assert_never(self)  # pragma: no cover
+
+    @property
+    def env(self) -&gt; str:
+        return f&#34;BLIGHT_WRAPPED_{self.build_tool.env}&#34;
+
+
+@enum.unique
+class CompilerStage(enum.Enum):
+    &#34;&#34;&#34;
+    Models the known stages that a compiler tool can be in.
+    &#34;&#34;&#34;
+
+    # TODO(ww): Maybe handle -v, -###, --help, --help=..., etc.
+
+    Preprocess = enum.auto()
+    &#34;&#34;&#34;
+    Preprocess only (e.g., `cc -E`)
+    &#34;&#34;&#34;
+
+    SyntaxOnly = enum.auto()
+    &#34;&#34;&#34;
+    Preprocess, parse, and typecheck only (e.g., `cc -fsyntax-only`)
+    &#34;&#34;&#34;
+
+    Assemble = enum.auto()
+    &#34;&#34;&#34;
+    Compile to assembly but don&#39;t run the assembler (e.g., `cc -S`)
+    &#34;&#34;&#34;
+
+    CompileObject = enum.auto()
+    &#34;&#34;&#34;
+    Compile and assemble to an individual object (e.g. `cc -c`)
+    &#34;&#34;&#34;
+
+    AllStages = enum.auto()
+    &#34;&#34;&#34;
+    All stages, including the linker (e.g. `cc`)
+    &#34;&#34;&#34;
+
+    Unknown = enum.auto()
+    &#34;&#34;&#34;
+    An unknown or unqualified stage.
+    &#34;&#34;&#34;
+
+
+@enum.unique
+class Lang(enum.Enum):
+    &#34;&#34;&#34;
+    Models the known languages for a tool.
+    &#34;&#34;&#34;
+
+    # TODO(ww): Maybe add each of the following:
+    # * Asm (assembly)
+    # * PreprocessedC (C that&#39;s already gone through the preprocessor)
+    # * PreprocessedCxx (C++ that&#39;s already gone through the preprocessor)
+
+    C = enum.auto()
+    &#34;&#34;&#34;
+    The C programming language.
+    &#34;&#34;&#34;
+
+    Cxx = enum.auto()
+    &#34;&#34;&#34;
+    The C++ programming language.
+    &#34;&#34;&#34;
+
+    Unknown = enum.auto()
+    &#34;&#34;&#34;
+    An unknown language.
+    &#34;&#34;&#34;
+
+
+@enum.unique
+class Std(enum.Enum):
+    &#34;&#34;&#34;
+    Models the various language standards for a tool.
+    &#34;&#34;&#34;
+
+    def is_unknown(self) -&gt; bool:
+        &#34;&#34;&#34;
+        Returns:
+            `True` if the standard is unknown
+        &#34;&#34;&#34;
+        return self in [Std.CUnknown, Std.CxxUnknown, Std.GnuUnknown, Std.GnuxxUnknown, Std.Unknown]
+
+    def is_cstd(self) -&gt; bool:
+        &#34;&#34;&#34;
+        Returns:
+            `True` if the standard is a C standard
+        &#34;&#34;&#34;
+        return self in [
+            Std.C89,
+            Std.C94,
+            Std.C99,
+            Std.C11,
+            Std.C17,
+            Std.C2x,
+            Std.Gnu89,
+            Std.Gnu99,
+            Std.Gnu11,
+            Std.Gnu17,
+            Std.Gnu2x,
+            Std.CUnknown,
+            Std.GnuUnknown,
+        ]
+
+    def is_cxxstd(self) -&gt; bool:
+        &#34;&#34;&#34;
+        Returns:
+            `True` if the standard is a C++ standard
+        &#34;&#34;&#34;
+        return self in [
+            Std.Cxx03,
+            Std.Cxx11,
+            Std.Cxx14,
+            Std.Cxx17,
+            Std.Cxx2a,
+            Std.Gnuxx03,
+            Std.Gnuxx11,
+            Std.Gnuxx14,
+            Std.Gnuxx17,
+            Std.Gnuxx2a,
+            Std.CxxUnknown,
+            Std.GnuxxUnknown,
+        ]
+
+    def lang(self) -&gt; Lang:
+        &#34;&#34;&#34;
+        Returns: a `Lang` corresponding to this `Std`.
+        &#34;&#34;&#34;
+        if self.is_cstd():
+            return Lang.C
+        elif self.is_cxxstd():
+            return Lang.Cxx
+        else:
+            return Lang.Unknown
+
+    C89 = enum.auto()
+    &#34;&#34;&#34;
+    C89 (a.k.a. C90, iso9899:1990)
+    &#34;&#34;&#34;
+
+    C94 = enum.auto()
+    &#34;&#34;&#34;
+    C94 (a.k.a. iso9899:199409)
+    &#34;&#34;&#34;
+
+    C99 = enum.auto()
+    &#34;&#34;&#34;
+    C99 (a.k.a. C9x, iso9899:1999, iso9899:199x)
+    &#34;&#34;&#34;
+
+    C11 = enum.auto()
+    &#34;&#34;&#34;
+    C11 (a.k.a. C1x, iso9899:2011)
+    &#34;&#34;&#34;
+
+    C17 = enum.auto()
+    &#34;&#34;&#34;
+    C17 (a.k.a. C18, iso9899:2017, iso9899:2018)
+    &#34;&#34;&#34;
+
+    C2x = enum.auto()
+    &#34;&#34;&#34;
+    C2x
+    &#34;&#34;&#34;
+
+    Gnu89 = enum.auto()
+    &#34;&#34;&#34;
+    GNU C89 (a.k.a. GNU C 90)
+    &#34;&#34;&#34;
+
+    Gnu99 = enum.auto()
+    &#34;&#34;&#34;
+    GNU C99 (a.k.a. GNU C 9x)
+    &#34;&#34;&#34;
+
+    Gnu11 = enum.auto()
+    &#34;&#34;&#34;
+    GNU C11 (a.k.a. GNU C11x)
+    &#34;&#34;&#34;
+
+    Gnu17 = enum.auto()
+    &#34;&#34;&#34;
+    GNU C17 (a.k.a. GNU C18)
+    &#34;&#34;&#34;
+
+    Gnu2x = enum.auto()
+    &#34;&#34;&#34;
+    GNU C2x
+    &#34;&#34;&#34;
+
+    Cxx03 = enum.auto()
+    &#34;&#34;&#34;
+    C++03 (a.k.a. C++98)
+    &#34;&#34;&#34;
+
+    Cxx11 = enum.auto()
+    &#34;&#34;&#34;
+    C++11 (a.k.a. C++0x)
+    &#34;&#34;&#34;
+
+    Cxx14 = enum.auto()
+    &#34;&#34;&#34;
+    C++14 (a.k.a. C++1y)
+    &#34;&#34;&#34;
+
+    Cxx17 = enum.auto()
+    &#34;&#34;&#34;
+    C++17 (a.k.a. C++1z)
+    &#34;&#34;&#34;
+
+    Cxx2a = enum.auto()
+    &#34;&#34;&#34;
+    C++2a (a.k.a. C++20)
+    &#34;&#34;&#34;
+
+    Gnuxx03 = enum.auto()
+    &#34;&#34;&#34;
+    GNU C++03 (a.k.a. GNU C++98)
+    &#34;&#34;&#34;
+
+    Gnuxx11 = enum.auto()
+    &#34;&#34;&#34;
+    GNU C++11 (a.k.a. GNU C++0x)
+    &#34;&#34;&#34;
+
+    Gnuxx14 = enum.auto()
+    &#34;&#34;&#34;
+    GNU C++14 (a.k.a. GNU C++1y)
+    &#34;&#34;&#34;
+
+    Gnuxx17 = enum.auto()
+    &#34;&#34;&#34;
+    GNU C++17 (a.k.a. GNU C++1z)
+    &#34;&#34;&#34;
+
+    Gnuxx2a = enum.auto()
+    &#34;&#34;&#34;
+    GNU C++2a (a.k.a. GNU C++20)
+    &#34;&#34;&#34;
+
+    CUnknown = enum.auto()
+    &#34;&#34;&#34;
+    Standard C, but an unknown version.
+    &#34;&#34;&#34;
+
+    CxxUnknown = enum.auto()
+    &#34;&#34;&#34;
+    Standard C++, but an unknown version.
+    &#34;&#34;&#34;
+
+    GnuUnknown = enum.auto()
+    &#34;&#34;&#34;
+    GNU C, but an unknown version.
+    &#34;&#34;&#34;
+
+    GnuxxUnknown = enum.auto()
+    &#34;&#34;&#34;
+    GNU C++, but an unknown version.
+    &#34;&#34;&#34;
+
+    Unknown = enum.auto()
+    &#34;&#34;&#34;
+    A completely unknown language standard.
+    &#34;&#34;&#34;
+
+
+@enum.unique
+class OptLevel(enum.Enum):
+    &#34;&#34;&#34;
+    Models the known optimization levels.
+    &#34;&#34;&#34;
+
+    def for_size(self) -&gt; bool:
+        &#34;&#34;&#34;
+        Returns:
+            `True` if the optimization is for compiled size
+        &#34;&#34;&#34;
+        return self == OptLevel.OSize or self == OptLevel.OSizeZ
+
+    def for_performance(self) -&gt; bool:
+        &#34;&#34;&#34;
+        Returns:
+            `True` if the optimization is for performance
+        &#34;&#34;&#34;
+        return self in [OptLevel.O1, OptLevel.O2, OptLevel.O3, OptLevel.OFast]
+
+    def for_debug(self) -&gt; bool:
+        &#34;&#34;&#34;
+        Returns:
+            `True` if the optimization is for debugging experience
+        &#34;&#34;&#34;
+        return self == OptLevel.ODebug
+
+    O0 = enum.auto()
+    &#34;&#34;&#34;
+    No optimizations.
+    &#34;&#34;&#34;
+
+    O1 = enum.auto()
+    &#34;&#34;&#34;
+    Minimal performance optimizations.
+    &#34;&#34;&#34;
+
+    O2 = enum.auto()
+    &#34;&#34;&#34;
+    Some performance optimizations.
+    &#34;&#34;&#34;
+
+    O3 = enum.auto()
+    &#34;&#34;&#34;
+    Aggressive performance optimizations.
+    &#34;&#34;&#34;
+
+    OFast = enum.auto()
+    &#34;&#34;&#34;
+    Aggressive, possibly standards-breaking performance optimizations.
+    &#34;&#34;&#34;
+
+    OSize = enum.auto()
+    &#34;&#34;&#34;
+    Size optimizations.
+    &#34;&#34;&#34;
+
+    OSizeZ = enum.auto()
+    &#34;&#34;&#34;
+    More aggressive size optimizations (Clang only).
+    &#34;&#34;&#34;
+
+    ODebug = enum.auto()
+    &#34;&#34;&#34;
+    Debugging experience optimizations.
+    &#34;&#34;&#34;
+
+    Unknown = enum.auto()
+    &#34;&#34;&#34;
+    An unknown optimization level.
+    &#34;&#34;&#34;
+
+
+@enum.unique
+class CodeModel(enum.Enum):
+    &#34;&#34;&#34;
+    Models the known machine code models.
+    &#34;&#34;&#34;
+
+    Small = enum.auto()
+    &#34;&#34;&#34;
+    The `small` machine code model (also `medlow` in Clang).
+    &#34;&#34;&#34;
+
+    Medium = enum.auto()
+    &#34;&#34;&#34;
+    The `medium` machine code model (also `medany` in Clang).
+    &#34;&#34;&#34;
+
+    Large = enum.auto()
+    &#34;&#34;&#34;
+    The `large` machine code model.
+    &#34;&#34;&#34;
+
+    Kernel = enum.auto()
+    &#34;&#34;&#34;
+    The `kernel` machine code model.
+    &#34;&#34;&#34;
+
+    Unknown = enum.auto()
+    &#34;&#34;&#34;
+    An unknown machine code model.
+    &#34;&#34;&#34;</code></pre>
+</details>
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+<h2 class="section-title" id="header-classes">Classes</h2>
+<dl>
+<dt id="blight.enums.BlightTool"><code class="flex name class">
+<span>class <span class="ident">BlightTool</span></span>
+<span>(</span><span>value, names=None, *, module=None, qualname=None, type=None, start=1)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>An enumeration of blight wrappers for the standard build tools.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@enum.unique
+class BlightTool(str, enum.Enum):
+    &#34;&#34;&#34;
+    An enumeration of blight wrappers for the standard build tools.
+    &#34;&#34;&#34;
+
+    CC: str = &#34;blight-cc&#34;
+    CXX: str = &#34;blight-c++&#34;
+    CPP: str = &#34;blight-cpp&#34;
+    LD: str = &#34;blight-ld&#34;
+    AS: str = &#34;blight-as&#34;
+    AR: str = &#34;blight-ar&#34;
+    STRIP: str = &#34;blight-strip&#34;
+
+    @property
+    def build_tool(self) -&gt; BuildTool:
+        &#34;&#34;&#34;
+        Returns the `BuildTool` corresponding to this blight wrapper tool.
+        &#34;&#34;&#34;
+        if self is BlightTool.CC:
+            return BuildTool.CC
+        elif self is BlightTool.CXX:
+            return BuildTool.CXX
+        elif self is BlightTool.CPP:
+            return BuildTool.CPP
+        elif self is BlightTool.LD:
+            return BuildTool.LD
+        elif self is BlightTool.AS:
+            return BuildTool.AS
+        elif self is BlightTool.AR:
+            return BuildTool.AR
+        elif self is BlightTool.STRIP:
+            return BuildTool.STRIP
+        else:
+            assert_never(self)  # pragma: no cover
+
+    @property
+    def env(self) -&gt; str:
+        return f&#34;BLIGHT_WRAPPED_{self.build_tool.env}&#34;</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li>builtins.str</li>
+<li>enum.Enum</li>
+</ul>
+<h3>Class variables</h3>
+<dl>
+<dt id="blight.enums.BlightTool.AR"><code class="name">var <span class="ident">AR</span> : str</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="blight.enums.BlightTool.AS"><code class="name">var <span class="ident">AS</span> : str</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="blight.enums.BlightTool.CC"><code class="name">var <span class="ident">CC</span> : str</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="blight.enums.BlightTool.CPP"><code class="name">var <span class="ident">CPP</span> : str</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="blight.enums.BlightTool.CXX"><code class="name">var <span class="ident">CXX</span> : str</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="blight.enums.BlightTool.LD"><code class="name">var <span class="ident">LD</span> : str</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="blight.enums.BlightTool.STRIP"><code class="name">var <span class="ident">STRIP</span> : str</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+</dl>
+<h3>Instance variables</h3>
+<dl>
+<dt id="blight.enums.BlightTool.build_tool"><code class="name">var <span class="ident">build_tool</span> : <a title="blight.enums.BuildTool" href="#blight.enums.BuildTool">BuildTool</a></code></dt>
+<dd>
+<div class="desc"><p>Returns the <code><a title="blight.enums.BuildTool" href="#blight.enums.BuildTool">BuildTool</a></code> corresponding to this blight wrapper tool.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@property
+def build_tool(self) -&gt; BuildTool:
+    &#34;&#34;&#34;
+    Returns the `BuildTool` corresponding to this blight wrapper tool.
+    &#34;&#34;&#34;
+    if self is BlightTool.CC:
+        return BuildTool.CC
+    elif self is BlightTool.CXX:
+        return BuildTool.CXX
+    elif self is BlightTool.CPP:
+        return BuildTool.CPP
+    elif self is BlightTool.LD:
+        return BuildTool.LD
+    elif self is BlightTool.AS:
+        return BuildTool.AS
+    elif self is BlightTool.AR:
+        return BuildTool.AR
+    elif self is BlightTool.STRIP:
+        return BuildTool.STRIP
+    else:
+        assert_never(self)  # pragma: no cover</code></pre>
+</details>
+</dd>
+<dt id="blight.enums.BlightTool.env"><code class="name">var <span class="ident">env</span> : str</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@property
+def env(self) -&gt; str:
+    return f&#34;BLIGHT_WRAPPED_{self.build_tool.env}&#34;</code></pre>
+</details>
+</dd>
+</dl>
+</dd>
+<dt id="blight.enums.BuildTool"><code class="flex name class">
+<span>class <span class="ident">BuildTool</span></span>
+<span>(</span><span>value, names=None, *, module=None, qualname=None, type=None, start=1)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>An enumeration of standard build tools.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@enum.unique
+class BuildTool(str, enum.Enum):
+    &#34;&#34;&#34;
+    An enumeration of standard build tools.
+    &#34;&#34;&#34;
+
+    CC: str = &#34;CC&#34;
+    CXX: str = &#34;CXX&#34;
+    CPP: str = &#34;CPP&#34;
+    LD: str = &#34;LD&#34;
+    AS: str = &#34;AS&#34;
+    AR: str = &#34;AR&#34;
+    STRIP: str = &#34;STRIP&#34;
+
+    @property
+    def cmd(self) -&gt; str:
+        &#34;&#34;&#34;
+        Returns the standard command associated with this tool.
+        &#34;&#34;&#34;
+        if self is BuildTool.CC:
+            return &#34;cc&#34;
+        elif self is BuildTool.CXX:
+            return &#34;c++&#34;
+        elif self is BuildTool.CPP:
+            return &#34;cpp&#34;
+        elif self is BuildTool.LD:
+            return &#34;ld&#34;
+        elif self is BuildTool.AS:
+            return &#34;as&#34;
+        elif self is BuildTool.AR:
+            return &#34;ar&#34;
+        elif self is BuildTool.STRIP:
+            return &#34;strip&#34;
+        else:
+            assert_never(self)  # pragma: no cover
+
+    @property
+    def env(self) -&gt; str:
+        return self.value
+
+    @property
+    def blight_tool(self) -&gt; BlightTool:
+        if self is BuildTool.CC:
+            return BlightTool.CC
+        elif self is BuildTool.CXX:
+            return BlightTool.CXX
+        elif self is BuildTool.CPP:
+            return BlightTool.CPP
+        elif self is BuildTool.LD:
+            return BlightTool.LD
+        elif self is BuildTool.AS:
+            return BlightTool.AS
+        elif self is BuildTool.AR:
+            return BlightTool.AR
+        elif self is BuildTool.STRIP:
+            return BlightTool.STRIP
+        else:
+            assert_never(self)  # pragma: no cover</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li>builtins.str</li>
+<li>enum.Enum</li>
+</ul>
+<h3>Class variables</h3>
+<dl>
+<dt id="blight.enums.BuildTool.AR"><code class="name">var <span class="ident">AR</span> : str</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="blight.enums.BuildTool.AS"><code class="name">var <span class="ident">AS</span> : str</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="blight.enums.BuildTool.CC"><code class="name">var <span class="ident">CC</span> : str</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="blight.enums.BuildTool.CPP"><code class="name">var <span class="ident">CPP</span> : str</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="blight.enums.BuildTool.CXX"><code class="name">var <span class="ident">CXX</span> : str</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="blight.enums.BuildTool.LD"><code class="name">var <span class="ident">LD</span> : str</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="blight.enums.BuildTool.STRIP"><code class="name">var <span class="ident">STRIP</span> : str</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+</dl>
+<h3>Instance variables</h3>
+<dl>
+<dt id="blight.enums.BuildTool.blight_tool"><code class="name">var <span class="ident">blight_tool</span> : <a title="blight.enums.BlightTool" href="#blight.enums.BlightTool">BlightTool</a></code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@property
+def blight_tool(self) -&gt; BlightTool:
+    if self is BuildTool.CC:
+        return BlightTool.CC
+    elif self is BuildTool.CXX:
+        return BlightTool.CXX
+    elif self is BuildTool.CPP:
+        return BlightTool.CPP
+    elif self is BuildTool.LD:
+        return BlightTool.LD
+    elif self is BuildTool.AS:
+        return BlightTool.AS
+    elif self is BuildTool.AR:
+        return BlightTool.AR
+    elif self is BuildTool.STRIP:
+        return BlightTool.STRIP
+    else:
+        assert_never(self)  # pragma: no cover</code></pre>
+</details>
+</dd>
+<dt id="blight.enums.BuildTool.cmd"><code class="name">var <span class="ident">cmd</span> : str</code></dt>
+<dd>
+<div class="desc"><p>Returns the standard command associated with this tool.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@property
+def cmd(self) -&gt; str:
+    &#34;&#34;&#34;
+    Returns the standard command associated with this tool.
+    &#34;&#34;&#34;
+    if self is BuildTool.CC:
+        return &#34;cc&#34;
+    elif self is BuildTool.CXX:
+        return &#34;c++&#34;
+    elif self is BuildTool.CPP:
+        return &#34;cpp&#34;
+    elif self is BuildTool.LD:
+        return &#34;ld&#34;
+    elif self is BuildTool.AS:
+        return &#34;as&#34;
+    elif self is BuildTool.AR:
+        return &#34;ar&#34;
+    elif self is BuildTool.STRIP:
+        return &#34;strip&#34;
+    else:
+        assert_never(self)  # pragma: no cover</code></pre>
+</details>
+</dd>
+<dt id="blight.enums.BuildTool.env"><code class="name">var <span class="ident">env</span> : str</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@property
+def env(self) -&gt; str:
+    return self.value</code></pre>
+</details>
+</dd>
+</dl>
+</dd>
+<dt id="blight.enums.CodeModel"><code class="flex name class">
+<span>class <span class="ident">CodeModel</span></span>
+<span>(</span><span>value, names=None, *, module=None, qualname=None, type=None, start=1)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Models the known machine code models.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@enum.unique
+class CodeModel(enum.Enum):
+    &#34;&#34;&#34;
+    Models the known machine code models.
+    &#34;&#34;&#34;
+
+    Small = enum.auto()
+    &#34;&#34;&#34;
+    The `small` machine code model (also `medlow` in Clang).
+    &#34;&#34;&#34;
+
+    Medium = enum.auto()
+    &#34;&#34;&#34;
+    The `medium` machine code model (also `medany` in Clang).
+    &#34;&#34;&#34;
+
+    Large = enum.auto()
+    &#34;&#34;&#34;
+    The `large` machine code model.
+    &#34;&#34;&#34;
+
+    Kernel = enum.auto()
+    &#34;&#34;&#34;
+    The `kernel` machine code model.
+    &#34;&#34;&#34;
+
+    Unknown = enum.auto()
+    &#34;&#34;&#34;
+    An unknown machine code model.
+    &#34;&#34;&#34;</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li>enum.Enum</li>
+</ul>
+<h3>Class variables</h3>
+<dl>
+<dt id="blight.enums.CodeModel.Kernel"><code class="name">var <span class="ident">Kernel</span></code></dt>
+<dd>
+<div class="desc"><p>The <code>kernel</code> machine code model.</p></div>
+</dd>
+<dt id="blight.enums.CodeModel.Large"><code class="name">var <span class="ident">Large</span></code></dt>
+<dd>
+<div class="desc"><p>The <code>large</code> machine code model.</p></div>
+</dd>
+<dt id="blight.enums.CodeModel.Medium"><code class="name">var <span class="ident">Medium</span></code></dt>
+<dd>
+<div class="desc"><p>The <code>medium</code> machine code model (also <code>medany</code> in Clang).</p></div>
+</dd>
+<dt id="blight.enums.CodeModel.Small"><code class="name">var <span class="ident">Small</span></code></dt>
+<dd>
+<div class="desc"><p>The <code>small</code> machine code model (also <code>medlow</code> in Clang).</p></div>
+</dd>
+<dt id="blight.enums.CodeModel.Unknown"><code class="name">var <span class="ident">Unknown</span></code></dt>
+<dd>
+<div class="desc"><p>An unknown machine code model.</p></div>
+</dd>
+</dl>
+</dd>
+<dt id="blight.enums.CompilerStage"><code class="flex name class">
+<span>class <span class="ident">CompilerStage</span></span>
+<span>(</span><span>value, names=None, *, module=None, qualname=None, type=None, start=1)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Models the known stages that a compiler tool can be in.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@enum.unique
+class CompilerStage(enum.Enum):
+    &#34;&#34;&#34;
+    Models the known stages that a compiler tool can be in.
+    &#34;&#34;&#34;
+
+    # TODO(ww): Maybe handle -v, -###, --help, --help=..., etc.
+
+    Preprocess = enum.auto()
+    &#34;&#34;&#34;
+    Preprocess only (e.g., `cc -E`)
+    &#34;&#34;&#34;
+
+    SyntaxOnly = enum.auto()
+    &#34;&#34;&#34;
+    Preprocess, parse, and typecheck only (e.g., `cc -fsyntax-only`)
+    &#34;&#34;&#34;
+
+    Assemble = enum.auto()
+    &#34;&#34;&#34;
+    Compile to assembly but don&#39;t run the assembler (e.g., `cc -S`)
+    &#34;&#34;&#34;
+
+    CompileObject = enum.auto()
+    &#34;&#34;&#34;
+    Compile and assemble to an individual object (e.g. `cc -c`)
+    &#34;&#34;&#34;
+
+    AllStages = enum.auto()
+    &#34;&#34;&#34;
+    All stages, including the linker (e.g. `cc`)
+    &#34;&#34;&#34;
+
+    Unknown = enum.auto()
+    &#34;&#34;&#34;
+    An unknown or unqualified stage.
+    &#34;&#34;&#34;</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li>enum.Enum</li>
+</ul>
+<h3>Class variables</h3>
+<dl>
+<dt id="blight.enums.CompilerStage.AllStages"><code class="name">var <span class="ident">AllStages</span></code></dt>
+<dd>
+<div class="desc"><p>All stages, including the linker (e.g. <code>cc</code>)</p></div>
+</dd>
+<dt id="blight.enums.CompilerStage.Assemble"><code class="name">var <span class="ident">Assemble</span></code></dt>
+<dd>
+<div class="desc"><p>Compile to assembly but don't run the assembler (e.g., <code>cc -S</code>)</p></div>
+</dd>
+<dt id="blight.enums.CompilerStage.CompileObject"><code class="name">var <span class="ident">CompileObject</span></code></dt>
+<dd>
+<div class="desc"><p>Compile and assemble to an individual object (e.g. <code>cc -c</code>)</p></div>
+</dd>
+<dt id="blight.enums.CompilerStage.Preprocess"><code class="name">var <span class="ident">Preprocess</span></code></dt>
+<dd>
+<div class="desc"><p>Preprocess only (e.g., <code>cc -E</code>)</p></div>
+</dd>
+<dt id="blight.enums.CompilerStage.SyntaxOnly"><code class="name">var <span class="ident">SyntaxOnly</span></code></dt>
+<dd>
+<div class="desc"><p>Preprocess, parse, and typecheck only (e.g., <code>cc -fsyntax-only</code>)</p></div>
+</dd>
+<dt id="blight.enums.CompilerStage.Unknown"><code class="name">var <span class="ident">Unknown</span></code></dt>
+<dd>
+<div class="desc"><p>An unknown or unqualified stage.</p></div>
+</dd>
+</dl>
+</dd>
+<dt id="blight.enums.Lang"><code class="flex name class">
+<span>class <span class="ident">Lang</span></span>
+<span>(</span><span>value, names=None, *, module=None, qualname=None, type=None, start=1)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Models the known languages for a tool.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@enum.unique
+class Lang(enum.Enum):
+    &#34;&#34;&#34;
+    Models the known languages for a tool.
+    &#34;&#34;&#34;
+
+    # TODO(ww): Maybe add each of the following:
+    # * Asm (assembly)
+    # * PreprocessedC (C that&#39;s already gone through the preprocessor)
+    # * PreprocessedCxx (C++ that&#39;s already gone through the preprocessor)
+
+    C = enum.auto()
+    &#34;&#34;&#34;
+    The C programming language.
+    &#34;&#34;&#34;
+
+    Cxx = enum.auto()
+    &#34;&#34;&#34;
+    The C++ programming language.
+    &#34;&#34;&#34;
+
+    Unknown = enum.auto()
+    &#34;&#34;&#34;
+    An unknown language.
+    &#34;&#34;&#34;</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li>enum.Enum</li>
+</ul>
+<h3>Class variables</h3>
+<dl>
+<dt id="blight.enums.Lang.C"><code class="name">var <span class="ident">C</span></code></dt>
+<dd>
+<div class="desc"><p>The C programming language.</p></div>
+</dd>
+<dt id="blight.enums.Lang.Cxx"><code class="name">var <span class="ident">Cxx</span></code></dt>
+<dd>
+<div class="desc"><p>The C++ programming language.</p></div>
+</dd>
+<dt id="blight.enums.Lang.Unknown"><code class="name">var <span class="ident">Unknown</span></code></dt>
+<dd>
+<div class="desc"><p>An unknown language.</p></div>
+</dd>
+</dl>
+</dd>
+<dt id="blight.enums.OptLevel"><code class="flex name class">
+<span>class <span class="ident">OptLevel</span></span>
+<span>(</span><span>value, names=None, *, module=None, qualname=None, type=None, start=1)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Models the known optimization levels.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@enum.unique
+class OptLevel(enum.Enum):
+    &#34;&#34;&#34;
+    Models the known optimization levels.
+    &#34;&#34;&#34;
+
+    def for_size(self) -&gt; bool:
+        &#34;&#34;&#34;
+        Returns:
+            `True` if the optimization is for compiled size
+        &#34;&#34;&#34;
+        return self == OptLevel.OSize or self == OptLevel.OSizeZ
+
+    def for_performance(self) -&gt; bool:
+        &#34;&#34;&#34;
+        Returns:
+            `True` if the optimization is for performance
+        &#34;&#34;&#34;
+        return self in [OptLevel.O1, OptLevel.O2, OptLevel.O3, OptLevel.OFast]
+
+    def for_debug(self) -&gt; bool:
+        &#34;&#34;&#34;
+        Returns:
+            `True` if the optimization is for debugging experience
+        &#34;&#34;&#34;
+        return self == OptLevel.ODebug
+
+    O0 = enum.auto()
+    &#34;&#34;&#34;
+    No optimizations.
+    &#34;&#34;&#34;
+
+    O1 = enum.auto()
+    &#34;&#34;&#34;
+    Minimal performance optimizations.
+    &#34;&#34;&#34;
+
+    O2 = enum.auto()
+    &#34;&#34;&#34;
+    Some performance optimizations.
+    &#34;&#34;&#34;
+
+    O3 = enum.auto()
+    &#34;&#34;&#34;
+    Aggressive performance optimizations.
+    &#34;&#34;&#34;
+
+    OFast = enum.auto()
+    &#34;&#34;&#34;
+    Aggressive, possibly standards-breaking performance optimizations.
+    &#34;&#34;&#34;
+
+    OSize = enum.auto()
+    &#34;&#34;&#34;
+    Size optimizations.
+    &#34;&#34;&#34;
+
+    OSizeZ = enum.auto()
+    &#34;&#34;&#34;
+    More aggressive size optimizations (Clang only).
+    &#34;&#34;&#34;
+
+    ODebug = enum.auto()
+    &#34;&#34;&#34;
+    Debugging experience optimizations.
+    &#34;&#34;&#34;
+
+    Unknown = enum.auto()
+    &#34;&#34;&#34;
+    An unknown optimization level.
+    &#34;&#34;&#34;</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li>enum.Enum</li>
+</ul>
+<h3>Class variables</h3>
+<dl>
+<dt id="blight.enums.OptLevel.O0"><code class="name">var <span class="ident">O0</span></code></dt>
+<dd>
+<div class="desc"><p>No optimizations.</p></div>
+</dd>
+<dt id="blight.enums.OptLevel.O1"><code class="name">var <span class="ident">O1</span></code></dt>
+<dd>
+<div class="desc"><p>Minimal performance optimizations.</p></div>
+</dd>
+<dt id="blight.enums.OptLevel.O2"><code class="name">var <span class="ident">O2</span></code></dt>
+<dd>
+<div class="desc"><p>Some performance optimizations.</p></div>
+</dd>
+<dt id="blight.enums.OptLevel.O3"><code class="name">var <span class="ident">O3</span></code></dt>
+<dd>
+<div class="desc"><p>Aggressive performance optimizations.</p></div>
+</dd>
+<dt id="blight.enums.OptLevel.ODebug"><code class="name">var <span class="ident">ODebug</span></code></dt>
+<dd>
+<div class="desc"><p>Debugging experience optimizations.</p></div>
+</dd>
+<dt id="blight.enums.OptLevel.OFast"><code class="name">var <span class="ident">OFast</span></code></dt>
+<dd>
+<div class="desc"><p>Aggressive, possibly standards-breaking performance optimizations.</p></div>
+</dd>
+<dt id="blight.enums.OptLevel.OSize"><code class="name">var <span class="ident">OSize</span></code></dt>
+<dd>
+<div class="desc"><p>Size optimizations.</p></div>
+</dd>
+<dt id="blight.enums.OptLevel.OSizeZ"><code class="name">var <span class="ident">OSizeZ</span></code></dt>
+<dd>
+<div class="desc"><p>More aggressive size optimizations (Clang only).</p></div>
+</dd>
+<dt id="blight.enums.OptLevel.Unknown"><code class="name">var <span class="ident">Unknown</span></code></dt>
+<dd>
+<div class="desc"><p>An unknown optimization level.</p></div>
+</dd>
+</dl>
+<h3>Methods</h3>
+<dl>
+<dt id="blight.enums.OptLevel.for_debug"><code class="name flex">
+<span>def <span class="ident">for_debug</span></span>(<span>self) ‑> bool</span>
+</code></dt>
+<dd>
+<div class="desc"><h2 id="returns">Returns</h2>
+<p><code>True</code> if the optimization is for debugging experience</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def for_debug(self) -&gt; bool:
+    &#34;&#34;&#34;
+    Returns:
+        `True` if the optimization is for debugging experience
+    &#34;&#34;&#34;
+    return self == OptLevel.ODebug</code></pre>
+</details>
+</dd>
+<dt id="blight.enums.OptLevel.for_performance"><code class="name flex">
+<span>def <span class="ident">for_performance</span></span>(<span>self) ‑> bool</span>
+</code></dt>
+<dd>
+<div class="desc"><h2 id="returns">Returns</h2>
+<p><code>True</code> if the optimization is for performance</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def for_performance(self) -&gt; bool:
+    &#34;&#34;&#34;
+    Returns:
+        `True` if the optimization is for performance
+    &#34;&#34;&#34;
+    return self in [OptLevel.O1, OptLevel.O2, OptLevel.O3, OptLevel.OFast]</code></pre>
+</details>
+</dd>
+<dt id="blight.enums.OptLevel.for_size"><code class="name flex">
+<span>def <span class="ident">for_size</span></span>(<span>self) ‑> bool</span>
+</code></dt>
+<dd>
+<div class="desc"><h2 id="returns">Returns</h2>
+<p><code>True</code> if the optimization is for compiled size</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def for_size(self) -&gt; bool:
+    &#34;&#34;&#34;
+    Returns:
+        `True` if the optimization is for compiled size
+    &#34;&#34;&#34;
+    return self == OptLevel.OSize or self == OptLevel.OSizeZ</code></pre>
+</details>
+</dd>
+</dl>
+</dd>
+<dt id="blight.enums.Std"><code class="flex name class">
+<span>class <span class="ident">Std</span></span>
+<span>(</span><span>value, names=None, *, module=None, qualname=None, type=None, start=1)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Models the various language standards for a tool.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@enum.unique
+class Std(enum.Enum):
+    &#34;&#34;&#34;
+    Models the various language standards for a tool.
+    &#34;&#34;&#34;
+
+    def is_unknown(self) -&gt; bool:
+        &#34;&#34;&#34;
+        Returns:
+            `True` if the standard is unknown
+        &#34;&#34;&#34;
+        return self in [Std.CUnknown, Std.CxxUnknown, Std.GnuUnknown, Std.GnuxxUnknown, Std.Unknown]
+
+    def is_cstd(self) -&gt; bool:
+        &#34;&#34;&#34;
+        Returns:
+            `True` if the standard is a C standard
+        &#34;&#34;&#34;
+        return self in [
+            Std.C89,
+            Std.C94,
+            Std.C99,
+            Std.C11,
+            Std.C17,
+            Std.C2x,
+            Std.Gnu89,
+            Std.Gnu99,
+            Std.Gnu11,
+            Std.Gnu17,
+            Std.Gnu2x,
+            Std.CUnknown,
+            Std.GnuUnknown,
+        ]
+
+    def is_cxxstd(self) -&gt; bool:
+        &#34;&#34;&#34;
+        Returns:
+            `True` if the standard is a C++ standard
+        &#34;&#34;&#34;
+        return self in [
+            Std.Cxx03,
+            Std.Cxx11,
+            Std.Cxx14,
+            Std.Cxx17,
+            Std.Cxx2a,
+            Std.Gnuxx03,
+            Std.Gnuxx11,
+            Std.Gnuxx14,
+            Std.Gnuxx17,
+            Std.Gnuxx2a,
+            Std.CxxUnknown,
+            Std.GnuxxUnknown,
+        ]
+
+    def lang(self) -&gt; Lang:
+        &#34;&#34;&#34;
+        Returns: a `Lang` corresponding to this `Std`.
+        &#34;&#34;&#34;
+        if self.is_cstd():
+            return Lang.C
+        elif self.is_cxxstd():
+            return Lang.Cxx
+        else:
+            return Lang.Unknown
+
+    C89 = enum.auto()
+    &#34;&#34;&#34;
+    C89 (a.k.a. C90, iso9899:1990)
+    &#34;&#34;&#34;
+
+    C94 = enum.auto()
+    &#34;&#34;&#34;
+    C94 (a.k.a. iso9899:199409)
+    &#34;&#34;&#34;
+
+    C99 = enum.auto()
+    &#34;&#34;&#34;
+    C99 (a.k.a. C9x, iso9899:1999, iso9899:199x)
+    &#34;&#34;&#34;
+
+    C11 = enum.auto()
+    &#34;&#34;&#34;
+    C11 (a.k.a. C1x, iso9899:2011)
+    &#34;&#34;&#34;
+
+    C17 = enum.auto()
+    &#34;&#34;&#34;
+    C17 (a.k.a. C18, iso9899:2017, iso9899:2018)
+    &#34;&#34;&#34;
+
+    C2x = enum.auto()
+    &#34;&#34;&#34;
+    C2x
+    &#34;&#34;&#34;
+
+    Gnu89 = enum.auto()
+    &#34;&#34;&#34;
+    GNU C89 (a.k.a. GNU C 90)
+    &#34;&#34;&#34;
+
+    Gnu99 = enum.auto()
+    &#34;&#34;&#34;
+    GNU C99 (a.k.a. GNU C 9x)
+    &#34;&#34;&#34;
+
+    Gnu11 = enum.auto()
+    &#34;&#34;&#34;
+    GNU C11 (a.k.a. GNU C11x)
+    &#34;&#34;&#34;
+
+    Gnu17 = enum.auto()
+    &#34;&#34;&#34;
+    GNU C17 (a.k.a. GNU C18)
+    &#34;&#34;&#34;
+
+    Gnu2x = enum.auto()
+    &#34;&#34;&#34;
+    GNU C2x
+    &#34;&#34;&#34;
+
+    Cxx03 = enum.auto()
+    &#34;&#34;&#34;
+    C++03 (a.k.a. C++98)
+    &#34;&#34;&#34;
+
+    Cxx11 = enum.auto()
+    &#34;&#34;&#34;
+    C++11 (a.k.a. C++0x)
+    &#34;&#34;&#34;
+
+    Cxx14 = enum.auto()
+    &#34;&#34;&#34;
+    C++14 (a.k.a. C++1y)
+    &#34;&#34;&#34;
+
+    Cxx17 = enum.auto()
+    &#34;&#34;&#34;
+    C++17 (a.k.a. C++1z)
+    &#34;&#34;&#34;
+
+    Cxx2a = enum.auto()
+    &#34;&#34;&#34;
+    C++2a (a.k.a. C++20)
+    &#34;&#34;&#34;
+
+    Gnuxx03 = enum.auto()
+    &#34;&#34;&#34;
+    GNU C++03 (a.k.a. GNU C++98)
+    &#34;&#34;&#34;
+
+    Gnuxx11 = enum.auto()
+    &#34;&#34;&#34;
+    GNU C++11 (a.k.a. GNU C++0x)
+    &#34;&#34;&#34;
+
+    Gnuxx14 = enum.auto()
+    &#34;&#34;&#34;
+    GNU C++14 (a.k.a. GNU C++1y)
+    &#34;&#34;&#34;
+
+    Gnuxx17 = enum.auto()
+    &#34;&#34;&#34;
+    GNU C++17 (a.k.a. GNU C++1z)
+    &#34;&#34;&#34;
+
+    Gnuxx2a = enum.auto()
+    &#34;&#34;&#34;
+    GNU C++2a (a.k.a. GNU C++20)
+    &#34;&#34;&#34;
+
+    CUnknown = enum.auto()
+    &#34;&#34;&#34;
+    Standard C, but an unknown version.
+    &#34;&#34;&#34;
+
+    CxxUnknown = enum.auto()
+    &#34;&#34;&#34;
+    Standard C++, but an unknown version.
+    &#34;&#34;&#34;
+
+    GnuUnknown = enum.auto()
+    &#34;&#34;&#34;
+    GNU C, but an unknown version.
+    &#34;&#34;&#34;
+
+    GnuxxUnknown = enum.auto()
+    &#34;&#34;&#34;
+    GNU C++, but an unknown version.
+    &#34;&#34;&#34;
+
+    Unknown = enum.auto()
+    &#34;&#34;&#34;
+    A completely unknown language standard.
+    &#34;&#34;&#34;</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li>enum.Enum</li>
+</ul>
+<h3>Class variables</h3>
+<dl>
+<dt id="blight.enums.Std.C11"><code class="name">var <span class="ident">C11</span></code></dt>
+<dd>
+<div class="desc"><p>C11 (a.k.a. C1x, iso9899:2011)</p></div>
+</dd>
+<dt id="blight.enums.Std.C17"><code class="name">var <span class="ident">C17</span></code></dt>
+<dd>
+<div class="desc"><p>C17 (a.k.a. C18, iso9899:2017, iso9899:2018)</p></div>
+</dd>
+<dt id="blight.enums.Std.C2x"><code class="name">var <span class="ident">C2x</span></code></dt>
+<dd>
+<div class="desc"><p>C2x</p></div>
+</dd>
+<dt id="blight.enums.Std.C89"><code class="name">var <span class="ident">C89</span></code></dt>
+<dd>
+<div class="desc"><p>C89 (a.k.a. C90, iso9899:1990)</p></div>
+</dd>
+<dt id="blight.enums.Std.C94"><code class="name">var <span class="ident">C94</span></code></dt>
+<dd>
+<div class="desc"><p>C94 (a.k.a. iso9899:199409)</p></div>
+</dd>
+<dt id="blight.enums.Std.C99"><code class="name">var <span class="ident">C99</span></code></dt>
+<dd>
+<div class="desc"><p>C99 (a.k.a. C9x, iso9899:1999, iso9899:199x)</p></div>
+</dd>
+<dt id="blight.enums.Std.CUnknown"><code class="name">var <span class="ident">CUnknown</span></code></dt>
+<dd>
+<div class="desc"><p>Standard C, but an unknown version.</p></div>
+</dd>
+<dt id="blight.enums.Std.Cxx03"><code class="name">var <span class="ident">Cxx03</span></code></dt>
+<dd>
+<div class="desc"><p>C++03 (a.k.a. C++98)</p></div>
+</dd>
+<dt id="blight.enums.Std.Cxx11"><code class="name">var <span class="ident">Cxx11</span></code></dt>
+<dd>
+<div class="desc"><p>C++11 (a.k.a. C++0x)</p></div>
+</dd>
+<dt id="blight.enums.Std.Cxx14"><code class="name">var <span class="ident">Cxx14</span></code></dt>
+<dd>
+<div class="desc"><p>C++14 (a.k.a. C++1y)</p></div>
+</dd>
+<dt id="blight.enums.Std.Cxx17"><code class="name">var <span class="ident">Cxx17</span></code></dt>
+<dd>
+<div class="desc"><p>C++17 (a.k.a. C++1z)</p></div>
+</dd>
+<dt id="blight.enums.Std.Cxx2a"><code class="name">var <span class="ident">Cxx2a</span></code></dt>
+<dd>
+<div class="desc"><p>C++2a (a.k.a. C++20)</p></div>
+</dd>
+<dt id="blight.enums.Std.CxxUnknown"><code class="name">var <span class="ident">CxxUnknown</span></code></dt>
+<dd>
+<div class="desc"><p>Standard C++, but an unknown version.</p></div>
+</dd>
+<dt id="blight.enums.Std.Gnu11"><code class="name">var <span class="ident">Gnu11</span></code></dt>
+<dd>
+<div class="desc"><p>GNU C11 (a.k.a. GNU C11x)</p></div>
+</dd>
+<dt id="blight.enums.Std.Gnu17"><code class="name">var <span class="ident">Gnu17</span></code></dt>
+<dd>
+<div class="desc"><p>GNU C17 (a.k.a. GNU C18)</p></div>
+</dd>
+<dt id="blight.enums.Std.Gnu2x"><code class="name">var <span class="ident">Gnu2x</span></code></dt>
+<dd>
+<div class="desc"><p>GNU C2x</p></div>
+</dd>
+<dt id="blight.enums.Std.Gnu89"><code class="name">var <span class="ident">Gnu89</span></code></dt>
+<dd>
+<div class="desc"><p>GNU C89 (a.k.a. GNU C 90)</p></div>
+</dd>
+<dt id="blight.enums.Std.Gnu99"><code class="name">var <span class="ident">Gnu99</span></code></dt>
+<dd>
+<div class="desc"><p>GNU C99 (a.k.a. GNU C 9x)</p></div>
+</dd>
+<dt id="blight.enums.Std.GnuUnknown"><code class="name">var <span class="ident">GnuUnknown</span></code></dt>
+<dd>
+<div class="desc"><p>GNU C, but an unknown version.</p></div>
+</dd>
+<dt id="blight.enums.Std.Gnuxx03"><code class="name">var <span class="ident">Gnuxx03</span></code></dt>
+<dd>
+<div class="desc"><p>GNU C++03 (a.k.a. GNU C++98)</p></div>
+</dd>
+<dt id="blight.enums.Std.Gnuxx11"><code class="name">var <span class="ident">Gnuxx11</span></code></dt>
+<dd>
+<div class="desc"><p>GNU C++11 (a.k.a. GNU C++0x)</p></div>
+</dd>
+<dt id="blight.enums.Std.Gnuxx14"><code class="name">var <span class="ident">Gnuxx14</span></code></dt>
+<dd>
+<div class="desc"><p>GNU C++14 (a.k.a. GNU C++1y)</p></div>
+</dd>
+<dt id="blight.enums.Std.Gnuxx17"><code class="name">var <span class="ident">Gnuxx17</span></code></dt>
+<dd>
+<div class="desc"><p>GNU C++17 (a.k.a. GNU C++1z)</p></div>
+</dd>
+<dt id="blight.enums.Std.Gnuxx2a"><code class="name">var <span class="ident">Gnuxx2a</span></code></dt>
+<dd>
+<div class="desc"><p>GNU C++2a (a.k.a. GNU C++20)</p></div>
+</dd>
+<dt id="blight.enums.Std.GnuxxUnknown"><code class="name">var <span class="ident">GnuxxUnknown</span></code></dt>
+<dd>
+<div class="desc"><p>GNU C++, but an unknown version.</p></div>
+</dd>
+<dt id="blight.enums.Std.Unknown"><code class="name">var <span class="ident">Unknown</span></code></dt>
+<dd>
+<div class="desc"><p>A completely unknown language standard.</p></div>
+</dd>
+</dl>
+<h3>Methods</h3>
+<dl>
+<dt id="blight.enums.Std.is_cstd"><code class="name flex">
+<span>def <span class="ident">is_cstd</span></span>(<span>self) ‑> bool</span>
+</code></dt>
+<dd>
+<div class="desc"><h2 id="returns">Returns</h2>
+<p><code>True</code> if the standard is a C standard</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def is_cstd(self) -&gt; bool:
+    &#34;&#34;&#34;
+    Returns:
+        `True` if the standard is a C standard
+    &#34;&#34;&#34;
+    return self in [
+        Std.C89,
+        Std.C94,
+        Std.C99,
+        Std.C11,
+        Std.C17,
+        Std.C2x,
+        Std.Gnu89,
+        Std.Gnu99,
+        Std.Gnu11,
+        Std.Gnu17,
+        Std.Gnu2x,
+        Std.CUnknown,
+        Std.GnuUnknown,
+    ]</code></pre>
+</details>
+</dd>
+<dt id="blight.enums.Std.is_cxxstd"><code class="name flex">
+<span>def <span class="ident">is_cxxstd</span></span>(<span>self) ‑> bool</span>
+</code></dt>
+<dd>
+<div class="desc"><h2 id="returns">Returns</h2>
+<p><code>True</code> if the standard is a C++ standard</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def is_cxxstd(self) -&gt; bool:
+    &#34;&#34;&#34;
+    Returns:
+        `True` if the standard is a C++ standard
+    &#34;&#34;&#34;
+    return self in [
+        Std.Cxx03,
+        Std.Cxx11,
+        Std.Cxx14,
+        Std.Cxx17,
+        Std.Cxx2a,
+        Std.Gnuxx03,
+        Std.Gnuxx11,
+        Std.Gnuxx14,
+        Std.Gnuxx17,
+        Std.Gnuxx2a,
+        Std.CxxUnknown,
+        Std.GnuxxUnknown,
+    ]</code></pre>
+</details>
+</dd>
+<dt id="blight.enums.Std.is_unknown"><code class="name flex">
+<span>def <span class="ident">is_unknown</span></span>(<span>self) ‑> bool</span>
+</code></dt>
+<dd>
+<div class="desc"><h2 id="returns">Returns</h2>
+<p><code>True</code> if the standard is unknown</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def is_unknown(self) -&gt; bool:
+    &#34;&#34;&#34;
+    Returns:
+        `True` if the standard is unknown
+    &#34;&#34;&#34;
+    return self in [Std.CUnknown, Std.CxxUnknown, Std.GnuUnknown, Std.GnuxxUnknown, Std.Unknown]</code></pre>
+</details>
+</dd>
+<dt id="blight.enums.Std.lang"><code class="name flex">
+<span>def <span class="ident">lang</span></span>(<span>self) ‑> <a title="blight.enums.Lang" href="#blight.enums.Lang">Lang</a></span>
+</code></dt>
+<dd>
+<div class="desc"><p>Returns: a <code><a title="blight.enums.Lang" href="#blight.enums.Lang">Lang</a></code> corresponding to this <code><a title="blight.enums.Std" href="#blight.enums.Std">Std</a></code>.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def lang(self) -&gt; Lang:
+    &#34;&#34;&#34;
+    Returns: a `Lang` corresponding to this `Std`.
+    &#34;&#34;&#34;
+    if self.is_cstd():
+        return Lang.C
+    elif self.is_cxxstd():
+        return Lang.Cxx
+    else:
+        return Lang.Unknown</code></pre>
+</details>
+</dd>
+</dl>
+</dd>
+</dl>
+</section>
+</article>
+<nav id="sidebar">
+<h1>Index</h1>
+<div class="toc">
+<ul></ul>
+</div>
+<ul id="index">
+<li><h3>Super-module</h3>
+<ul>
+<li><code><a title="blight" href="index.html">blight</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-classes">Classes</a></h3>
+<ul>
+<li>
+<h4><code><a title="blight.enums.BlightTool" href="#blight.enums.BlightTool">BlightTool</a></code></h4>
+<ul class="two-column">
+<li><code><a title="blight.enums.BlightTool.AR" href="#blight.enums.BlightTool.AR">AR</a></code></li>
+<li><code><a title="blight.enums.BlightTool.AS" href="#blight.enums.BlightTool.AS">AS</a></code></li>
+<li><code><a title="blight.enums.BlightTool.CC" href="#blight.enums.BlightTool.CC">CC</a></code></li>
+<li><code><a title="blight.enums.BlightTool.CPP" href="#blight.enums.BlightTool.CPP">CPP</a></code></li>
+<li><code><a title="blight.enums.BlightTool.CXX" href="#blight.enums.BlightTool.CXX">CXX</a></code></li>
+<li><code><a title="blight.enums.BlightTool.LD" href="#blight.enums.BlightTool.LD">LD</a></code></li>
+<li><code><a title="blight.enums.BlightTool.STRIP" href="#blight.enums.BlightTool.STRIP">STRIP</a></code></li>
+<li><code><a title="blight.enums.BlightTool.build_tool" href="#blight.enums.BlightTool.build_tool">build_tool</a></code></li>
+<li><code><a title="blight.enums.BlightTool.env" href="#blight.enums.BlightTool.env">env</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="blight.enums.BuildTool" href="#blight.enums.BuildTool">BuildTool</a></code></h4>
+<ul class="two-column">
+<li><code><a title="blight.enums.BuildTool.AR" href="#blight.enums.BuildTool.AR">AR</a></code></li>
+<li><code><a title="blight.enums.BuildTool.AS" href="#blight.enums.BuildTool.AS">AS</a></code></li>
+<li><code><a title="blight.enums.BuildTool.CC" href="#blight.enums.BuildTool.CC">CC</a></code></li>
+<li><code><a title="blight.enums.BuildTool.CPP" href="#blight.enums.BuildTool.CPP">CPP</a></code></li>
+<li><code><a title="blight.enums.BuildTool.CXX" href="#blight.enums.BuildTool.CXX">CXX</a></code></li>
+<li><code><a title="blight.enums.BuildTool.LD" href="#blight.enums.BuildTool.LD">LD</a></code></li>
+<li><code><a title="blight.enums.BuildTool.STRIP" href="#blight.enums.BuildTool.STRIP">STRIP</a></code></li>
+<li><code><a title="blight.enums.BuildTool.blight_tool" href="#blight.enums.BuildTool.blight_tool">blight_tool</a></code></li>
+<li><code><a title="blight.enums.BuildTool.cmd" href="#blight.enums.BuildTool.cmd">cmd</a></code></li>
+<li><code><a title="blight.enums.BuildTool.env" href="#blight.enums.BuildTool.env">env</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="blight.enums.CodeModel" href="#blight.enums.CodeModel">CodeModel</a></code></h4>
+<ul class="">
+<li><code><a title="blight.enums.CodeModel.Kernel" href="#blight.enums.CodeModel.Kernel">Kernel</a></code></li>
+<li><code><a title="blight.enums.CodeModel.Large" href="#blight.enums.CodeModel.Large">Large</a></code></li>
+<li><code><a title="blight.enums.CodeModel.Medium" href="#blight.enums.CodeModel.Medium">Medium</a></code></li>
+<li><code><a title="blight.enums.CodeModel.Small" href="#blight.enums.CodeModel.Small">Small</a></code></li>
+<li><code><a title="blight.enums.CodeModel.Unknown" href="#blight.enums.CodeModel.Unknown">Unknown</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="blight.enums.CompilerStage" href="#blight.enums.CompilerStage">CompilerStage</a></code></h4>
+<ul class="two-column">
+<li><code><a title="blight.enums.CompilerStage.AllStages" href="#blight.enums.CompilerStage.AllStages">AllStages</a></code></li>
+<li><code><a title="blight.enums.CompilerStage.Assemble" href="#blight.enums.CompilerStage.Assemble">Assemble</a></code></li>
+<li><code><a title="blight.enums.CompilerStage.CompileObject" href="#blight.enums.CompilerStage.CompileObject">CompileObject</a></code></li>
+<li><code><a title="blight.enums.CompilerStage.Preprocess" href="#blight.enums.CompilerStage.Preprocess">Preprocess</a></code></li>
+<li><code><a title="blight.enums.CompilerStage.SyntaxOnly" href="#blight.enums.CompilerStage.SyntaxOnly">SyntaxOnly</a></code></li>
+<li><code><a title="blight.enums.CompilerStage.Unknown" href="#blight.enums.CompilerStage.Unknown">Unknown</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="blight.enums.Lang" href="#blight.enums.Lang">Lang</a></code></h4>
+<ul class="">
+<li><code><a title="blight.enums.Lang.C" href="#blight.enums.Lang.C">C</a></code></li>
+<li><code><a title="blight.enums.Lang.Cxx" href="#blight.enums.Lang.Cxx">Cxx</a></code></li>
+<li><code><a title="blight.enums.Lang.Unknown" href="#blight.enums.Lang.Unknown">Unknown</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="blight.enums.OptLevel" href="#blight.enums.OptLevel">OptLevel</a></code></h4>
+<ul class="two-column">
+<li><code><a title="blight.enums.OptLevel.O0" href="#blight.enums.OptLevel.O0">O0</a></code></li>
+<li><code><a title="blight.enums.OptLevel.O1" href="#blight.enums.OptLevel.O1">O1</a></code></li>
+<li><code><a title="blight.enums.OptLevel.O2" href="#blight.enums.OptLevel.O2">O2</a></code></li>
+<li><code><a title="blight.enums.OptLevel.O3" href="#blight.enums.OptLevel.O3">O3</a></code></li>
+<li><code><a title="blight.enums.OptLevel.ODebug" href="#blight.enums.OptLevel.ODebug">ODebug</a></code></li>
+<li><code><a title="blight.enums.OptLevel.OFast" href="#blight.enums.OptLevel.OFast">OFast</a></code></li>
+<li><code><a title="blight.enums.OptLevel.OSize" href="#blight.enums.OptLevel.OSize">OSize</a></code></li>
+<li><code><a title="blight.enums.OptLevel.OSizeZ" href="#blight.enums.OptLevel.OSizeZ">OSizeZ</a></code></li>
+<li><code><a title="blight.enums.OptLevel.Unknown" href="#blight.enums.OptLevel.Unknown">Unknown</a></code></li>
+<li><code><a title="blight.enums.OptLevel.for_debug" href="#blight.enums.OptLevel.for_debug">for_debug</a></code></li>
+<li><code><a title="blight.enums.OptLevel.for_performance" href="#blight.enums.OptLevel.for_performance">for_performance</a></code></li>
+<li><code><a title="blight.enums.OptLevel.for_size" href="#blight.enums.OptLevel.for_size">for_size</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="blight.enums.Std" href="#blight.enums.Std">Std</a></code></h4>
+<ul class="two-column">
+<li><code><a title="blight.enums.Std.C11" href="#blight.enums.Std.C11">C11</a></code></li>
+<li><code><a title="blight.enums.Std.C17" href="#blight.enums.Std.C17">C17</a></code></li>
+<li><code><a title="blight.enums.Std.C2x" href="#blight.enums.Std.C2x">C2x</a></code></li>
+<li><code><a title="blight.enums.Std.C89" href="#blight.enums.Std.C89">C89</a></code></li>
+<li><code><a title="blight.enums.Std.C94" href="#blight.enums.Std.C94">C94</a></code></li>
+<li><code><a title="blight.enums.Std.C99" href="#blight.enums.Std.C99">C99</a></code></li>
+<li><code><a title="blight.enums.Std.CUnknown" href="#blight.enums.Std.CUnknown">CUnknown</a></code></li>
+<li><code><a title="blight.enums.Std.Cxx03" href="#blight.enums.Std.Cxx03">Cxx03</a></code></li>
+<li><code><a title="blight.enums.Std.Cxx11" href="#blight.enums.Std.Cxx11">Cxx11</a></code></li>
+<li><code><a title="blight.enums.Std.Cxx14" href="#blight.enums.Std.Cxx14">Cxx14</a></code></li>
+<li><code><a title="blight.enums.Std.Cxx17" href="#blight.enums.Std.Cxx17">Cxx17</a></code></li>
+<li><code><a title="blight.enums.Std.Cxx2a" href="#blight.enums.Std.Cxx2a">Cxx2a</a></code></li>
+<li><code><a title="blight.enums.Std.CxxUnknown" href="#blight.enums.Std.CxxUnknown">CxxUnknown</a></code></li>
+<li><code><a title="blight.enums.Std.Gnu11" href="#blight.enums.Std.Gnu11">Gnu11</a></code></li>
+<li><code><a title="blight.enums.Std.Gnu17" href="#blight.enums.Std.Gnu17">Gnu17</a></code></li>
+<li><code><a title="blight.enums.Std.Gnu2x" href="#blight.enums.Std.Gnu2x">Gnu2x</a></code></li>
+<li><code><a title="blight.enums.Std.Gnu89" href="#blight.enums.Std.Gnu89">Gnu89</a></code></li>
+<li><code><a title="blight.enums.Std.Gnu99" href="#blight.enums.Std.Gnu99">Gnu99</a></code></li>
+<li><code><a title="blight.enums.Std.GnuUnknown" href="#blight.enums.Std.GnuUnknown">GnuUnknown</a></code></li>
+<li><code><a title="blight.enums.Std.Gnuxx03" href="#blight.enums.Std.Gnuxx03">Gnuxx03</a></code></li>
+<li><code><a title="blight.enums.Std.Gnuxx11" href="#blight.enums.Std.Gnuxx11">Gnuxx11</a></code></li>
+<li><code><a title="blight.enums.Std.Gnuxx14" href="#blight.enums.Std.Gnuxx14">Gnuxx14</a></code></li>
+<li><code><a title="blight.enums.Std.Gnuxx17" href="#blight.enums.Std.Gnuxx17">Gnuxx17</a></code></li>
+<li><code><a title="blight.enums.Std.Gnuxx2a" href="#blight.enums.Std.Gnuxx2a">Gnuxx2a</a></code></li>
+<li><code><a title="blight.enums.Std.GnuxxUnknown" href="#blight.enums.Std.GnuxxUnknown">GnuxxUnknown</a></code></li>
+<li><code><a title="blight.enums.Std.Unknown" href="#blight.enums.Std.Unknown">Unknown</a></code></li>
+<li><code><a title="blight.enums.Std.is_cstd" href="#blight.enums.Std.is_cstd">is_cstd</a></code></li>
+<li><code><a title="blight.enums.Std.is_cxxstd" href="#blight.enums.Std.is_cxxstd">is_cxxstd</a></code></li>
+<li><code><a title="blight.enums.Std.is_unknown" href="#blight.enums.Std.is_unknown">is_unknown</a></code></li>
+<li><code><a title="blight.enums.Std.lang" href="#blight.enums.Std.lang">lang</a></code></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</nav>
+</main>
+<footer id="footer">
+<p>Generated by <a href="https://pdoc3.github.io/pdoc"><cite>pdoc</cite> 0.9.2</a>.</p>
+</footer>
+</body>
+</html>

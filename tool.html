@@ -1,0 +1,2999 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
+<meta name="generator" content="pdoc 0.9.2" />
+<title>blight.tool API documentation</title>
+<meta name="description" content="Encapsulations of the tools supported by blight." />
+<link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/sanitize.min.css" integrity="sha256-PK9q560IAAa6WVRRh76LtCaI8pjTJ2z11v0miyNNjrs=" crossorigin>
+<link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/typography.min.css" integrity="sha256-7l/o7C8jubJiy74VsKTidCy1yBkRtiUGbVkYBylBqUg=" crossorigin>
+<link rel="stylesheet preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/styles/github.min.css" crossorigin>
+<style>:root{--highlight-color:#fe9}.flex{display:flex !important}body{line-height:1.5em}#content{padding:20px}#sidebar{padding:30px;overflow:hidden}#sidebar > *:last-child{margin-bottom:2cm}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:1em 0 .50em 0}h3{font-size:1.4em;margin:25px 0 10px 0}h4{margin:0;font-size:105%}h1:target,h2:target,h3:target,h4:target,h5:target,h6:target{background:var(--highlight-color);padding:.2em 0}a{color:#058;text-decoration:none;transition:color .3s ease-in-out}a:hover{color:#e82}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900}pre code{background:#f8f8f8;font-size:.8em;line-height:1.4em}code{background:#f2f2f1;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{background:#f8f8f8;border:0;border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0;padding:1ex}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{margin-top:.6em;font-weight:bold}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-weight:bold;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}dt:target .name{background:var(--highlight-color)}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source summary,.git-link-div{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase}.source summary > *{white-space:nowrap;cursor:pointer}.git-link{color:inherit;margin-left:1em}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}td{padding:0 .5em}.admonition{padding:.1em .5em;margin-bottom:1em}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
+<style media="screen and (min-width: 700px)">@media screen and (min-width:700px){#sidebar{width:30%;height:100vh;overflow:auto;position:sticky;top:0}#content{width:70%;max-width:100ch;padding:3em 4em;border-left:1px solid #ddd}pre code{font-size:1em}.item .name{font-size:1em}main{display:flex;flex-direction:row-reverse;justify-content:flex-end}.toc ul ul,#index ul{padding-left:1.5em}.toc > ul > li{margin-top:.5em}}</style>
+<style media="print">@media print{#sidebar h1{page-break-before:always}.source{display:none}}@media print{*{background:transparent !important;color:#000 !important;box-shadow:none !important;text-shadow:none !important}a[href]:after{content:" (" attr(href) ")";font-size:90%}a[href][title]:after{content:none}abbr[title]:after{content:" (" attr(title) ")"}.ir a:after,a[href^="javascript:"]:after,a[href^="#"]:after{content:""}pre,blockquote{border:1px solid #999;page-break-inside:avoid}thead{display:table-header-group}tr,img{page-break-inside:avoid}img{max-width:100% !important}@page{margin:0.5cm}p,h2,h3{orphans:3;widows:3}h1,h2,h3,h4,h5,h6{page-break-after:avoid}}</style>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/highlight.min.js" integrity="sha256-Uv3H6lx7dJmRfRvH8TH6kJD1TSK1aFcwgx+mdg3epi8=" crossorigin></script>
+<script>window.addEventListener('DOMContentLoaded', () => hljs.initHighlighting())</script>
+</head>
+<body>
+<main>
+<article id="content">
+<header>
+<h1 class="title">Module <code>blight.tool</code></h1>
+</header>
+<section id="section-intro">
+<p>Encapsulations of the tools supported by blight.</p>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">&#34;&#34;&#34;
+Encapsulations of the tools supported by blight.
+&#34;&#34;&#34;
+
+import logging
+import os
+import re
+import shlex
+import subprocess
+from pathlib import Path
+from typing import Any, Dict, List, Tuple
+
+from blight import util
+from blight.enums import BlightTool, BuildTool, CodeModel, CompilerStage, Lang, OptLevel, Std
+from blight.exceptions import BlightError, BuildError, SkipRun
+from blight.protocols import CanonicalizedArgsProtocol, IndexedUndefinesProtocol, LangProtocol
+
+logger = logging.getLogger(__name__)
+
+
+RESPONSE_FILE_RECURSION_LIMIT = 64
+&#34;&#34;&#34;
+Response files can contain further `@file` arguments, because of course they can.
+
+Neither clang nor GCC is explicit in their documentation about their recursion limits,
+if they have any. We choose an arbitrary limit here.
+&#34;&#34;&#34;
+
+
+class Tool:
+    &#34;&#34;&#34;
+    Represents a generic tool wrapped by blight.
+
+    Every `Tool` has two views of its supplied arguments:
+
+    * An &#34;effective&#34; view, provided by `Tool.args`
+    * A &#34;canonicalized&#34; view, provided by `Tool.canonicalized_args`
+
+    The &#34;effective&#34; view is used to invoke the underlying wrapped tool. It should
+    never differ from the original arguments supplied to the invocation, **except**
+    for when a user configures an action that **intentionally** modifies the
+    arguments.
+
+    The &#34;canonicalized&#34; view is used to model the behavior of the underlying wrapped
+    tool. Specific `Tool` subclasses may specialize the canonicalized view to improve
+    modeling fidelity. For example, tools that support the `@file` syntax (see
+    `ResponseFileMixin`) for expanding arguments may augment `canonicalized_args`
+    to reflect a fully expanded and normalized version of the original arguments.
+
+    The &#34;canonicalized&#34; view always derives directly from the &#34;effective&#34; view:
+    any modifications made to the &#34;effective&#34; arguments by an action will be
+    propagated to the &#34;canonicalized&#34; arguments.
+
+    `Tool` instances cannot be created directory; a specific subclass must be used.
+    &#34;&#34;&#34;
+
+    @classmethod
+    def build_tool(cls) -&gt; BuildTool:
+        &#34;&#34;&#34;
+        Returns the `BuildTool` enum associated with this `Tool`.
+        &#34;&#34;&#34;
+        return BuildTool(cls.__name__)
+
+    @classmethod
+    def blight_tool(cls) -&gt; BlightTool:
+        &#34;&#34;&#34;
+        Returns the `BlightTool` enum associated with this `Tool`.
+        &#34;&#34;&#34;
+        return cls.build_tool().blight_tool
+
+    @classmethod
+    def wrapped_tool(cls) -&gt; str:
+        &#34;&#34;&#34;
+        Returns the executable name or path of the tool that this blight tool wraps.
+        &#34;&#34;&#34;
+        wrapped_tool = os.getenv(cls.blight_tool().env)
+        if wrapped_tool is None:
+            raise BlightError(f&#34;No wrapped tool found for {cls.build_tool()}&#34;)
+        return wrapped_tool
+
+    def __init__(self, args: List[str]) -&gt; None:
+        if self.__class__ == Tool:
+            raise NotImplementedError(f&#34;can&#39;t instantiate {self.__class__.__name__} directly&#34;)
+        self._args = args
+        self._canonicalized_args = args.copy()
+        self._env = self._fixup_env()
+        self._cwd = Path(os.getcwd()).resolve()
+        self._actions = util.load_actions()
+        self._skip_run = False
+
+    def _fixup_env(self) -&gt; Dict[str, str]:
+        &#34;&#34;&#34;
+        Fixes up `os.environ` to remove any references to blight&#39;s swizzled paths,
+        if any are present.
+        &#34;&#34;&#34;
+        env = dict(os.environ)
+        env[&#34;PATH&#34;] = util.unswizzled_path()
+        return env
+
+    def _before_run(self) -&gt; None:
+        for action in self._actions:
+            try:
+                action._before_run(self)
+            except SkipRun:
+                self._skip_run = True
+
+    def _after_run(self) -&gt; None:
+        for action in self._actions:
+            action._after_run(self, run_skipped=self._skip_run)
+
+    def run(self) -&gt; None:
+        &#34;&#34;&#34;
+        Runs the wrapped tool with the original arguments.
+        &#34;&#34;&#34;
+        self._before_run()
+
+        if not self._skip_run:
+            status = subprocess.run([self.wrapped_tool(), *self.args], env=self._env)
+            if status.returncode != 0:
+                raise BuildError(
+                    f&#34;{self.wrapped_tool()} exited with status code {status.returncode}&#34;
+                )
+
+        self._after_run()
+
+    def asdict(self) -&gt; Dict[str, Any]:
+        &#34;&#34;&#34;
+        Returns:
+            A dictionary representation of this tool
+        &#34;&#34;&#34;
+
+        return {
+            &#34;name&#34;: self.__class__.__name__,
+            &#34;wrapped_tool&#34;: self.wrapped_tool(),
+            &#34;args&#34;: self.args,
+            &#34;canonicalized_args&#34;: self.canonicalized_args,
+            &#34;cwd&#34;: str(self._cwd),
+            &#34;env&#34;: self._env,
+        }
+
+    @property
+    def args(self) -&gt; List[str]:
+        return self._args
+
+    @args.setter
+    def args(self, args_: List[str]) -&gt; None:
+        self._args = args_
+
+        # NOTE(ww): Modifying the effective arguments also propagates
+        # those changes to the canonicalized arguments. This shouldn&#39;t be a problem,
+        # since mixins that specialize `canonicalized_args` call
+        # `super.canonicalized_args` to get the most recent copy.
+        self._canonicalized_args = args_.copy()
+
+    @property
+    def canonicalized_args(self) -&gt; List[str]:
+        # NOTE(ww): `canonicalized_args` doesn&#39;t need an explicit setter property,
+        # since all specializations of it are expected to modify the underlying
+        # list.
+        return self._canonicalized_args
+
+    @property
+    def cwd(self) -&gt; Path:
+        &#34;&#34;&#34;
+        Returns the directory that this tool was run in.
+        &#34;&#34;&#34;
+        return self._cwd
+
+    @property
+    def inputs(self) -&gt; List[str]:
+        &#34;&#34;&#34;
+        Returns all explicit &#34;inputs&#34; to the tool. &#34;Inputs&#34; is subjectively
+        defined to be the &#34;main&#34; inputs to a tool, i.e. source files and **not**
+        additional files that *may* be passed in via options.
+
+        Tools may further refine the behavior of this property
+        by overriding it with their own, more specific behavior.
+
+        **NOTE**: This property, more so than others, relies on heuristics.
+
+        Returns:
+            A list of `str`s, representing the tool&#39;s inputs.
+        &#34;&#34;&#34;
+
+        # Our strategy here is as follows:
+        # * Filter out any arguments that begin with &#34;-&#34; or &#34;@&#34; and
+        #   aren&#39;t *just&#34; &#34;-&#34; (since that indicates stdin).
+        # * Then, look for arguments that are files in the tool&#39;s current
+        #   directory.
+        inputs = []
+        for idx, arg in enumerate(self.canonicalized_args):
+            if arg.startswith(&#34;-&#34;) or arg.startswith(&#34;@&#34;):
+                if arg == &#34;-&#34;:
+                    inputs.append(arg)
+                continue
+
+            candidate = Path(arg)
+            if not candidate.is_file() and not (self.cwd / candidate).is_file():
+                # NOTE(ww): pathlib&#39;s is_file returns False for device files, e.g. /dev/stdin.
+                # It would be perverse for a build system to use these, but maybe worth
+                # handling.
+                continue
+
+            # Annoying edge cases: most other flags that take filenames do so in
+            # -flag=filename form, but -aux-info does it without the &#34;=&#34;.
+            # Similarly, we need to make sure not to catch an output flag&#39;s
+            # argument here.
+            if idx == 0 or self.canonicalized_args[idx - 1] not in [&#34;-aux-info&#34;, &#34;-o&#34;]:
+                inputs.append(arg)
+
+        return inputs
+
+    @property
+    def outputs(self) -&gt; List[str]:
+        &#34;&#34;&#34;
+        Returns all &#34;outputs&#34; produced by the tool. &#34;Outputs&#34; is subjectively
+        defined to be the &#34;main&#34; products of a tool, i.e. results of a particular
+        stage or invocation and **not** any incidental or metadata files that
+        might otherwise be created in the process.
+
+        Tools may further refine the behavior of this mixin-supplied property
+        by overriding it with their own, more specific behavior.
+
+        Returns:
+            A list of `str`, each of which is an output
+        &#34;&#34;&#34;
+
+        o_flag_index = util.rindex_prefix(self.canonicalized_args, &#34;-o&#34;)
+        if o_flag_index is None:
+            return []
+
+        if self.canonicalized_args[o_flag_index] == &#34;-o&#34;:
+            return [self.canonicalized_args[o_flag_index + 1]]
+
+        # NOTE(ww): Outputs like -ofoo. Gross, but valid according to GCC.
+        return [self.canonicalized_args[o_flag_index][2:]]
+
+
+class LangMixin:
+    &#34;&#34;&#34;
+    A mixin for tools that have a &#34;language&#34; component, i.e.
+    those that change their behavior based on the language that they&#39;re used with.
+    &#34;&#34;&#34;
+
+    @property
+    def lang(self: CanonicalizedArgsProtocol) -&gt; Lang:
+        &#34;&#34;&#34;
+        Returns:
+            A `blight.enums.Lang` value representing the tool&#39;s language
+        &#34;&#34;&#34;
+        x_lang_map = {&#34;c&#34;: Lang.C, &#34;c-header&#34;: Lang.C, &#34;c++&#34;: Lang.Cxx, &#34;c++-header&#34;: Lang.Cxx}
+
+        # First, check for `-x lang`. This overrides the language determined by
+        # the frontend&#39;s binary name (e.g. `g++`).
+        x_flag_index = util.rindex_prefix(self.canonicalized_args, &#34;-x&#34;)
+        if x_flag_index is not None:
+            if self.canonicalized_args[x_flag_index] == &#34;-x&#34;:
+                # TODO(ww): Maybe bounds check.
+                x_lang = self.canonicalized_args[x_flag_index + 1]
+            else:
+                # NOTE(ww): -xc and -xc++ both work, at least on GCC.
+                x_lang = self.canonicalized_args[x_flag_index][2:]
+            return x_lang_map.get(x_lang, Lang.Unknown)
+
+        # No `-x lang` means that we&#39;re operating in the frontend&#39;s default mode.
+        if self.__class__ == CC:
+            return Lang.C
+        elif self.__class__ == CXX:
+            return Lang.Cxx
+        else:
+            logger.debug(f&#34;unknown default language mode for {self.__class__.__name__}&#34;)
+            return Lang.Unknown
+
+
+class StdMixin(LangMixin):
+    &#34;&#34;&#34;
+    A mixin for tools that have a &#34;standard&#34; component, i.e.
+    those that change their behavior based on a particular language standard.
+    &#34;&#34;&#34;
+
+    @property
+    def std(self: LangProtocol) -&gt; Std:
+        &#34;&#34;&#34;
+        Returns:
+            A `blight.enums.Std` value representing the tool&#39;s standard
+        &#34;&#34;&#34;
+
+        # First, a special case: if -ansi is present, we&#39;re in
+        # C89 mode for C code and C++03 mode for C++ code.
+        if &#34;-ansi&#34; in self.canonicalized_args:
+            if self.lang == Lang.C:
+                return Std.C89
+            elif self.lang == Lang.Cxx:
+                return Std.Cxx03
+            else:
+                logger.debug(f&#34;-ansi passed but unknown language: {self.lang}&#34;)
+                return Std.Unknown
+
+        # Experimentally, both GCC and clang respect the last -std=XXX flag passed.
+        # See: https://stackoverflow.com/questions/40563269/passing-multiple-std-switches-to-g
+        std_flag_index = util.rindex_prefix(self.canonicalized_args, &#34;-std=&#34;)
+
+        # No -std=XXX flags? The tool is operating in its default standard mode,
+        # which is determined by its language.
+        if std_flag_index is None:
+            if self.lang == Lang.C:
+                return Std.GnuUnknown
+            elif self.lang == Lang.Cxx:
+                return Std.GnuxxUnknown
+            else:
+                logger.debug(f&#34;no -std= flag and unknown language: {self.lang}&#34;)
+                return Std.Unknown
+
+        last_std_flag = self.canonicalized_args[std_flag_index]
+        std_flag_map = {
+            # C89 flags.
+            &#34;-std=c89&#34;: Std.C89,
+            &#34;-std=c90&#34;: Std.C89,
+            &#34;-std=iso9899:1990&#34;: Std.C89,
+            # C94 flags.
+            &#34;-std=iso9899:199409&#34;: Std.C94,
+            # C99 flags.
+            &#34;-std=c99&#34;: Std.C99,
+            &#34;-std=c9x&#34;: Std.C99,
+            &#34;-std=iso9899:1999&#34;: Std.C99,
+            &#34;-std=iso9899:199x&#34;: Std.C99,
+            # C11 flags.
+            &#34;-std=c11&#34;: Std.C11,
+            &#34;-std=c1x&#34;: Std.C11,
+            &#34;-std=iso9899:2011&#34;: Std.C11,
+            # C17 flags.
+            &#34;-std=c17&#34;: Std.C17,
+            &#34;-std=c18&#34;: Std.C17,
+            &#34;-std=iso9899:2017&#34;: Std.C17,
+            &#34;-std=iso9899:2018&#34;: Std.C17,
+            # C20 (presumptive) flags.
+            &#34;-std=c2x&#34;: Std.C2x,
+            # GNU89 flags.
+            &#34;-std=gnu89&#34;: Std.Gnu89,
+            &#34;-std=gnu90&#34;: Std.Gnu89,
+            # GNU99 flags.
+            &#34;-std=gnu99&#34;: Std.Gnu99,
+            &#34;-std=gnu9x&#34;: Std.Gnu99,
+            # GNU11 flags.
+            &#34;-std=gnu11&#34;: Std.Gnu11,
+            &#34;-std=gnu1x&#34;: Std.Gnu11,
+            # GNU17 flags.
+            &#34;-std=gnu17&#34;: Std.Gnu17,
+            &#34;-std=gnu18&#34;: Std.Gnu17,
+            # GNU20 (presumptive) flags.
+            &#34;-std=gnu2x&#34;: Std.Gnu2x,
+            # C++03 flags.
+            # NOTE(ww): Both gcc and clang treat C++98 mode as C++03 mode.
+            &#34;-std=c++98&#34;: Std.Cxx03,
+            &#34;-std=c++03&#34;: Std.Cxx03,
+            # C++11 flags.
+            &#34;-std=c++11&#34;: Std.Cxx11,
+            &#34;-std=c++0x&#34;: Std.Cxx11,
+            # C++14 flags.
+            &#34;-std=c++14&#34;: Std.Cxx14,
+            &#34;-std=c++1y&#34;: Std.Cxx14,
+            # C++17 flags.
+            &#34;-std=c++17&#34;: Std.Cxx17,
+            &#34;-std=c++1z&#34;: Std.Cxx17,
+            # C++20 (presumptive) flags.
+            &#34;-std=c++2a&#34;: Std.Cxx2a,
+            &#34;-std=c++20&#34;: Std.Cxx2a,
+            # GNU++03 flags.
+            &#34;-std=gnu++98&#34;: Std.Gnuxx03,
+            &#34;-std=gnu++03&#34;: Std.Gnuxx03,
+            # GNU++11 flags.
+            &#34;-std=gnu++11&#34;: Std.Gnuxx11,
+            &#34;-std=gnu++0x&#34;: Std.Gnuxx11,
+            # GNU++14 flags.
+            &#34;-std=gnu++14&#34;: Std.Gnuxx14,
+            &#34;-std=gnu++1y&#34;: Std.Gnuxx14,
+            # GNU++17 flags.
+            &#34;-std=gnu++17&#34;: Std.Gnuxx17,
+            &#34;-std=gnu++1z&#34;: Std.Gnuxx17,
+            # GNU++20 (presumptive) flags.
+            &#34;-std=gnu++2a&#34;: Std.Gnuxx2a,
+            &#34;-std=gnu++20&#34;: Std.Gnuxx2a,
+        }
+
+        std = std_flag_map.get(last_std_flag)
+        if std is not None:
+            return std
+
+        # If we&#39;ve made it here, then we&#39;ve reached a -std=XXX flag that we
+        # don&#39;t know yet. Make an effort to guess at it.
+        std_name = last_std_flag.split(&#34;=&#34;)[1]
+        if std_name.startswith(&#34;c++&#34;):
+            logger.debug(f&#34;partially unrecognized c++ std: {last_std_flag}&#34;)
+            return Std.CxxUnknown
+        elif std_name.startswith(&#34;gnu++&#34;):
+            logger.debug(f&#34;partially unrecognized gnu++ std: {last_std_flag}&#34;)
+            return Std.GnuxxUnknown
+        elif std_name.startswith(&#34;gnu&#34;):
+            logger.debug(f&#34;partially unrecognized gnu c std: {last_std_flag}&#34;)
+            return Std.GnuUnknown
+        elif std_name.startswith(&#34;c&#34;) or std_name.startswith(&#34;iso9899&#34;):
+            logger.debug(f&#34;partially unrecognized c std: {last_std_flag}&#34;)
+            return Std.CUnknown
+
+        logger.debug(f&#34;completely unrecognized -std= flag: {last_std_flag}&#34;)
+        return Std.Unknown
+
+
+class OptMixin:
+    &#34;&#34;&#34;
+    A mixin for tools that have an optimization level.
+    &#34;&#34;&#34;
+
+    @property
+    def opt(self: CanonicalizedArgsProtocol) -&gt; OptLevel:
+        &#34;&#34;&#34;
+        Returns:
+            A `blight.enums.OptLevel` value representing the optimization level
+        &#34;&#34;&#34;
+
+        opt_flag_map = {
+            &#34;-O0&#34;: OptLevel.O0,
+            &#34;-O&#34;: OptLevel.O1,
+            &#34;-O1&#34;: OptLevel.O1,
+            &#34;-O2&#34;: OptLevel.O2,
+            &#34;-O3&#34;: OptLevel.O3,
+            &#34;-Ofast&#34;: OptLevel.OFast,
+            &#34;-Os&#34;: OptLevel.OSize,
+            &#34;-Oz&#34;: OptLevel.OSizeZ,
+            &#34;-Og&#34;: OptLevel.ODebug,
+        }
+
+        # The last optimization flag takes precedence, so iterate over the arguments
+        # in reverse order.
+        for arg in reversed(self.canonicalized_args):
+            opt = opt_flag_map.get(arg)
+            if opt is not None:
+                return opt
+
+            if not arg.startswith(&#34;-O&#34;):
+                continue
+
+            # Special case: -O4 and above are currently equivalent to -O3 in
+            # GCC and Clang. Identify these and map them to -O3.
+            if re.fullmatch(r&#34;^-O[1-9]\d*$&#34;, arg):
+                return OptLevel.O3
+
+            # Otherwise: We&#39;ve found an argument that looks like -Osomething,
+            # but we don&#39;t know what it is. Treat it as an unknown.
+            logger.debug(f&#34;unknown optimization level: {arg}&#34;)
+            return OptLevel.Unknown
+
+        # If we&#39;ve made it here, then the arguments don&#39;t mention an explicit
+        # optimization level. Both GCC and Clang use -O0 by default, so return that here.
+        return OptLevel.O0
+
+
+class ResponseFileMixin:
+    &#34;&#34;&#34;
+    A mixin for tools that support the `@file` syntax for adding command-line arguments
+    via an input file.
+
+    These appear to originate from Windows and are called &#34;response files&#34; there, hence
+    the name of this mixin.
+    &#34;&#34;&#34;
+
+    def _expand_response_file(
+        self, response_file: Path, working_dir: Path, level: int
+    ) -&gt; List[str]:
+        if level &gt;= RESPONSE_FILE_RECURSION_LIMIT:
+            logger.debug(f&#34;recursion limit exceeded: {response_file} in {working_dir}&#34;)
+            return []
+
+        # Non-absolute response files are resolved relative to `working_dir`, which
+        # begins at the CWD initially and changes to the parent directory of the
+        # including file for nested response files.
+        if not response_file.is_absolute():
+            response_file = working_dir / response_file
+
+        if not response_file.is_file():
+            logger.debug(f&#34;response file {response_file} does not exist&#34;)
+            # TODO(ww): Instead of returning empty here, maybe return `@response_file`?
+            return []
+
+        args = shlex.split(response_file.read_text())
+        response_files = [(idx, arg) for (idx, arg) in enumerate(args) if arg.startswith(&#34;@&#34;)]
+        for idx, nested_rf in response_files:
+            args = util.insert_items_at_idx(
+                args,
+                idx,
+                self._expand_response_file(
+                    Path(nested_rf[1:]), response_file.parent.resolve(), level + 1
+                ),
+            )
+
+        return args
+
+    @property
+    def canonicalized_args(self) -&gt; List[str]:
+        &#34;&#34;&#34;
+        Overrides the behavior of `Tool.canonicalized_args`, expanding any response file arguments
+        in a depth-first manner.
+        &#34;&#34;&#34;
+
+        # NOTE(ww): This method badly needs some typechecking TLC.
+        # The `super()` call to `canonicalized_args` probably needs to be handled
+        # with a `self: CanonicalizedArgsProtocol` hint, but that causes other problems
+        # related to mypy&#39;s ability to see `_expand_response_file`.
+
+        response_files = [
+            (idx, arg)
+            for (idx, arg) in enumerate(super().canonicalized_args)  # type: ignore
+            if arg.startswith(&#34;@&#34;)
+        ]
+        expanded_args = super().canonicalized_args  # type: ignore
+        for idx, response_file in response_files:
+            expanded_args = util.insert_items_at_idx(
+                expanded_args,
+                idx,
+                self._expand_response_file(Path(response_file[1:]), self.cwd, 0),  # type: ignore
+            )
+
+        self._canonicalized_args = expanded_args
+        return self._canonicalized_args
+
+
+class DefinesMixin:
+    &#34;&#34;&#34;
+    A mixin for tools that support the `-Dname[=value]` and `-Uname` syntaxes for defining
+    and undefining C preprocessor macros.
+    &#34;&#34;&#34;
+
+    @property
+    def indexed_undefines(self: IndexedUndefinesProtocol) -&gt; Dict[str, int]:
+        &#34;&#34;&#34;
+        Returns a dictionary of indices for undefined macros. This is used in
+        `defines` to ensure that we don&#39;t incorrectly report a subsequently undefined
+        macro as defined. Only the rightmost index of each undefined macro is saved.
+
+        Returns:
+            A dict of `name: index` for each undefined macro.
+        &#34;&#34;&#34;
+        indexed_undefines = {}
+        for idx, arg in enumerate(self.canonicalized_args):
+            if not arg.startswith(&#34;-U&#34;):
+                continue
+
+            # Both `-Uname` and `-U name` work in GCC and Clang.
+            if arg == &#34;-U&#34;:
+                undefine = self.canonicalized_args[idx + 1]
+            else:
+                undefine = arg[2:]
+
+            indexed_undefines[undefine] = idx
+
+        return indexed_undefines
+
+    @property
+    def defines(self: IndexedUndefinesProtocol) -&gt; List[Tuple[str, str]]:
+        &#34;&#34;&#34;
+        The list of **effective** defines for this tool invocation. An &#34;effective&#34;
+        define is one that is not canceled out by a subsequent undefine.
+
+        Returns:
+            A list of tuples of (name, value) for each effectively defined macro.
+        &#34;&#34;&#34;
+        defines = []
+        for idx, arg in enumerate(self.canonicalized_args):
+            if not arg.startswith(&#34;-D&#34;):
+                continue
+
+            # Both `-Dname[=value]` and `-D name[=value]` work in GCC and Clang.
+            if arg == &#34;-D&#34;:
+                define = self.canonicalized_args[idx + 1]
+            else:
+                define = arg[2:]
+
+            components = define.split(&#34;=&#34;, 1)
+            name = components[0]
+            if len(components) == 1:
+                # NOTE(ww): 1 is the default macro value.
+                # It&#39;s actually an integer at the preprocessor level, but we model everything
+                # as strings here to avoid complicating things.
+                value = &#34;1&#34;
+            else:
+                value = components[1]
+
+            # Is this macro subsequently undefined? If so, don&#39;t include it in
+            # the defines list.
+            if self.indexed_undefines.get(name, -1) &gt; idx:
+                continue
+
+            defines.append((name, value))
+
+        return defines
+
+
+class CodeModelMixin:
+    &#34;&#34;&#34;
+    A mixin for tools that support the `-mcmodel=MODEL` syntax for declaring their
+    code model.
+    &#34;&#34;&#34;
+
+    @property
+    def code_model(self: CanonicalizedArgsProtocol):
+        &#34;&#34;&#34;
+        Returns:
+            A `blight.enums.CodeModel` value representing the tool&#39;s code model
+        &#34;&#34;&#34;
+        code_model_map = {
+            &#34;-mcmodel=small&#34;: CodeModel.Small,
+            &#34;-mcmodel=medlow&#34;: CodeModel.Small,
+            &#34;-mcmodel=medium&#34;: CodeModel.Medium,
+            &#34;-mcmodel=medany&#34;: CodeModel.Medium,
+            &#34;-mcmodel=large&#34;: CodeModel.Large,
+            &#34;-mcmodel=kernel&#34;: CodeModel.Kernel,
+        }
+
+        # NOTE(ww): Both Clang and GCC seem to default to the &#34;small&#34; code model
+        # when none is specified, at least on x86-64. But this might not be consistent
+        # across architectures, so maybe we should return `CodeModel.Unknown` here
+        # instead.
+        code_model = util.ritem_prefix(self.canonicalized_args, &#34;-mcmodel=&#34;)
+        if code_model is None:
+            return CodeModel.Small
+
+        return code_model_map.get(code_model, CodeModel.Unknown)
+
+
+# NOTE(ww): The funny mixin order here (`ResponseFileMixin` before `Tool`) and elsewhere
+# is because Python defines its class hierarchy from right to left. `ResponseFileMixin`
+# therefore needs to come first in order to properly override `canonicalized_args`.
+class CompilerTool(ResponseFileMixin, Tool, StdMixin, OptMixin, DefinesMixin, CodeModelMixin):
+    &#34;&#34;&#34;
+    Represents a generic (C or C++) compiler frontend.
+
+    Like `Tool`, `CompilerTool` cannot be instantiated directly.
+    &#34;&#34;&#34;
+
+    def __init__(self, args) -&gt; None:
+        if self.__class__ == CompilerTool:
+            raise NotImplementedError(f&#34;can&#39;t instantiate {self.__class__.__name__} directly&#34;)
+        super().__init__(args)
+
+    @property
+    def stage(self) -&gt; CompilerStage:
+        &#34;&#34;&#34;
+        Returns:
+            A `blight.enums.CompilerStage` value representing the stage that this tool is on
+        &#34;&#34;&#34;
+
+        # TODO(ww): Refactor this entire method. Both GCC and Clang can actually
+        # run multiple stages per invocation, e.g. `-x c foo.c -x c++ bar.cpp`,
+        # so we should model this as &#34;stages&#34; instead. This, in turn, will require
+        # us to reevaluate our output guesswork below.
+
+        if len(self.canonicalized_args) == 0:
+            return CompilerStage.Unknown
+
+        stage_flag_map = {
+            # NOTE(ww): See the TODO in CompilerStage.
+            &#34;-v&#34;: CompilerStage.Unknown,
+            &#34;-###&#34;: CompilerStage.Unknown,
+            &#34;-E&#34;: CompilerStage.Preprocess,
+            &#34;-fsyntax-only&#34;: CompilerStage.SyntaxOnly,
+            &#34;-S&#34;: CompilerStage.Assemble,
+            &#34;-c&#34;: CompilerStage.CompileObject,
+        }
+
+        for flag, stage in stage_flag_map.items():
+            if flag in self.canonicalized_args:
+                return stage
+
+        # TODO(ww): Handle header precompilation here. GCC doesn&#39;t seem to
+        # consider this a real &#34;stage&#34;, but it&#39;s different enough from every
+        # other stage to warrant special treatment.
+
+        # No explicit stage flag? Both gcc and clang treat this as
+        # &#34;run all stages&#34;, so we do too.
+        return CompilerStage.AllStages
+
+    @property
+    def outputs(self) -&gt; List[str]:
+        &#34;&#34;&#34;
+        Specializes `Tool.outputs` for compiler tools.
+        &#34;&#34;&#34;
+        outputs = super().outputs
+        if outputs != []:
+            return outputs
+
+        # Without an explicit `-o outfile`, the default output name(s)
+        # depends on the compiler&#39;s stage.
+        if self.stage == CompilerStage.Preprocess:
+            # NOTE(ww): The preprocessor stage emits to stdout, but returning &#34;-&#34; as
+            # a sentinel for that is very meh. If only Python had Rust-style enums.
+            return [&#34;-&#34;]
+        elif self.stage == CompilerStage.Assemble:
+            # NOTE(ww): Outputs are created relative to the current working directory,
+            # not relative to their input. We return them as relative paths to
+            # indicate this (maybe we should just fully resolve them?)
+            return [Path(input_).with_suffix(&#34;.s&#34;).name for input_ in self.inputs]
+        elif self.stage == CompilerStage.CompileObject:
+            return [Path(input_).with_suffix(&#34;.o&#34;).name for input_ in self.inputs]
+        elif self.stage == CompilerStage.AllStages:
+            # NOTE(ww): This will be wrong when we&#39;re doing header precompilation;
+            # see the TODO in `stage`.
+            return [&#34;a.out&#34;]
+        else:
+            return []
+
+    def asdict(self) -&gt; Dict[str, Any]:
+        return {
+            **super().asdict(),
+            &#34;lang&#34;: self.lang.name,
+            &#34;std&#34;: self.std.name,
+            &#34;stage&#34;: self.stage.name,
+            &#34;opt&#34;: self.opt.name,
+        }
+
+
+class CC(CompilerTool):
+    &#34;&#34;&#34;
+    A specialization of `CompilerTool` for the C compiler frontend.
+    &#34;&#34;&#34;
+
+    def __repr__(self) -&gt; str:
+        return f&#34;&lt;CC {self.wrapped_tool()} {self.lang} {self.std} {self.stage}&gt;&#34;
+
+
+class CXX(CompilerTool):
+    &#34;&#34;&#34;
+    A specialization of `CompilerTool` for the C++ compiler frontend.
+    &#34;&#34;&#34;
+
+    def __repr__(self) -&gt; str:
+        return f&#34;&lt;CXX {self.wrapped_tool()} {self.lang} {self.std} {self.stage}&gt;&#34;
+
+
+class CPP(Tool, StdMixin, DefinesMixin):
+    &#34;&#34;&#34;
+    Represents the C preprocessor tool.
+    &#34;&#34;&#34;
+
+    def __repr__(self) -&gt; str:
+        return f&#34;&lt;CPP {self.wrapped_tool()} {self.lang} {self.std}&gt;&#34;
+
+    def asdict(self) -&gt; Dict[str, Any]:
+        return {**super().asdict(), &#34;lang&#34;: self.lang.name, &#34;std&#34;: self.std.name}
+
+
+class LD(ResponseFileMixin, Tool):
+    &#34;&#34;&#34;
+    Represents the linker.
+    &#34;&#34;&#34;
+
+    @property
+    def outputs(self) -&gt; List[str]:
+        &#34;&#34;&#34;
+        Specializes `Tool.outputs` for the linker.
+        &#34;&#34;&#34;
+
+        outputs = super().outputs
+        if outputs != []:
+            return outputs
+
+        # The GNU linker additionally supports --output=OUTFILE and
+        # --output OUTFILE. Handle them here.
+        output_flag_index = util.rindex_prefix(self.canonicalized_args, &#34;--output&#34;)
+        if output_flag_index is None:
+            return [&#34;a.out&#34;]
+
+        # Split option form.
+        if self.canonicalized_args[output_flag_index] == &#34;--output&#34;:
+            return [self.canonicalized_args[output_flag_index + 1]]
+
+        # Assignment form.
+        return [self.canonicalized_args[output_flag_index].split(&#34;=&#34;)[1]]
+
+    def __repr__(self) -&gt; str:
+        return f&#34;&lt;LD {self.wrapped_tool()}&gt;&#34;
+
+
+class AS(ResponseFileMixin, Tool):
+    &#34;&#34;&#34;
+    Represents the assembler.
+    &#34;&#34;&#34;
+
+    def __repr__(self) -&gt; str:
+        return f&#34;&lt;AS {self.wrapped_tool()}&gt;&#34;
+
+
+class AR(Tool):
+    &#34;&#34;&#34;
+    Represents the archiver.
+    &#34;&#34;&#34;
+
+    def __repr__(self) -&gt; str:
+        return f&#34;&lt;AR {self.wrapped_tool()}&gt;&#34;
+
+
+class STRIP(ResponseFileMixin, Tool):
+    &#34;&#34;&#34;
+    Represents the stripping tool.
+    &#34;&#34;&#34;
+
+    def __repr__(self) -&gt; str:
+        return f&#34;&lt;STRIP {self.wrapped_tool()}&gt;&#34;</code></pre>
+</details>
+</section>
+<section>
+</section>
+<section>
+<h2 class="section-title" id="header-variables">Global variables</h2>
+<dl>
+<dt id="blight.tool.RESPONSE_FILE_RECURSION_LIMIT"><code class="name">var <span class="ident">RESPONSE_FILE_RECURSION_LIMIT</span></code></dt>
+<dd>
+<div class="desc"><p>Response files can contain further <code>@file</code> arguments, because of course they can.</p>
+<p>Neither clang nor GCC is explicit in their documentation about their recursion limits,
+if they have any. We choose an arbitrary limit here.</p></div>
+</dd>
+</dl>
+</section>
+<section>
+</section>
+<section>
+<h2 class="section-title" id="header-classes">Classes</h2>
+<dl>
+<dt id="blight.tool.AR"><code class="flex name class">
+<span>class <span class="ident">AR</span></span>
+<span>(</span><span>args: List[str])</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Represents the archiver.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class AR(Tool):
+    &#34;&#34;&#34;
+    Represents the archiver.
+    &#34;&#34;&#34;
+
+    def __repr__(self) -&gt; str:
+        return f&#34;&lt;AR {self.wrapped_tool()}&gt;&#34;</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="blight.tool.Tool" href="#blight.tool.Tool">Tool</a></li>
+</ul>
+<h3>Inherited members</h3>
+<ul class="hlist">
+<li><code><b><a title="blight.tool.Tool" href="#blight.tool.Tool">Tool</a></b></code>:
+<ul class="hlist">
+<li><code><a title="blight.tool.Tool.asdict" href="#blight.tool.Tool.asdict">asdict</a></code></li>
+<li><code><a title="blight.tool.Tool.blight_tool" href="#blight.tool.Tool.blight_tool">blight_tool</a></code></li>
+<li><code><a title="blight.tool.Tool.build_tool" href="#blight.tool.Tool.build_tool">build_tool</a></code></li>
+<li><code><a title="blight.tool.Tool.cwd" href="#blight.tool.Tool.cwd">cwd</a></code></li>
+<li><code><a title="blight.tool.Tool.inputs" href="#blight.tool.Tool.inputs">inputs</a></code></li>
+<li><code><a title="blight.tool.Tool.outputs" href="#blight.tool.Tool.outputs">outputs</a></code></li>
+<li><code><a title="blight.tool.Tool.run" href="#blight.tool.Tool.run">run</a></code></li>
+<li><code><a title="blight.tool.Tool.wrapped_tool" href="#blight.tool.Tool.wrapped_tool">wrapped_tool</a></code></li>
+</ul>
+</li>
+</ul>
+</dd>
+<dt id="blight.tool.AS"><code class="flex name class">
+<span>class <span class="ident">AS</span></span>
+<span>(</span><span>args: List[str])</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Represents the assembler.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class AS(ResponseFileMixin, Tool):
+    &#34;&#34;&#34;
+    Represents the assembler.
+    &#34;&#34;&#34;
+
+    def __repr__(self) -&gt; str:
+        return f&#34;&lt;AS {self.wrapped_tool()}&gt;&#34;</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="blight.tool.ResponseFileMixin" href="#blight.tool.ResponseFileMixin">ResponseFileMixin</a></li>
+<li><a title="blight.tool.Tool" href="#blight.tool.Tool">Tool</a></li>
+</ul>
+<h3>Inherited members</h3>
+<ul class="hlist">
+<li><code><b><a title="blight.tool.ResponseFileMixin" href="#blight.tool.ResponseFileMixin">ResponseFileMixin</a></b></code>:
+<ul class="hlist">
+<li><code><a title="blight.tool.ResponseFileMixin.canonicalized_args" href="#blight.tool.ResponseFileMixin.canonicalized_args">canonicalized_args</a></code></li>
+</ul>
+</li>
+<li><code><b><a title="blight.tool.Tool" href="#blight.tool.Tool">Tool</a></b></code>:
+<ul class="hlist">
+<li><code><a title="blight.tool.Tool.asdict" href="#blight.tool.Tool.asdict">asdict</a></code></li>
+<li><code><a title="blight.tool.Tool.blight_tool" href="#blight.tool.Tool.blight_tool">blight_tool</a></code></li>
+<li><code><a title="blight.tool.Tool.build_tool" href="#blight.tool.Tool.build_tool">build_tool</a></code></li>
+<li><code><a title="blight.tool.Tool.cwd" href="#blight.tool.Tool.cwd">cwd</a></code></li>
+<li><code><a title="blight.tool.Tool.inputs" href="#blight.tool.Tool.inputs">inputs</a></code></li>
+<li><code><a title="blight.tool.Tool.outputs" href="#blight.tool.Tool.outputs">outputs</a></code></li>
+<li><code><a title="blight.tool.Tool.run" href="#blight.tool.Tool.run">run</a></code></li>
+<li><code><a title="blight.tool.Tool.wrapped_tool" href="#blight.tool.Tool.wrapped_tool">wrapped_tool</a></code></li>
+</ul>
+</li>
+</ul>
+</dd>
+<dt id="blight.tool.CC"><code class="flex name class">
+<span>class <span class="ident">CC</span></span>
+<span>(</span><span>args)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>A specialization of <code><a title="blight.tool.CompilerTool" href="#blight.tool.CompilerTool">CompilerTool</a></code> for the C compiler frontend.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class CC(CompilerTool):
+    &#34;&#34;&#34;
+    A specialization of `CompilerTool` for the C compiler frontend.
+    &#34;&#34;&#34;
+
+    def __repr__(self) -&gt; str:
+        return f&#34;&lt;CC {self.wrapped_tool()} {self.lang} {self.std} {self.stage}&gt;&#34;</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="blight.tool.CompilerTool" href="#blight.tool.CompilerTool">CompilerTool</a></li>
+<li><a title="blight.tool.ResponseFileMixin" href="#blight.tool.ResponseFileMixin">ResponseFileMixin</a></li>
+<li><a title="blight.tool.Tool" href="#blight.tool.Tool">Tool</a></li>
+<li><a title="blight.tool.StdMixin" href="#blight.tool.StdMixin">StdMixin</a></li>
+<li><a title="blight.tool.LangMixin" href="#blight.tool.LangMixin">LangMixin</a></li>
+<li><a title="blight.tool.OptMixin" href="#blight.tool.OptMixin">OptMixin</a></li>
+<li><a title="blight.tool.DefinesMixin" href="#blight.tool.DefinesMixin">DefinesMixin</a></li>
+<li><a title="blight.tool.CodeModelMixin" href="#blight.tool.CodeModelMixin">CodeModelMixin</a></li>
+</ul>
+<h3>Inherited members</h3>
+<ul class="hlist">
+<li><code><b><a title="blight.tool.CompilerTool" href="#blight.tool.CompilerTool">CompilerTool</a></b></code>:
+<ul class="hlist">
+<li><code><a title="blight.tool.CompilerTool.asdict" href="#blight.tool.Tool.asdict">asdict</a></code></li>
+<li><code><a title="blight.tool.CompilerTool.blight_tool" href="#blight.tool.Tool.blight_tool">blight_tool</a></code></li>
+<li><code><a title="blight.tool.CompilerTool.build_tool" href="#blight.tool.Tool.build_tool">build_tool</a></code></li>
+<li><code><a title="blight.tool.CompilerTool.canonicalized_args" href="#blight.tool.ResponseFileMixin.canonicalized_args">canonicalized_args</a></code></li>
+<li><code><a title="blight.tool.CompilerTool.code_model" href="#blight.tool.CodeModelMixin.code_model">code_model</a></code></li>
+<li><code><a title="blight.tool.CompilerTool.cwd" href="#blight.tool.Tool.cwd">cwd</a></code></li>
+<li><code><a title="blight.tool.CompilerTool.defines" href="#blight.tool.DefinesMixin.defines">defines</a></code></li>
+<li><code><a title="blight.tool.CompilerTool.indexed_undefines" href="#blight.tool.DefinesMixin.indexed_undefines">indexed_undefines</a></code></li>
+<li><code><a title="blight.tool.CompilerTool.inputs" href="#blight.tool.Tool.inputs">inputs</a></code></li>
+<li><code><a title="blight.tool.CompilerTool.lang" href="#blight.tool.LangMixin.lang">lang</a></code></li>
+<li><code><a title="blight.tool.CompilerTool.opt" href="#blight.tool.OptMixin.opt">opt</a></code></li>
+<li><code><a title="blight.tool.CompilerTool.outputs" href="#blight.tool.CompilerTool.outputs">outputs</a></code></li>
+<li><code><a title="blight.tool.CompilerTool.run" href="#blight.tool.Tool.run">run</a></code></li>
+<li><code><a title="blight.tool.CompilerTool.stage" href="#blight.tool.CompilerTool.stage">stage</a></code></li>
+<li><code><a title="blight.tool.CompilerTool.std" href="#blight.tool.StdMixin.std">std</a></code></li>
+<li><code><a title="blight.tool.CompilerTool.wrapped_tool" href="#blight.tool.Tool.wrapped_tool">wrapped_tool</a></code></li>
+</ul>
+</li>
+</ul>
+</dd>
+<dt id="blight.tool.CPP"><code class="flex name class">
+<span>class <span class="ident">CPP</span></span>
+<span>(</span><span>args: List[str])</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Represents the C preprocessor tool.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class CPP(Tool, StdMixin, DefinesMixin):
+    &#34;&#34;&#34;
+    Represents the C preprocessor tool.
+    &#34;&#34;&#34;
+
+    def __repr__(self) -&gt; str:
+        return f&#34;&lt;CPP {self.wrapped_tool()} {self.lang} {self.std}&gt;&#34;
+
+    def asdict(self) -&gt; Dict[str, Any]:
+        return {**super().asdict(), &#34;lang&#34;: self.lang.name, &#34;std&#34;: self.std.name}</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="blight.tool.Tool" href="#blight.tool.Tool">Tool</a></li>
+<li><a title="blight.tool.StdMixin" href="#blight.tool.StdMixin">StdMixin</a></li>
+<li><a title="blight.tool.LangMixin" href="#blight.tool.LangMixin">LangMixin</a></li>
+<li><a title="blight.tool.DefinesMixin" href="#blight.tool.DefinesMixin">DefinesMixin</a></li>
+</ul>
+<h3>Inherited members</h3>
+<ul class="hlist">
+<li><code><b><a title="blight.tool.Tool" href="#blight.tool.Tool">Tool</a></b></code>:
+<ul class="hlist">
+<li><code><a title="blight.tool.Tool.asdict" href="#blight.tool.Tool.asdict">asdict</a></code></li>
+<li><code><a title="blight.tool.Tool.blight_tool" href="#blight.tool.Tool.blight_tool">blight_tool</a></code></li>
+<li><code><a title="blight.tool.Tool.build_tool" href="#blight.tool.Tool.build_tool">build_tool</a></code></li>
+<li><code><a title="blight.tool.Tool.cwd" href="#blight.tool.Tool.cwd">cwd</a></code></li>
+<li><code><a title="blight.tool.Tool.inputs" href="#blight.tool.Tool.inputs">inputs</a></code></li>
+<li><code><a title="blight.tool.Tool.outputs" href="#blight.tool.Tool.outputs">outputs</a></code></li>
+<li><code><a title="blight.tool.Tool.run" href="#blight.tool.Tool.run">run</a></code></li>
+<li><code><a title="blight.tool.Tool.wrapped_tool" href="#blight.tool.Tool.wrapped_tool">wrapped_tool</a></code></li>
+</ul>
+</li>
+<li><code><b><a title="blight.tool.StdMixin" href="#blight.tool.StdMixin">StdMixin</a></b></code>:
+<ul class="hlist">
+<li><code><a title="blight.tool.StdMixin.lang" href="#blight.tool.LangMixin.lang">lang</a></code></li>
+<li><code><a title="blight.tool.StdMixin.std" href="#blight.tool.StdMixin.std">std</a></code></li>
+</ul>
+</li>
+<li><code><b><a title="blight.tool.DefinesMixin" href="#blight.tool.DefinesMixin">DefinesMixin</a></b></code>:
+<ul class="hlist">
+<li><code><a title="blight.tool.DefinesMixin.defines" href="#blight.tool.DefinesMixin.defines">defines</a></code></li>
+<li><code><a title="blight.tool.DefinesMixin.indexed_undefines" href="#blight.tool.DefinesMixin.indexed_undefines">indexed_undefines</a></code></li>
+</ul>
+</li>
+</ul>
+</dd>
+<dt id="blight.tool.CXX"><code class="flex name class">
+<span>class <span class="ident">CXX</span></span>
+<span>(</span><span>args)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>A specialization of <code><a title="blight.tool.CompilerTool" href="#blight.tool.CompilerTool">CompilerTool</a></code> for the C++ compiler frontend.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class CXX(CompilerTool):
+    &#34;&#34;&#34;
+    A specialization of `CompilerTool` for the C++ compiler frontend.
+    &#34;&#34;&#34;
+
+    def __repr__(self) -&gt; str:
+        return f&#34;&lt;CXX {self.wrapped_tool()} {self.lang} {self.std} {self.stage}&gt;&#34;</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="blight.tool.CompilerTool" href="#blight.tool.CompilerTool">CompilerTool</a></li>
+<li><a title="blight.tool.ResponseFileMixin" href="#blight.tool.ResponseFileMixin">ResponseFileMixin</a></li>
+<li><a title="blight.tool.Tool" href="#blight.tool.Tool">Tool</a></li>
+<li><a title="blight.tool.StdMixin" href="#blight.tool.StdMixin">StdMixin</a></li>
+<li><a title="blight.tool.LangMixin" href="#blight.tool.LangMixin">LangMixin</a></li>
+<li><a title="blight.tool.OptMixin" href="#blight.tool.OptMixin">OptMixin</a></li>
+<li><a title="blight.tool.DefinesMixin" href="#blight.tool.DefinesMixin">DefinesMixin</a></li>
+<li><a title="blight.tool.CodeModelMixin" href="#blight.tool.CodeModelMixin">CodeModelMixin</a></li>
+</ul>
+<h3>Inherited members</h3>
+<ul class="hlist">
+<li><code><b><a title="blight.tool.CompilerTool" href="#blight.tool.CompilerTool">CompilerTool</a></b></code>:
+<ul class="hlist">
+<li><code><a title="blight.tool.CompilerTool.asdict" href="#blight.tool.Tool.asdict">asdict</a></code></li>
+<li><code><a title="blight.tool.CompilerTool.blight_tool" href="#blight.tool.Tool.blight_tool">blight_tool</a></code></li>
+<li><code><a title="blight.tool.CompilerTool.build_tool" href="#blight.tool.Tool.build_tool">build_tool</a></code></li>
+<li><code><a title="blight.tool.CompilerTool.canonicalized_args" href="#blight.tool.ResponseFileMixin.canonicalized_args">canonicalized_args</a></code></li>
+<li><code><a title="blight.tool.CompilerTool.code_model" href="#blight.tool.CodeModelMixin.code_model">code_model</a></code></li>
+<li><code><a title="blight.tool.CompilerTool.cwd" href="#blight.tool.Tool.cwd">cwd</a></code></li>
+<li><code><a title="blight.tool.CompilerTool.defines" href="#blight.tool.DefinesMixin.defines">defines</a></code></li>
+<li><code><a title="blight.tool.CompilerTool.indexed_undefines" href="#blight.tool.DefinesMixin.indexed_undefines">indexed_undefines</a></code></li>
+<li><code><a title="blight.tool.CompilerTool.inputs" href="#blight.tool.Tool.inputs">inputs</a></code></li>
+<li><code><a title="blight.tool.CompilerTool.lang" href="#blight.tool.LangMixin.lang">lang</a></code></li>
+<li><code><a title="blight.tool.CompilerTool.opt" href="#blight.tool.OptMixin.opt">opt</a></code></li>
+<li><code><a title="blight.tool.CompilerTool.outputs" href="#blight.tool.CompilerTool.outputs">outputs</a></code></li>
+<li><code><a title="blight.tool.CompilerTool.run" href="#blight.tool.Tool.run">run</a></code></li>
+<li><code><a title="blight.tool.CompilerTool.stage" href="#blight.tool.CompilerTool.stage">stage</a></code></li>
+<li><code><a title="blight.tool.CompilerTool.std" href="#blight.tool.StdMixin.std">std</a></code></li>
+<li><code><a title="blight.tool.CompilerTool.wrapped_tool" href="#blight.tool.Tool.wrapped_tool">wrapped_tool</a></code></li>
+</ul>
+</li>
+</ul>
+</dd>
+<dt id="blight.tool.CodeModelMixin"><code class="flex name class">
+<span>class <span class="ident">CodeModelMixin</span></span>
+</code></dt>
+<dd>
+<div class="desc"><p>A mixin for tools that support the <code>-mcmodel=MODEL</code> syntax for declaring their
+code model.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class CodeModelMixin:
+    &#34;&#34;&#34;
+    A mixin for tools that support the `-mcmodel=MODEL` syntax for declaring their
+    code model.
+    &#34;&#34;&#34;
+
+    @property
+    def code_model(self: CanonicalizedArgsProtocol):
+        &#34;&#34;&#34;
+        Returns:
+            A `blight.enums.CodeModel` value representing the tool&#39;s code model
+        &#34;&#34;&#34;
+        code_model_map = {
+            &#34;-mcmodel=small&#34;: CodeModel.Small,
+            &#34;-mcmodel=medlow&#34;: CodeModel.Small,
+            &#34;-mcmodel=medium&#34;: CodeModel.Medium,
+            &#34;-mcmodel=medany&#34;: CodeModel.Medium,
+            &#34;-mcmodel=large&#34;: CodeModel.Large,
+            &#34;-mcmodel=kernel&#34;: CodeModel.Kernel,
+        }
+
+        # NOTE(ww): Both Clang and GCC seem to default to the &#34;small&#34; code model
+        # when none is specified, at least on x86-64. But this might not be consistent
+        # across architectures, so maybe we should return `CodeModel.Unknown` here
+        # instead.
+        code_model = util.ritem_prefix(self.canonicalized_args, &#34;-mcmodel=&#34;)
+        if code_model is None:
+            return CodeModel.Small
+
+        return code_model_map.get(code_model, CodeModel.Unknown)</code></pre>
+</details>
+<h3>Subclasses</h3>
+<ul class="hlist">
+<li><a title="blight.tool.CompilerTool" href="#blight.tool.CompilerTool">CompilerTool</a></li>
+</ul>
+<h3>Instance variables</h3>
+<dl>
+<dt id="blight.tool.CodeModelMixin.code_model"><code class="name">var <span class="ident">code_model</span></code></dt>
+<dd>
+<div class="desc"><h2 id="returns">Returns</h2>
+<p>A <code><a title="blight.enums.CodeModel" href="enums.html#blight.enums.CodeModel">CodeModel</a></code> value representing the tool's code model</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@property
+def code_model(self: CanonicalizedArgsProtocol):
+    &#34;&#34;&#34;
+    Returns:
+        A `blight.enums.CodeModel` value representing the tool&#39;s code model
+    &#34;&#34;&#34;
+    code_model_map = {
+        &#34;-mcmodel=small&#34;: CodeModel.Small,
+        &#34;-mcmodel=medlow&#34;: CodeModel.Small,
+        &#34;-mcmodel=medium&#34;: CodeModel.Medium,
+        &#34;-mcmodel=medany&#34;: CodeModel.Medium,
+        &#34;-mcmodel=large&#34;: CodeModel.Large,
+        &#34;-mcmodel=kernel&#34;: CodeModel.Kernel,
+    }
+
+    # NOTE(ww): Both Clang and GCC seem to default to the &#34;small&#34; code model
+    # when none is specified, at least on x86-64. But this might not be consistent
+    # across architectures, so maybe we should return `CodeModel.Unknown` here
+    # instead.
+    code_model = util.ritem_prefix(self.canonicalized_args, &#34;-mcmodel=&#34;)
+    if code_model is None:
+        return CodeModel.Small
+
+    return code_model_map.get(code_model, CodeModel.Unknown)</code></pre>
+</details>
+</dd>
+</dl>
+</dd>
+<dt id="blight.tool.CompilerTool"><code class="flex name class">
+<span>class <span class="ident">CompilerTool</span></span>
+<span>(</span><span>args)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Represents a generic (C or C++) compiler frontend.</p>
+<p>Like <code><a title="blight.tool.Tool" href="#blight.tool.Tool">Tool</a></code>, <code><a title="blight.tool.CompilerTool" href="#blight.tool.CompilerTool">CompilerTool</a></code> cannot be instantiated directly.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class CompilerTool(ResponseFileMixin, Tool, StdMixin, OptMixin, DefinesMixin, CodeModelMixin):
+    &#34;&#34;&#34;
+    Represents a generic (C or C++) compiler frontend.
+
+    Like `Tool`, `CompilerTool` cannot be instantiated directly.
+    &#34;&#34;&#34;
+
+    def __init__(self, args) -&gt; None:
+        if self.__class__ == CompilerTool:
+            raise NotImplementedError(f&#34;can&#39;t instantiate {self.__class__.__name__} directly&#34;)
+        super().__init__(args)
+
+    @property
+    def stage(self) -&gt; CompilerStage:
+        &#34;&#34;&#34;
+        Returns:
+            A `blight.enums.CompilerStage` value representing the stage that this tool is on
+        &#34;&#34;&#34;
+
+        # TODO(ww): Refactor this entire method. Both GCC and Clang can actually
+        # run multiple stages per invocation, e.g. `-x c foo.c -x c++ bar.cpp`,
+        # so we should model this as &#34;stages&#34; instead. This, in turn, will require
+        # us to reevaluate our output guesswork below.
+
+        if len(self.canonicalized_args) == 0:
+            return CompilerStage.Unknown
+
+        stage_flag_map = {
+            # NOTE(ww): See the TODO in CompilerStage.
+            &#34;-v&#34;: CompilerStage.Unknown,
+            &#34;-###&#34;: CompilerStage.Unknown,
+            &#34;-E&#34;: CompilerStage.Preprocess,
+            &#34;-fsyntax-only&#34;: CompilerStage.SyntaxOnly,
+            &#34;-S&#34;: CompilerStage.Assemble,
+            &#34;-c&#34;: CompilerStage.CompileObject,
+        }
+
+        for flag, stage in stage_flag_map.items():
+            if flag in self.canonicalized_args:
+                return stage
+
+        # TODO(ww): Handle header precompilation here. GCC doesn&#39;t seem to
+        # consider this a real &#34;stage&#34;, but it&#39;s different enough from every
+        # other stage to warrant special treatment.
+
+        # No explicit stage flag? Both gcc and clang treat this as
+        # &#34;run all stages&#34;, so we do too.
+        return CompilerStage.AllStages
+
+    @property
+    def outputs(self) -&gt; List[str]:
+        &#34;&#34;&#34;
+        Specializes `Tool.outputs` for compiler tools.
+        &#34;&#34;&#34;
+        outputs = super().outputs
+        if outputs != []:
+            return outputs
+
+        # Without an explicit `-o outfile`, the default output name(s)
+        # depends on the compiler&#39;s stage.
+        if self.stage == CompilerStage.Preprocess:
+            # NOTE(ww): The preprocessor stage emits to stdout, but returning &#34;-&#34; as
+            # a sentinel for that is very meh. If only Python had Rust-style enums.
+            return [&#34;-&#34;]
+        elif self.stage == CompilerStage.Assemble:
+            # NOTE(ww): Outputs are created relative to the current working directory,
+            # not relative to their input. We return them as relative paths to
+            # indicate this (maybe we should just fully resolve them?)
+            return [Path(input_).with_suffix(&#34;.s&#34;).name for input_ in self.inputs]
+        elif self.stage == CompilerStage.CompileObject:
+            return [Path(input_).with_suffix(&#34;.o&#34;).name for input_ in self.inputs]
+        elif self.stage == CompilerStage.AllStages:
+            # NOTE(ww): This will be wrong when we&#39;re doing header precompilation;
+            # see the TODO in `stage`.
+            return [&#34;a.out&#34;]
+        else:
+            return []
+
+    def asdict(self) -&gt; Dict[str, Any]:
+        return {
+            **super().asdict(),
+            &#34;lang&#34;: self.lang.name,
+            &#34;std&#34;: self.std.name,
+            &#34;stage&#34;: self.stage.name,
+            &#34;opt&#34;: self.opt.name,
+        }</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="blight.tool.ResponseFileMixin" href="#blight.tool.ResponseFileMixin">ResponseFileMixin</a></li>
+<li><a title="blight.tool.Tool" href="#blight.tool.Tool">Tool</a></li>
+<li><a title="blight.tool.StdMixin" href="#blight.tool.StdMixin">StdMixin</a></li>
+<li><a title="blight.tool.LangMixin" href="#blight.tool.LangMixin">LangMixin</a></li>
+<li><a title="blight.tool.OptMixin" href="#blight.tool.OptMixin">OptMixin</a></li>
+<li><a title="blight.tool.DefinesMixin" href="#blight.tool.DefinesMixin">DefinesMixin</a></li>
+<li><a title="blight.tool.CodeModelMixin" href="#blight.tool.CodeModelMixin">CodeModelMixin</a></li>
+</ul>
+<h3>Subclasses</h3>
+<ul class="hlist">
+<li><a title="blight.tool.CC" href="#blight.tool.CC">CC</a></li>
+<li><a title="blight.tool.CXX" href="#blight.tool.CXX">CXX</a></li>
+</ul>
+<h3>Instance variables</h3>
+<dl>
+<dt id="blight.tool.CompilerTool.outputs"><code class="name">var <span class="ident">outputs</span> : List[str]</code></dt>
+<dd>
+<div class="desc"><p>Specializes <code><a title="blight.tool.Tool.outputs" href="#blight.tool.Tool.outputs">Tool.outputs</a></code> for compiler tools.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@property
+def outputs(self) -&gt; List[str]:
+    &#34;&#34;&#34;
+    Specializes `Tool.outputs` for compiler tools.
+    &#34;&#34;&#34;
+    outputs = super().outputs
+    if outputs != []:
+        return outputs
+
+    # Without an explicit `-o outfile`, the default output name(s)
+    # depends on the compiler&#39;s stage.
+    if self.stage == CompilerStage.Preprocess:
+        # NOTE(ww): The preprocessor stage emits to stdout, but returning &#34;-&#34; as
+        # a sentinel for that is very meh. If only Python had Rust-style enums.
+        return [&#34;-&#34;]
+    elif self.stage == CompilerStage.Assemble:
+        # NOTE(ww): Outputs are created relative to the current working directory,
+        # not relative to their input. We return them as relative paths to
+        # indicate this (maybe we should just fully resolve them?)
+        return [Path(input_).with_suffix(&#34;.s&#34;).name for input_ in self.inputs]
+    elif self.stage == CompilerStage.CompileObject:
+        return [Path(input_).with_suffix(&#34;.o&#34;).name for input_ in self.inputs]
+    elif self.stage == CompilerStage.AllStages:
+        # NOTE(ww): This will be wrong when we&#39;re doing header precompilation;
+        # see the TODO in `stage`.
+        return [&#34;a.out&#34;]
+    else:
+        return []</code></pre>
+</details>
+</dd>
+<dt id="blight.tool.CompilerTool.stage"><code class="name">var <span class="ident">stage</span> : <a title="blight.enums.CompilerStage" href="enums.html#blight.enums.CompilerStage">CompilerStage</a></code></dt>
+<dd>
+<div class="desc"><h2 id="returns">Returns</h2>
+<p>A <code><a title="blight.enums.CompilerStage" href="enums.html#blight.enums.CompilerStage">CompilerStage</a></code> value representing the stage that this tool is on</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@property
+def stage(self) -&gt; CompilerStage:
+    &#34;&#34;&#34;
+    Returns:
+        A `blight.enums.CompilerStage` value representing the stage that this tool is on
+    &#34;&#34;&#34;
+
+    # TODO(ww): Refactor this entire method. Both GCC and Clang can actually
+    # run multiple stages per invocation, e.g. `-x c foo.c -x c++ bar.cpp`,
+    # so we should model this as &#34;stages&#34; instead. This, in turn, will require
+    # us to reevaluate our output guesswork below.
+
+    if len(self.canonicalized_args) == 0:
+        return CompilerStage.Unknown
+
+    stage_flag_map = {
+        # NOTE(ww): See the TODO in CompilerStage.
+        &#34;-v&#34;: CompilerStage.Unknown,
+        &#34;-###&#34;: CompilerStage.Unknown,
+        &#34;-E&#34;: CompilerStage.Preprocess,
+        &#34;-fsyntax-only&#34;: CompilerStage.SyntaxOnly,
+        &#34;-S&#34;: CompilerStage.Assemble,
+        &#34;-c&#34;: CompilerStage.CompileObject,
+    }
+
+    for flag, stage in stage_flag_map.items():
+        if flag in self.canonicalized_args:
+            return stage
+
+    # TODO(ww): Handle header precompilation here. GCC doesn&#39;t seem to
+    # consider this a real &#34;stage&#34;, but it&#39;s different enough from every
+    # other stage to warrant special treatment.
+
+    # No explicit stage flag? Both gcc and clang treat this as
+    # &#34;run all stages&#34;, so we do too.
+    return CompilerStage.AllStages</code></pre>
+</details>
+</dd>
+</dl>
+<h3>Inherited members</h3>
+<ul class="hlist">
+<li><code><b><a title="blight.tool.ResponseFileMixin" href="#blight.tool.ResponseFileMixin">ResponseFileMixin</a></b></code>:
+<ul class="hlist">
+<li><code><a title="blight.tool.ResponseFileMixin.canonicalized_args" href="#blight.tool.ResponseFileMixin.canonicalized_args">canonicalized_args</a></code></li>
+</ul>
+</li>
+<li><code><b><a title="blight.tool.Tool" href="#blight.tool.Tool">Tool</a></b></code>:
+<ul class="hlist">
+<li><code><a title="blight.tool.Tool.asdict" href="#blight.tool.Tool.asdict">asdict</a></code></li>
+</ul>
+</li>
+<li><code><b><a title="blight.tool.Tool" href="#blight.tool.Tool">Tool</a></b></code>:
+<ul class="hlist">
+<li><code><a title="blight.tool.Tool.blight_tool" href="#blight.tool.Tool.blight_tool">blight_tool</a></code></li>
+<li><code><a title="blight.tool.Tool.build_tool" href="#blight.tool.Tool.build_tool">build_tool</a></code></li>
+<li><code><a title="blight.tool.Tool.cwd" href="#blight.tool.Tool.cwd">cwd</a></code></li>
+<li><code><a title="blight.tool.Tool.inputs" href="#blight.tool.Tool.inputs">inputs</a></code></li>
+<li><code><a title="blight.tool.Tool.run" href="#blight.tool.Tool.run">run</a></code></li>
+<li><code><a title="blight.tool.Tool.wrapped_tool" href="#blight.tool.Tool.wrapped_tool">wrapped_tool</a></code></li>
+</ul>
+</li>
+<li><code><b><a title="blight.tool.StdMixin" href="#blight.tool.StdMixin">StdMixin</a></b></code>:
+<ul class="hlist">
+<li><code><a title="blight.tool.StdMixin.lang" href="#blight.tool.LangMixin.lang">lang</a></code></li>
+<li><code><a title="blight.tool.StdMixin.std" href="#blight.tool.StdMixin.std">std</a></code></li>
+</ul>
+</li>
+<li><code><b><a title="blight.tool.OptMixin" href="#blight.tool.OptMixin">OptMixin</a></b></code>:
+<ul class="hlist">
+<li><code><a title="blight.tool.OptMixin.opt" href="#blight.tool.OptMixin.opt">opt</a></code></li>
+</ul>
+</li>
+<li><code><b><a title="blight.tool.DefinesMixin" href="#blight.tool.DefinesMixin">DefinesMixin</a></b></code>:
+<ul class="hlist">
+<li><code><a title="blight.tool.DefinesMixin.defines" href="#blight.tool.DefinesMixin.defines">defines</a></code></li>
+<li><code><a title="blight.tool.DefinesMixin.indexed_undefines" href="#blight.tool.DefinesMixin.indexed_undefines">indexed_undefines</a></code></li>
+</ul>
+</li>
+<li><code><b><a title="blight.tool.CodeModelMixin" href="#blight.tool.CodeModelMixin">CodeModelMixin</a></b></code>:
+<ul class="hlist">
+<li><code><a title="blight.tool.CodeModelMixin.code_model" href="#blight.tool.CodeModelMixin.code_model">code_model</a></code></li>
+</ul>
+</li>
+</ul>
+</dd>
+<dt id="blight.tool.DefinesMixin"><code class="flex name class">
+<span>class <span class="ident">DefinesMixin</span></span>
+</code></dt>
+<dd>
+<div class="desc"><p>A mixin for tools that support the <code>-Dname[=value]</code> and <code>-Uname</code> syntaxes for defining
+and undefining C preprocessor macros.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class DefinesMixin:
+    &#34;&#34;&#34;
+    A mixin for tools that support the `-Dname[=value]` and `-Uname` syntaxes for defining
+    and undefining C preprocessor macros.
+    &#34;&#34;&#34;
+
+    @property
+    def indexed_undefines(self: IndexedUndefinesProtocol) -&gt; Dict[str, int]:
+        &#34;&#34;&#34;
+        Returns a dictionary of indices for undefined macros. This is used in
+        `defines` to ensure that we don&#39;t incorrectly report a subsequently undefined
+        macro as defined. Only the rightmost index of each undefined macro is saved.
+
+        Returns:
+            A dict of `name: index` for each undefined macro.
+        &#34;&#34;&#34;
+        indexed_undefines = {}
+        for idx, arg in enumerate(self.canonicalized_args):
+            if not arg.startswith(&#34;-U&#34;):
+                continue
+
+            # Both `-Uname` and `-U name` work in GCC and Clang.
+            if arg == &#34;-U&#34;:
+                undefine = self.canonicalized_args[idx + 1]
+            else:
+                undefine = arg[2:]
+
+            indexed_undefines[undefine] = idx
+
+        return indexed_undefines
+
+    @property
+    def defines(self: IndexedUndefinesProtocol) -&gt; List[Tuple[str, str]]:
+        &#34;&#34;&#34;
+        The list of **effective** defines for this tool invocation. An &#34;effective&#34;
+        define is one that is not canceled out by a subsequent undefine.
+
+        Returns:
+            A list of tuples of (name, value) for each effectively defined macro.
+        &#34;&#34;&#34;
+        defines = []
+        for idx, arg in enumerate(self.canonicalized_args):
+            if not arg.startswith(&#34;-D&#34;):
+                continue
+
+            # Both `-Dname[=value]` and `-D name[=value]` work in GCC and Clang.
+            if arg == &#34;-D&#34;:
+                define = self.canonicalized_args[idx + 1]
+            else:
+                define = arg[2:]
+
+            components = define.split(&#34;=&#34;, 1)
+            name = components[0]
+            if len(components) == 1:
+                # NOTE(ww): 1 is the default macro value.
+                # It&#39;s actually an integer at the preprocessor level, but we model everything
+                # as strings here to avoid complicating things.
+                value = &#34;1&#34;
+            else:
+                value = components[1]
+
+            # Is this macro subsequently undefined? If so, don&#39;t include it in
+            # the defines list.
+            if self.indexed_undefines.get(name, -1) &gt; idx:
+                continue
+
+            defines.append((name, value))
+
+        return defines</code></pre>
+</details>
+<h3>Subclasses</h3>
+<ul class="hlist">
+<li><a title="blight.tool.CPP" href="#blight.tool.CPP">CPP</a></li>
+<li><a title="blight.tool.CompilerTool" href="#blight.tool.CompilerTool">CompilerTool</a></li>
+</ul>
+<h3>Instance variables</h3>
+<dl>
+<dt id="blight.tool.DefinesMixin.defines"><code class="name">var <span class="ident">defines</span> : List[Tuple[str, str]]</code></dt>
+<dd>
+<div class="desc"><p>The list of <strong>effective</strong> defines for this tool invocation. An "effective"
+define is one that is not canceled out by a subsequent undefine.</p>
+<h2 id="returns">Returns</h2>
+<p>A list of tuples of (name, value) for each effectively defined macro.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@property
+def defines(self: IndexedUndefinesProtocol) -&gt; List[Tuple[str, str]]:
+    &#34;&#34;&#34;
+    The list of **effective** defines for this tool invocation. An &#34;effective&#34;
+    define is one that is not canceled out by a subsequent undefine.
+
+    Returns:
+        A list of tuples of (name, value) for each effectively defined macro.
+    &#34;&#34;&#34;
+    defines = []
+    for idx, arg in enumerate(self.canonicalized_args):
+        if not arg.startswith(&#34;-D&#34;):
+            continue
+
+        # Both `-Dname[=value]` and `-D name[=value]` work in GCC and Clang.
+        if arg == &#34;-D&#34;:
+            define = self.canonicalized_args[idx + 1]
+        else:
+            define = arg[2:]
+
+        components = define.split(&#34;=&#34;, 1)
+        name = components[0]
+        if len(components) == 1:
+            # NOTE(ww): 1 is the default macro value.
+            # It&#39;s actually an integer at the preprocessor level, but we model everything
+            # as strings here to avoid complicating things.
+            value = &#34;1&#34;
+        else:
+            value = components[1]
+
+        # Is this macro subsequently undefined? If so, don&#39;t include it in
+        # the defines list.
+        if self.indexed_undefines.get(name, -1) &gt; idx:
+            continue
+
+        defines.append((name, value))
+
+    return defines</code></pre>
+</details>
+</dd>
+<dt id="blight.tool.DefinesMixin.indexed_undefines"><code class="name">var <span class="ident">indexed_undefines</span> : Dict[str, int]</code></dt>
+<dd>
+<div class="desc"><p>Returns a dictionary of indices for undefined macros. This is used in
+<code>defines</code> to ensure that we don't incorrectly report a subsequently undefined
+macro as defined. Only the rightmost index of each undefined macro is saved.</p>
+<h2 id="returns">Returns</h2>
+<p>A dict of <code>name: index</code> for each undefined macro.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@property
+def indexed_undefines(self: IndexedUndefinesProtocol) -&gt; Dict[str, int]:
+    &#34;&#34;&#34;
+    Returns a dictionary of indices for undefined macros. This is used in
+    `defines` to ensure that we don&#39;t incorrectly report a subsequently undefined
+    macro as defined. Only the rightmost index of each undefined macro is saved.
+
+    Returns:
+        A dict of `name: index` for each undefined macro.
+    &#34;&#34;&#34;
+    indexed_undefines = {}
+    for idx, arg in enumerate(self.canonicalized_args):
+        if not arg.startswith(&#34;-U&#34;):
+            continue
+
+        # Both `-Uname` and `-U name` work in GCC and Clang.
+        if arg == &#34;-U&#34;:
+            undefine = self.canonicalized_args[idx + 1]
+        else:
+            undefine = arg[2:]
+
+        indexed_undefines[undefine] = idx
+
+    return indexed_undefines</code></pre>
+</details>
+</dd>
+</dl>
+</dd>
+<dt id="blight.tool.LD"><code class="flex name class">
+<span>class <span class="ident">LD</span></span>
+<span>(</span><span>args: List[str])</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Represents the linker.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class LD(ResponseFileMixin, Tool):
+    &#34;&#34;&#34;
+    Represents the linker.
+    &#34;&#34;&#34;
+
+    @property
+    def outputs(self) -&gt; List[str]:
+        &#34;&#34;&#34;
+        Specializes `Tool.outputs` for the linker.
+        &#34;&#34;&#34;
+
+        outputs = super().outputs
+        if outputs != []:
+            return outputs
+
+        # The GNU linker additionally supports --output=OUTFILE and
+        # --output OUTFILE. Handle them here.
+        output_flag_index = util.rindex_prefix(self.canonicalized_args, &#34;--output&#34;)
+        if output_flag_index is None:
+            return [&#34;a.out&#34;]
+
+        # Split option form.
+        if self.canonicalized_args[output_flag_index] == &#34;--output&#34;:
+            return [self.canonicalized_args[output_flag_index + 1]]
+
+        # Assignment form.
+        return [self.canonicalized_args[output_flag_index].split(&#34;=&#34;)[1]]
+
+    def __repr__(self) -&gt; str:
+        return f&#34;&lt;LD {self.wrapped_tool()}&gt;&#34;</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="blight.tool.ResponseFileMixin" href="#blight.tool.ResponseFileMixin">ResponseFileMixin</a></li>
+<li><a title="blight.tool.Tool" href="#blight.tool.Tool">Tool</a></li>
+</ul>
+<h3>Instance variables</h3>
+<dl>
+<dt id="blight.tool.LD.outputs"><code class="name">var <span class="ident">outputs</span> : List[str]</code></dt>
+<dd>
+<div class="desc"><p>Specializes <code><a title="blight.tool.Tool.outputs" href="#blight.tool.Tool.outputs">Tool.outputs</a></code> for the linker.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@property
+def outputs(self) -&gt; List[str]:
+    &#34;&#34;&#34;
+    Specializes `Tool.outputs` for the linker.
+    &#34;&#34;&#34;
+
+    outputs = super().outputs
+    if outputs != []:
+        return outputs
+
+    # The GNU linker additionally supports --output=OUTFILE and
+    # --output OUTFILE. Handle them here.
+    output_flag_index = util.rindex_prefix(self.canonicalized_args, &#34;--output&#34;)
+    if output_flag_index is None:
+        return [&#34;a.out&#34;]
+
+    # Split option form.
+    if self.canonicalized_args[output_flag_index] == &#34;--output&#34;:
+        return [self.canonicalized_args[output_flag_index + 1]]
+
+    # Assignment form.
+    return [self.canonicalized_args[output_flag_index].split(&#34;=&#34;)[1]]</code></pre>
+</details>
+</dd>
+</dl>
+<h3>Inherited members</h3>
+<ul class="hlist">
+<li><code><b><a title="blight.tool.ResponseFileMixin" href="#blight.tool.ResponseFileMixin">ResponseFileMixin</a></b></code>:
+<ul class="hlist">
+<li><code><a title="blight.tool.ResponseFileMixin.canonicalized_args" href="#blight.tool.ResponseFileMixin.canonicalized_args">canonicalized_args</a></code></li>
+</ul>
+</li>
+<li><code><b><a title="blight.tool.Tool" href="#blight.tool.Tool">Tool</a></b></code>:
+<ul class="hlist">
+<li><code><a title="blight.tool.Tool.asdict" href="#blight.tool.Tool.asdict">asdict</a></code></li>
+<li><code><a title="blight.tool.Tool.blight_tool" href="#blight.tool.Tool.blight_tool">blight_tool</a></code></li>
+<li><code><a title="blight.tool.Tool.build_tool" href="#blight.tool.Tool.build_tool">build_tool</a></code></li>
+<li><code><a title="blight.tool.Tool.cwd" href="#blight.tool.Tool.cwd">cwd</a></code></li>
+<li><code><a title="blight.tool.Tool.inputs" href="#blight.tool.Tool.inputs">inputs</a></code></li>
+<li><code><a title="blight.tool.Tool.run" href="#blight.tool.Tool.run">run</a></code></li>
+<li><code><a title="blight.tool.Tool.wrapped_tool" href="#blight.tool.Tool.wrapped_tool">wrapped_tool</a></code></li>
+</ul>
+</li>
+</ul>
+</dd>
+<dt id="blight.tool.LangMixin"><code class="flex name class">
+<span>class <span class="ident">LangMixin</span></span>
+</code></dt>
+<dd>
+<div class="desc"><p>A mixin for tools that have a "language" component, i.e.
+those that change their behavior based on the language that they're used with.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class LangMixin:
+    &#34;&#34;&#34;
+    A mixin for tools that have a &#34;language&#34; component, i.e.
+    those that change their behavior based on the language that they&#39;re used with.
+    &#34;&#34;&#34;
+
+    @property
+    def lang(self: CanonicalizedArgsProtocol) -&gt; Lang:
+        &#34;&#34;&#34;
+        Returns:
+            A `blight.enums.Lang` value representing the tool&#39;s language
+        &#34;&#34;&#34;
+        x_lang_map = {&#34;c&#34;: Lang.C, &#34;c-header&#34;: Lang.C, &#34;c++&#34;: Lang.Cxx, &#34;c++-header&#34;: Lang.Cxx}
+
+        # First, check for `-x lang`. This overrides the language determined by
+        # the frontend&#39;s binary name (e.g. `g++`).
+        x_flag_index = util.rindex_prefix(self.canonicalized_args, &#34;-x&#34;)
+        if x_flag_index is not None:
+            if self.canonicalized_args[x_flag_index] == &#34;-x&#34;:
+                # TODO(ww): Maybe bounds check.
+                x_lang = self.canonicalized_args[x_flag_index + 1]
+            else:
+                # NOTE(ww): -xc and -xc++ both work, at least on GCC.
+                x_lang = self.canonicalized_args[x_flag_index][2:]
+            return x_lang_map.get(x_lang, Lang.Unknown)
+
+        # No `-x lang` means that we&#39;re operating in the frontend&#39;s default mode.
+        if self.__class__ == CC:
+            return Lang.C
+        elif self.__class__ == CXX:
+            return Lang.Cxx
+        else:
+            logger.debug(f&#34;unknown default language mode for {self.__class__.__name__}&#34;)
+            return Lang.Unknown</code></pre>
+</details>
+<h3>Subclasses</h3>
+<ul class="hlist">
+<li><a title="blight.tool.StdMixin" href="#blight.tool.StdMixin">StdMixin</a></li>
+</ul>
+<h3>Instance variables</h3>
+<dl>
+<dt id="blight.tool.LangMixin.lang"><code class="name">var <span class="ident">lang</span> : <a title="blight.enums.Lang" href="enums.html#blight.enums.Lang">Lang</a></code></dt>
+<dd>
+<div class="desc"><h2 id="returns">Returns</h2>
+<p>A <code><a title="blight.enums.Lang" href="enums.html#blight.enums.Lang">Lang</a></code> value representing the tool's language</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@property
+def lang(self: CanonicalizedArgsProtocol) -&gt; Lang:
+    &#34;&#34;&#34;
+    Returns:
+        A `blight.enums.Lang` value representing the tool&#39;s language
+    &#34;&#34;&#34;
+    x_lang_map = {&#34;c&#34;: Lang.C, &#34;c-header&#34;: Lang.C, &#34;c++&#34;: Lang.Cxx, &#34;c++-header&#34;: Lang.Cxx}
+
+    # First, check for `-x lang`. This overrides the language determined by
+    # the frontend&#39;s binary name (e.g. `g++`).
+    x_flag_index = util.rindex_prefix(self.canonicalized_args, &#34;-x&#34;)
+    if x_flag_index is not None:
+        if self.canonicalized_args[x_flag_index] == &#34;-x&#34;:
+            # TODO(ww): Maybe bounds check.
+            x_lang = self.canonicalized_args[x_flag_index + 1]
+        else:
+            # NOTE(ww): -xc and -xc++ both work, at least on GCC.
+            x_lang = self.canonicalized_args[x_flag_index][2:]
+        return x_lang_map.get(x_lang, Lang.Unknown)
+
+    # No `-x lang` means that we&#39;re operating in the frontend&#39;s default mode.
+    if self.__class__ == CC:
+        return Lang.C
+    elif self.__class__ == CXX:
+        return Lang.Cxx
+    else:
+        logger.debug(f&#34;unknown default language mode for {self.__class__.__name__}&#34;)
+        return Lang.Unknown</code></pre>
+</details>
+</dd>
+</dl>
+</dd>
+<dt id="blight.tool.OptMixin"><code class="flex name class">
+<span>class <span class="ident">OptMixin</span></span>
+</code></dt>
+<dd>
+<div class="desc"><p>A mixin for tools that have an optimization level.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class OptMixin:
+    &#34;&#34;&#34;
+    A mixin for tools that have an optimization level.
+    &#34;&#34;&#34;
+
+    @property
+    def opt(self: CanonicalizedArgsProtocol) -&gt; OptLevel:
+        &#34;&#34;&#34;
+        Returns:
+            A `blight.enums.OptLevel` value representing the optimization level
+        &#34;&#34;&#34;
+
+        opt_flag_map = {
+            &#34;-O0&#34;: OptLevel.O0,
+            &#34;-O&#34;: OptLevel.O1,
+            &#34;-O1&#34;: OptLevel.O1,
+            &#34;-O2&#34;: OptLevel.O2,
+            &#34;-O3&#34;: OptLevel.O3,
+            &#34;-Ofast&#34;: OptLevel.OFast,
+            &#34;-Os&#34;: OptLevel.OSize,
+            &#34;-Oz&#34;: OptLevel.OSizeZ,
+            &#34;-Og&#34;: OptLevel.ODebug,
+        }
+
+        # The last optimization flag takes precedence, so iterate over the arguments
+        # in reverse order.
+        for arg in reversed(self.canonicalized_args):
+            opt = opt_flag_map.get(arg)
+            if opt is not None:
+                return opt
+
+            if not arg.startswith(&#34;-O&#34;):
+                continue
+
+            # Special case: -O4 and above are currently equivalent to -O3 in
+            # GCC and Clang. Identify these and map them to -O3.
+            if re.fullmatch(r&#34;^-O[1-9]\d*$&#34;, arg):
+                return OptLevel.O3
+
+            # Otherwise: We&#39;ve found an argument that looks like -Osomething,
+            # but we don&#39;t know what it is. Treat it as an unknown.
+            logger.debug(f&#34;unknown optimization level: {arg}&#34;)
+            return OptLevel.Unknown
+
+        # If we&#39;ve made it here, then the arguments don&#39;t mention an explicit
+        # optimization level. Both GCC and Clang use -O0 by default, so return that here.
+        return OptLevel.O0</code></pre>
+</details>
+<h3>Subclasses</h3>
+<ul class="hlist">
+<li><a title="blight.tool.CompilerTool" href="#blight.tool.CompilerTool">CompilerTool</a></li>
+</ul>
+<h3>Instance variables</h3>
+<dl>
+<dt id="blight.tool.OptMixin.opt"><code class="name">var <span class="ident">opt</span> : <a title="blight.enums.OptLevel" href="enums.html#blight.enums.OptLevel">OptLevel</a></code></dt>
+<dd>
+<div class="desc"><h2 id="returns">Returns</h2>
+<p>A <code><a title="blight.enums.OptLevel" href="enums.html#blight.enums.OptLevel">OptLevel</a></code> value representing the optimization level</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@property
+def opt(self: CanonicalizedArgsProtocol) -&gt; OptLevel:
+    &#34;&#34;&#34;
+    Returns:
+        A `blight.enums.OptLevel` value representing the optimization level
+    &#34;&#34;&#34;
+
+    opt_flag_map = {
+        &#34;-O0&#34;: OptLevel.O0,
+        &#34;-O&#34;: OptLevel.O1,
+        &#34;-O1&#34;: OptLevel.O1,
+        &#34;-O2&#34;: OptLevel.O2,
+        &#34;-O3&#34;: OptLevel.O3,
+        &#34;-Ofast&#34;: OptLevel.OFast,
+        &#34;-Os&#34;: OptLevel.OSize,
+        &#34;-Oz&#34;: OptLevel.OSizeZ,
+        &#34;-Og&#34;: OptLevel.ODebug,
+    }
+
+    # The last optimization flag takes precedence, so iterate over the arguments
+    # in reverse order.
+    for arg in reversed(self.canonicalized_args):
+        opt = opt_flag_map.get(arg)
+        if opt is not None:
+            return opt
+
+        if not arg.startswith(&#34;-O&#34;):
+            continue
+
+        # Special case: -O4 and above are currently equivalent to -O3 in
+        # GCC and Clang. Identify these and map them to -O3.
+        if re.fullmatch(r&#34;^-O[1-9]\d*$&#34;, arg):
+            return OptLevel.O3
+
+        # Otherwise: We&#39;ve found an argument that looks like -Osomething,
+        # but we don&#39;t know what it is. Treat it as an unknown.
+        logger.debug(f&#34;unknown optimization level: {arg}&#34;)
+        return OptLevel.Unknown
+
+    # If we&#39;ve made it here, then the arguments don&#39;t mention an explicit
+    # optimization level. Both GCC and Clang use -O0 by default, so return that here.
+    return OptLevel.O0</code></pre>
+</details>
+</dd>
+</dl>
+</dd>
+<dt id="blight.tool.ResponseFileMixin"><code class="flex name class">
+<span>class <span class="ident">ResponseFileMixin</span></span>
+</code></dt>
+<dd>
+<div class="desc"><p>A mixin for tools that support the <code>@file</code> syntax for adding command-line arguments
+via an input file.</p>
+<p>These appear to originate from Windows and are called "response files" there, hence
+the name of this mixin.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class ResponseFileMixin:
+    &#34;&#34;&#34;
+    A mixin for tools that support the `@file` syntax for adding command-line arguments
+    via an input file.
+
+    These appear to originate from Windows and are called &#34;response files&#34; there, hence
+    the name of this mixin.
+    &#34;&#34;&#34;
+
+    def _expand_response_file(
+        self, response_file: Path, working_dir: Path, level: int
+    ) -&gt; List[str]:
+        if level &gt;= RESPONSE_FILE_RECURSION_LIMIT:
+            logger.debug(f&#34;recursion limit exceeded: {response_file} in {working_dir}&#34;)
+            return []
+
+        # Non-absolute response files are resolved relative to `working_dir`, which
+        # begins at the CWD initially and changes to the parent directory of the
+        # including file for nested response files.
+        if not response_file.is_absolute():
+            response_file = working_dir / response_file
+
+        if not response_file.is_file():
+            logger.debug(f&#34;response file {response_file} does not exist&#34;)
+            # TODO(ww): Instead of returning empty here, maybe return `@response_file`?
+            return []
+
+        args = shlex.split(response_file.read_text())
+        response_files = [(idx, arg) for (idx, arg) in enumerate(args) if arg.startswith(&#34;@&#34;)]
+        for idx, nested_rf in response_files:
+            args = util.insert_items_at_idx(
+                args,
+                idx,
+                self._expand_response_file(
+                    Path(nested_rf[1:]), response_file.parent.resolve(), level + 1
+                ),
+            )
+
+        return args
+
+    @property
+    def canonicalized_args(self) -&gt; List[str]:
+        &#34;&#34;&#34;
+        Overrides the behavior of `Tool.canonicalized_args`, expanding any response file arguments
+        in a depth-first manner.
+        &#34;&#34;&#34;
+
+        # NOTE(ww): This method badly needs some typechecking TLC.
+        # The `super()` call to `canonicalized_args` probably needs to be handled
+        # with a `self: CanonicalizedArgsProtocol` hint, but that causes other problems
+        # related to mypy&#39;s ability to see `_expand_response_file`.
+
+        response_files = [
+            (idx, arg)
+            for (idx, arg) in enumerate(super().canonicalized_args)  # type: ignore
+            if arg.startswith(&#34;@&#34;)
+        ]
+        expanded_args = super().canonicalized_args  # type: ignore
+        for idx, response_file in response_files:
+            expanded_args = util.insert_items_at_idx(
+                expanded_args,
+                idx,
+                self._expand_response_file(Path(response_file[1:]), self.cwd, 0),  # type: ignore
+            )
+
+        self._canonicalized_args = expanded_args
+        return self._canonicalized_args</code></pre>
+</details>
+<h3>Subclasses</h3>
+<ul class="hlist">
+<li><a title="blight.tool.AS" href="#blight.tool.AS">AS</a></li>
+<li><a title="blight.tool.CompilerTool" href="#blight.tool.CompilerTool">CompilerTool</a></li>
+<li><a title="blight.tool.LD" href="#blight.tool.LD">LD</a></li>
+<li><a title="blight.tool.STRIP" href="#blight.tool.STRIP">STRIP</a></li>
+</ul>
+<h3>Instance variables</h3>
+<dl>
+<dt id="blight.tool.ResponseFileMixin.canonicalized_args"><code class="name">var <span class="ident">canonicalized_args</span> : List[str]</code></dt>
+<dd>
+<div class="desc"><p>Overrides the behavior of <code><a title="blight.tool.Tool.canonicalized_args" href="#blight.tool.Tool.canonicalized_args">Tool.canonicalized_args</a></code>, expanding any response file arguments
+in a depth-first manner.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@property
+def canonicalized_args(self) -&gt; List[str]:
+    &#34;&#34;&#34;
+    Overrides the behavior of `Tool.canonicalized_args`, expanding any response file arguments
+    in a depth-first manner.
+    &#34;&#34;&#34;
+
+    # NOTE(ww): This method badly needs some typechecking TLC.
+    # The `super()` call to `canonicalized_args` probably needs to be handled
+    # with a `self: CanonicalizedArgsProtocol` hint, but that causes other problems
+    # related to mypy&#39;s ability to see `_expand_response_file`.
+
+    response_files = [
+        (idx, arg)
+        for (idx, arg) in enumerate(super().canonicalized_args)  # type: ignore
+        if arg.startswith(&#34;@&#34;)
+    ]
+    expanded_args = super().canonicalized_args  # type: ignore
+    for idx, response_file in response_files:
+        expanded_args = util.insert_items_at_idx(
+            expanded_args,
+            idx,
+            self._expand_response_file(Path(response_file[1:]), self.cwd, 0),  # type: ignore
+        )
+
+    self._canonicalized_args = expanded_args
+    return self._canonicalized_args</code></pre>
+</details>
+</dd>
+</dl>
+</dd>
+<dt id="blight.tool.STRIP"><code class="flex name class">
+<span>class <span class="ident">STRIP</span></span>
+<span>(</span><span>args: List[str])</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Represents the stripping tool.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class STRIP(ResponseFileMixin, Tool):
+    &#34;&#34;&#34;
+    Represents the stripping tool.
+    &#34;&#34;&#34;
+
+    def __repr__(self) -&gt; str:
+        return f&#34;&lt;STRIP {self.wrapped_tool()}&gt;&#34;</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="blight.tool.ResponseFileMixin" href="#blight.tool.ResponseFileMixin">ResponseFileMixin</a></li>
+<li><a title="blight.tool.Tool" href="#blight.tool.Tool">Tool</a></li>
+</ul>
+<h3>Inherited members</h3>
+<ul class="hlist">
+<li><code><b><a title="blight.tool.ResponseFileMixin" href="#blight.tool.ResponseFileMixin">ResponseFileMixin</a></b></code>:
+<ul class="hlist">
+<li><code><a title="blight.tool.ResponseFileMixin.canonicalized_args" href="#blight.tool.ResponseFileMixin.canonicalized_args">canonicalized_args</a></code></li>
+</ul>
+</li>
+<li><code><b><a title="blight.tool.Tool" href="#blight.tool.Tool">Tool</a></b></code>:
+<ul class="hlist">
+<li><code><a title="blight.tool.Tool.asdict" href="#blight.tool.Tool.asdict">asdict</a></code></li>
+<li><code><a title="blight.tool.Tool.blight_tool" href="#blight.tool.Tool.blight_tool">blight_tool</a></code></li>
+<li><code><a title="blight.tool.Tool.build_tool" href="#blight.tool.Tool.build_tool">build_tool</a></code></li>
+<li><code><a title="blight.tool.Tool.cwd" href="#blight.tool.Tool.cwd">cwd</a></code></li>
+<li><code><a title="blight.tool.Tool.inputs" href="#blight.tool.Tool.inputs">inputs</a></code></li>
+<li><code><a title="blight.tool.Tool.outputs" href="#blight.tool.Tool.outputs">outputs</a></code></li>
+<li><code><a title="blight.tool.Tool.run" href="#blight.tool.Tool.run">run</a></code></li>
+<li><code><a title="blight.tool.Tool.wrapped_tool" href="#blight.tool.Tool.wrapped_tool">wrapped_tool</a></code></li>
+</ul>
+</li>
+</ul>
+</dd>
+<dt id="blight.tool.StdMixin"><code class="flex name class">
+<span>class <span class="ident">StdMixin</span></span>
+</code></dt>
+<dd>
+<div class="desc"><p>A mixin for tools that have a "standard" component, i.e.
+those that change their behavior based on a particular language standard.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class StdMixin(LangMixin):
+    &#34;&#34;&#34;
+    A mixin for tools that have a &#34;standard&#34; component, i.e.
+    those that change their behavior based on a particular language standard.
+    &#34;&#34;&#34;
+
+    @property
+    def std(self: LangProtocol) -&gt; Std:
+        &#34;&#34;&#34;
+        Returns:
+            A `blight.enums.Std` value representing the tool&#39;s standard
+        &#34;&#34;&#34;
+
+        # First, a special case: if -ansi is present, we&#39;re in
+        # C89 mode for C code and C++03 mode for C++ code.
+        if &#34;-ansi&#34; in self.canonicalized_args:
+            if self.lang == Lang.C:
+                return Std.C89
+            elif self.lang == Lang.Cxx:
+                return Std.Cxx03
+            else:
+                logger.debug(f&#34;-ansi passed but unknown language: {self.lang}&#34;)
+                return Std.Unknown
+
+        # Experimentally, both GCC and clang respect the last -std=XXX flag passed.
+        # See: https://stackoverflow.com/questions/40563269/passing-multiple-std-switches-to-g
+        std_flag_index = util.rindex_prefix(self.canonicalized_args, &#34;-std=&#34;)
+
+        # No -std=XXX flags? The tool is operating in its default standard mode,
+        # which is determined by its language.
+        if std_flag_index is None:
+            if self.lang == Lang.C:
+                return Std.GnuUnknown
+            elif self.lang == Lang.Cxx:
+                return Std.GnuxxUnknown
+            else:
+                logger.debug(f&#34;no -std= flag and unknown language: {self.lang}&#34;)
+                return Std.Unknown
+
+        last_std_flag = self.canonicalized_args[std_flag_index]
+        std_flag_map = {
+            # C89 flags.
+            &#34;-std=c89&#34;: Std.C89,
+            &#34;-std=c90&#34;: Std.C89,
+            &#34;-std=iso9899:1990&#34;: Std.C89,
+            # C94 flags.
+            &#34;-std=iso9899:199409&#34;: Std.C94,
+            # C99 flags.
+            &#34;-std=c99&#34;: Std.C99,
+            &#34;-std=c9x&#34;: Std.C99,
+            &#34;-std=iso9899:1999&#34;: Std.C99,
+            &#34;-std=iso9899:199x&#34;: Std.C99,
+            # C11 flags.
+            &#34;-std=c11&#34;: Std.C11,
+            &#34;-std=c1x&#34;: Std.C11,
+            &#34;-std=iso9899:2011&#34;: Std.C11,
+            # C17 flags.
+            &#34;-std=c17&#34;: Std.C17,
+            &#34;-std=c18&#34;: Std.C17,
+            &#34;-std=iso9899:2017&#34;: Std.C17,
+            &#34;-std=iso9899:2018&#34;: Std.C17,
+            # C20 (presumptive) flags.
+            &#34;-std=c2x&#34;: Std.C2x,
+            # GNU89 flags.
+            &#34;-std=gnu89&#34;: Std.Gnu89,
+            &#34;-std=gnu90&#34;: Std.Gnu89,
+            # GNU99 flags.
+            &#34;-std=gnu99&#34;: Std.Gnu99,
+            &#34;-std=gnu9x&#34;: Std.Gnu99,
+            # GNU11 flags.
+            &#34;-std=gnu11&#34;: Std.Gnu11,
+            &#34;-std=gnu1x&#34;: Std.Gnu11,
+            # GNU17 flags.
+            &#34;-std=gnu17&#34;: Std.Gnu17,
+            &#34;-std=gnu18&#34;: Std.Gnu17,
+            # GNU20 (presumptive) flags.
+            &#34;-std=gnu2x&#34;: Std.Gnu2x,
+            # C++03 flags.
+            # NOTE(ww): Both gcc and clang treat C++98 mode as C++03 mode.
+            &#34;-std=c++98&#34;: Std.Cxx03,
+            &#34;-std=c++03&#34;: Std.Cxx03,
+            # C++11 flags.
+            &#34;-std=c++11&#34;: Std.Cxx11,
+            &#34;-std=c++0x&#34;: Std.Cxx11,
+            # C++14 flags.
+            &#34;-std=c++14&#34;: Std.Cxx14,
+            &#34;-std=c++1y&#34;: Std.Cxx14,
+            # C++17 flags.
+            &#34;-std=c++17&#34;: Std.Cxx17,
+            &#34;-std=c++1z&#34;: Std.Cxx17,
+            # C++20 (presumptive) flags.
+            &#34;-std=c++2a&#34;: Std.Cxx2a,
+            &#34;-std=c++20&#34;: Std.Cxx2a,
+            # GNU++03 flags.
+            &#34;-std=gnu++98&#34;: Std.Gnuxx03,
+            &#34;-std=gnu++03&#34;: Std.Gnuxx03,
+            # GNU++11 flags.
+            &#34;-std=gnu++11&#34;: Std.Gnuxx11,
+            &#34;-std=gnu++0x&#34;: Std.Gnuxx11,
+            # GNU++14 flags.
+            &#34;-std=gnu++14&#34;: Std.Gnuxx14,
+            &#34;-std=gnu++1y&#34;: Std.Gnuxx14,
+            # GNU++17 flags.
+            &#34;-std=gnu++17&#34;: Std.Gnuxx17,
+            &#34;-std=gnu++1z&#34;: Std.Gnuxx17,
+            # GNU++20 (presumptive) flags.
+            &#34;-std=gnu++2a&#34;: Std.Gnuxx2a,
+            &#34;-std=gnu++20&#34;: Std.Gnuxx2a,
+        }
+
+        std = std_flag_map.get(last_std_flag)
+        if std is not None:
+            return std
+
+        # If we&#39;ve made it here, then we&#39;ve reached a -std=XXX flag that we
+        # don&#39;t know yet. Make an effort to guess at it.
+        std_name = last_std_flag.split(&#34;=&#34;)[1]
+        if std_name.startswith(&#34;c++&#34;):
+            logger.debug(f&#34;partially unrecognized c++ std: {last_std_flag}&#34;)
+            return Std.CxxUnknown
+        elif std_name.startswith(&#34;gnu++&#34;):
+            logger.debug(f&#34;partially unrecognized gnu++ std: {last_std_flag}&#34;)
+            return Std.GnuxxUnknown
+        elif std_name.startswith(&#34;gnu&#34;):
+            logger.debug(f&#34;partially unrecognized gnu c std: {last_std_flag}&#34;)
+            return Std.GnuUnknown
+        elif std_name.startswith(&#34;c&#34;) or std_name.startswith(&#34;iso9899&#34;):
+            logger.debug(f&#34;partially unrecognized c std: {last_std_flag}&#34;)
+            return Std.CUnknown
+
+        logger.debug(f&#34;completely unrecognized -std= flag: {last_std_flag}&#34;)
+        return Std.Unknown</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="blight.tool.LangMixin" href="#blight.tool.LangMixin">LangMixin</a></li>
+</ul>
+<h3>Subclasses</h3>
+<ul class="hlist">
+<li><a title="blight.tool.CPP" href="#blight.tool.CPP">CPP</a></li>
+<li><a title="blight.tool.CompilerTool" href="#blight.tool.CompilerTool">CompilerTool</a></li>
+</ul>
+<h3>Instance variables</h3>
+<dl>
+<dt id="blight.tool.StdMixin.std"><code class="name">var <span class="ident">std</span> : <a title="blight.enums.Std" href="enums.html#blight.enums.Std">Std</a></code></dt>
+<dd>
+<div class="desc"><h2 id="returns">Returns</h2>
+<p>A <code><a title="blight.enums.Std" href="enums.html#blight.enums.Std">Std</a></code> value representing the tool's standard</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@property
+def std(self: LangProtocol) -&gt; Std:
+    &#34;&#34;&#34;
+    Returns:
+        A `blight.enums.Std` value representing the tool&#39;s standard
+    &#34;&#34;&#34;
+
+    # First, a special case: if -ansi is present, we&#39;re in
+    # C89 mode for C code and C++03 mode for C++ code.
+    if &#34;-ansi&#34; in self.canonicalized_args:
+        if self.lang == Lang.C:
+            return Std.C89
+        elif self.lang == Lang.Cxx:
+            return Std.Cxx03
+        else:
+            logger.debug(f&#34;-ansi passed but unknown language: {self.lang}&#34;)
+            return Std.Unknown
+
+    # Experimentally, both GCC and clang respect the last -std=XXX flag passed.
+    # See: https://stackoverflow.com/questions/40563269/passing-multiple-std-switches-to-g
+    std_flag_index = util.rindex_prefix(self.canonicalized_args, &#34;-std=&#34;)
+
+    # No -std=XXX flags? The tool is operating in its default standard mode,
+    # which is determined by its language.
+    if std_flag_index is None:
+        if self.lang == Lang.C:
+            return Std.GnuUnknown
+        elif self.lang == Lang.Cxx:
+            return Std.GnuxxUnknown
+        else:
+            logger.debug(f&#34;no -std= flag and unknown language: {self.lang}&#34;)
+            return Std.Unknown
+
+    last_std_flag = self.canonicalized_args[std_flag_index]
+    std_flag_map = {
+        # C89 flags.
+        &#34;-std=c89&#34;: Std.C89,
+        &#34;-std=c90&#34;: Std.C89,
+        &#34;-std=iso9899:1990&#34;: Std.C89,
+        # C94 flags.
+        &#34;-std=iso9899:199409&#34;: Std.C94,
+        # C99 flags.
+        &#34;-std=c99&#34;: Std.C99,
+        &#34;-std=c9x&#34;: Std.C99,
+        &#34;-std=iso9899:1999&#34;: Std.C99,
+        &#34;-std=iso9899:199x&#34;: Std.C99,
+        # C11 flags.
+        &#34;-std=c11&#34;: Std.C11,
+        &#34;-std=c1x&#34;: Std.C11,
+        &#34;-std=iso9899:2011&#34;: Std.C11,
+        # C17 flags.
+        &#34;-std=c17&#34;: Std.C17,
+        &#34;-std=c18&#34;: Std.C17,
+        &#34;-std=iso9899:2017&#34;: Std.C17,
+        &#34;-std=iso9899:2018&#34;: Std.C17,
+        # C20 (presumptive) flags.
+        &#34;-std=c2x&#34;: Std.C2x,
+        # GNU89 flags.
+        &#34;-std=gnu89&#34;: Std.Gnu89,
+        &#34;-std=gnu90&#34;: Std.Gnu89,
+        # GNU99 flags.
+        &#34;-std=gnu99&#34;: Std.Gnu99,
+        &#34;-std=gnu9x&#34;: Std.Gnu99,
+        # GNU11 flags.
+        &#34;-std=gnu11&#34;: Std.Gnu11,
+        &#34;-std=gnu1x&#34;: Std.Gnu11,
+        # GNU17 flags.
+        &#34;-std=gnu17&#34;: Std.Gnu17,
+        &#34;-std=gnu18&#34;: Std.Gnu17,
+        # GNU20 (presumptive) flags.
+        &#34;-std=gnu2x&#34;: Std.Gnu2x,
+        # C++03 flags.
+        # NOTE(ww): Both gcc and clang treat C++98 mode as C++03 mode.
+        &#34;-std=c++98&#34;: Std.Cxx03,
+        &#34;-std=c++03&#34;: Std.Cxx03,
+        # C++11 flags.
+        &#34;-std=c++11&#34;: Std.Cxx11,
+        &#34;-std=c++0x&#34;: Std.Cxx11,
+        # C++14 flags.
+        &#34;-std=c++14&#34;: Std.Cxx14,
+        &#34;-std=c++1y&#34;: Std.Cxx14,
+        # C++17 flags.
+        &#34;-std=c++17&#34;: Std.Cxx17,
+        &#34;-std=c++1z&#34;: Std.Cxx17,
+        # C++20 (presumptive) flags.
+        &#34;-std=c++2a&#34;: Std.Cxx2a,
+        &#34;-std=c++20&#34;: Std.Cxx2a,
+        # GNU++03 flags.
+        &#34;-std=gnu++98&#34;: Std.Gnuxx03,
+        &#34;-std=gnu++03&#34;: Std.Gnuxx03,
+        # GNU++11 flags.
+        &#34;-std=gnu++11&#34;: Std.Gnuxx11,
+        &#34;-std=gnu++0x&#34;: Std.Gnuxx11,
+        # GNU++14 flags.
+        &#34;-std=gnu++14&#34;: Std.Gnuxx14,
+        &#34;-std=gnu++1y&#34;: Std.Gnuxx14,
+        # GNU++17 flags.
+        &#34;-std=gnu++17&#34;: Std.Gnuxx17,
+        &#34;-std=gnu++1z&#34;: Std.Gnuxx17,
+        # GNU++20 (presumptive) flags.
+        &#34;-std=gnu++2a&#34;: Std.Gnuxx2a,
+        &#34;-std=gnu++20&#34;: Std.Gnuxx2a,
+    }
+
+    std = std_flag_map.get(last_std_flag)
+    if std is not None:
+        return std
+
+    # If we&#39;ve made it here, then we&#39;ve reached a -std=XXX flag that we
+    # don&#39;t know yet. Make an effort to guess at it.
+    std_name = last_std_flag.split(&#34;=&#34;)[1]
+    if std_name.startswith(&#34;c++&#34;):
+        logger.debug(f&#34;partially unrecognized c++ std: {last_std_flag}&#34;)
+        return Std.CxxUnknown
+    elif std_name.startswith(&#34;gnu++&#34;):
+        logger.debug(f&#34;partially unrecognized gnu++ std: {last_std_flag}&#34;)
+        return Std.GnuxxUnknown
+    elif std_name.startswith(&#34;gnu&#34;):
+        logger.debug(f&#34;partially unrecognized gnu c std: {last_std_flag}&#34;)
+        return Std.GnuUnknown
+    elif std_name.startswith(&#34;c&#34;) or std_name.startswith(&#34;iso9899&#34;):
+        logger.debug(f&#34;partially unrecognized c std: {last_std_flag}&#34;)
+        return Std.CUnknown
+
+    logger.debug(f&#34;completely unrecognized -std= flag: {last_std_flag}&#34;)
+    return Std.Unknown</code></pre>
+</details>
+</dd>
+</dl>
+<h3>Inherited members</h3>
+<ul class="hlist">
+<li><code><b><a title="blight.tool.LangMixin" href="#blight.tool.LangMixin">LangMixin</a></b></code>:
+<ul class="hlist">
+<li><code><a title="blight.tool.LangMixin.lang" href="#blight.tool.LangMixin.lang">lang</a></code></li>
+</ul>
+</li>
+</ul>
+</dd>
+<dt id="blight.tool.Tool"><code class="flex name class">
+<span>class <span class="ident">Tool</span></span>
+<span>(</span><span>args: List[str])</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Represents a generic tool wrapped by blight.</p>
+<p>Every <code><a title="blight.tool.Tool" href="#blight.tool.Tool">Tool</a></code> has two views of its supplied arguments:</p>
+<ul>
+<li>An "effective" view, provided by <code><a title="blight.tool.Tool.args" href="#blight.tool.Tool.args">Tool.args</a></code></li>
+<li>A "canonicalized" view, provided by <code><a title="blight.tool.Tool.canonicalized_args" href="#blight.tool.Tool.canonicalized_args">Tool.canonicalized_args</a></code></li>
+</ul>
+<p>The "effective" view is used to invoke the underlying wrapped tool. It should
+never differ from the original arguments supplied to the invocation, <strong>except</strong>
+for when a user configures an action that <strong>intentionally</strong> modifies the
+arguments.</p>
+<p>The "canonicalized" view is used to model the behavior of the underlying wrapped
+tool. Specific <code><a title="blight.tool.Tool" href="#blight.tool.Tool">Tool</a></code> subclasses may specialize the canonicalized view to improve
+modeling fidelity. For example, tools that support the <code>@file</code> syntax (see
+<code><a title="blight.tool.ResponseFileMixin" href="#blight.tool.ResponseFileMixin">ResponseFileMixin</a></code>) for expanding arguments may augment <code>canonicalized_args</code>
+to reflect a fully expanded and normalized version of the original arguments.</p>
+<p>The "canonicalized" view always derives directly from the "effective" view:
+any modifications made to the "effective" arguments by an action will be
+propagated to the "canonicalized" arguments.</p>
+<p><code><a title="blight.tool.Tool" href="#blight.tool.Tool">Tool</a></code> instances cannot be created directory; a specific subclass must be used.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class Tool:
+    &#34;&#34;&#34;
+    Represents a generic tool wrapped by blight.
+
+    Every `Tool` has two views of its supplied arguments:
+
+    * An &#34;effective&#34; view, provided by `Tool.args`
+    * A &#34;canonicalized&#34; view, provided by `Tool.canonicalized_args`
+
+    The &#34;effective&#34; view is used to invoke the underlying wrapped tool. It should
+    never differ from the original arguments supplied to the invocation, **except**
+    for when a user configures an action that **intentionally** modifies the
+    arguments.
+
+    The &#34;canonicalized&#34; view is used to model the behavior of the underlying wrapped
+    tool. Specific `Tool` subclasses may specialize the canonicalized view to improve
+    modeling fidelity. For example, tools that support the `@file` syntax (see
+    `ResponseFileMixin`) for expanding arguments may augment `canonicalized_args`
+    to reflect a fully expanded and normalized version of the original arguments.
+
+    The &#34;canonicalized&#34; view always derives directly from the &#34;effective&#34; view:
+    any modifications made to the &#34;effective&#34; arguments by an action will be
+    propagated to the &#34;canonicalized&#34; arguments.
+
+    `Tool` instances cannot be created directory; a specific subclass must be used.
+    &#34;&#34;&#34;
+
+    @classmethod
+    def build_tool(cls) -&gt; BuildTool:
+        &#34;&#34;&#34;
+        Returns the `BuildTool` enum associated with this `Tool`.
+        &#34;&#34;&#34;
+        return BuildTool(cls.__name__)
+
+    @classmethod
+    def blight_tool(cls) -&gt; BlightTool:
+        &#34;&#34;&#34;
+        Returns the `BlightTool` enum associated with this `Tool`.
+        &#34;&#34;&#34;
+        return cls.build_tool().blight_tool
+
+    @classmethod
+    def wrapped_tool(cls) -&gt; str:
+        &#34;&#34;&#34;
+        Returns the executable name or path of the tool that this blight tool wraps.
+        &#34;&#34;&#34;
+        wrapped_tool = os.getenv(cls.blight_tool().env)
+        if wrapped_tool is None:
+            raise BlightError(f&#34;No wrapped tool found for {cls.build_tool()}&#34;)
+        return wrapped_tool
+
+    def __init__(self, args: List[str]) -&gt; None:
+        if self.__class__ == Tool:
+            raise NotImplementedError(f&#34;can&#39;t instantiate {self.__class__.__name__} directly&#34;)
+        self._args = args
+        self._canonicalized_args = args.copy()
+        self._env = self._fixup_env()
+        self._cwd = Path(os.getcwd()).resolve()
+        self._actions = util.load_actions()
+        self._skip_run = False
+
+    def _fixup_env(self) -&gt; Dict[str, str]:
+        &#34;&#34;&#34;
+        Fixes up `os.environ` to remove any references to blight&#39;s swizzled paths,
+        if any are present.
+        &#34;&#34;&#34;
+        env = dict(os.environ)
+        env[&#34;PATH&#34;] = util.unswizzled_path()
+        return env
+
+    def _before_run(self) -&gt; None:
+        for action in self._actions:
+            try:
+                action._before_run(self)
+            except SkipRun:
+                self._skip_run = True
+
+    def _after_run(self) -&gt; None:
+        for action in self._actions:
+            action._after_run(self, run_skipped=self._skip_run)
+
+    def run(self) -&gt; None:
+        &#34;&#34;&#34;
+        Runs the wrapped tool with the original arguments.
+        &#34;&#34;&#34;
+        self._before_run()
+
+        if not self._skip_run:
+            status = subprocess.run([self.wrapped_tool(), *self.args], env=self._env)
+            if status.returncode != 0:
+                raise BuildError(
+                    f&#34;{self.wrapped_tool()} exited with status code {status.returncode}&#34;
+                )
+
+        self._after_run()
+
+    def asdict(self) -&gt; Dict[str, Any]:
+        &#34;&#34;&#34;
+        Returns:
+            A dictionary representation of this tool
+        &#34;&#34;&#34;
+
+        return {
+            &#34;name&#34;: self.__class__.__name__,
+            &#34;wrapped_tool&#34;: self.wrapped_tool(),
+            &#34;args&#34;: self.args,
+            &#34;canonicalized_args&#34;: self.canonicalized_args,
+            &#34;cwd&#34;: str(self._cwd),
+            &#34;env&#34;: self._env,
+        }
+
+    @property
+    def args(self) -&gt; List[str]:
+        return self._args
+
+    @args.setter
+    def args(self, args_: List[str]) -&gt; None:
+        self._args = args_
+
+        # NOTE(ww): Modifying the effective arguments also propagates
+        # those changes to the canonicalized arguments. This shouldn&#39;t be a problem,
+        # since mixins that specialize `canonicalized_args` call
+        # `super.canonicalized_args` to get the most recent copy.
+        self._canonicalized_args = args_.copy()
+
+    @property
+    def canonicalized_args(self) -&gt; List[str]:
+        # NOTE(ww): `canonicalized_args` doesn&#39;t need an explicit setter property,
+        # since all specializations of it are expected to modify the underlying
+        # list.
+        return self._canonicalized_args
+
+    @property
+    def cwd(self) -&gt; Path:
+        &#34;&#34;&#34;
+        Returns the directory that this tool was run in.
+        &#34;&#34;&#34;
+        return self._cwd
+
+    @property
+    def inputs(self) -&gt; List[str]:
+        &#34;&#34;&#34;
+        Returns all explicit &#34;inputs&#34; to the tool. &#34;Inputs&#34; is subjectively
+        defined to be the &#34;main&#34; inputs to a tool, i.e. source files and **not**
+        additional files that *may* be passed in via options.
+
+        Tools may further refine the behavior of this property
+        by overriding it with their own, more specific behavior.
+
+        **NOTE**: This property, more so than others, relies on heuristics.
+
+        Returns:
+            A list of `str`s, representing the tool&#39;s inputs.
+        &#34;&#34;&#34;
+
+        # Our strategy here is as follows:
+        # * Filter out any arguments that begin with &#34;-&#34; or &#34;@&#34; and
+        #   aren&#39;t *just&#34; &#34;-&#34; (since that indicates stdin).
+        # * Then, look for arguments that are files in the tool&#39;s current
+        #   directory.
+        inputs = []
+        for idx, arg in enumerate(self.canonicalized_args):
+            if arg.startswith(&#34;-&#34;) or arg.startswith(&#34;@&#34;):
+                if arg == &#34;-&#34;:
+                    inputs.append(arg)
+                continue
+
+            candidate = Path(arg)
+            if not candidate.is_file() and not (self.cwd / candidate).is_file():
+                # NOTE(ww): pathlib&#39;s is_file returns False for device files, e.g. /dev/stdin.
+                # It would be perverse for a build system to use these, but maybe worth
+                # handling.
+                continue
+
+            # Annoying edge cases: most other flags that take filenames do so in
+            # -flag=filename form, but -aux-info does it without the &#34;=&#34;.
+            # Similarly, we need to make sure not to catch an output flag&#39;s
+            # argument here.
+            if idx == 0 or self.canonicalized_args[idx - 1] not in [&#34;-aux-info&#34;, &#34;-o&#34;]:
+                inputs.append(arg)
+
+        return inputs
+
+    @property
+    def outputs(self) -&gt; List[str]:
+        &#34;&#34;&#34;
+        Returns all &#34;outputs&#34; produced by the tool. &#34;Outputs&#34; is subjectively
+        defined to be the &#34;main&#34; products of a tool, i.e. results of a particular
+        stage or invocation and **not** any incidental or metadata files that
+        might otherwise be created in the process.
+
+        Tools may further refine the behavior of this mixin-supplied property
+        by overriding it with their own, more specific behavior.
+
+        Returns:
+            A list of `str`, each of which is an output
+        &#34;&#34;&#34;
+
+        o_flag_index = util.rindex_prefix(self.canonicalized_args, &#34;-o&#34;)
+        if o_flag_index is None:
+            return []
+
+        if self.canonicalized_args[o_flag_index] == &#34;-o&#34;:
+            return [self.canonicalized_args[o_flag_index + 1]]
+
+        # NOTE(ww): Outputs like -ofoo. Gross, but valid according to GCC.
+        return [self.canonicalized_args[o_flag_index][2:]]</code></pre>
+</details>
+<h3>Subclasses</h3>
+<ul class="hlist">
+<li><a title="blight.tool.AR" href="#blight.tool.AR">AR</a></li>
+<li><a title="blight.tool.AS" href="#blight.tool.AS">AS</a></li>
+<li><a title="blight.tool.CPP" href="#blight.tool.CPP">CPP</a></li>
+<li><a title="blight.tool.CompilerTool" href="#blight.tool.CompilerTool">CompilerTool</a></li>
+<li><a title="blight.tool.LD" href="#blight.tool.LD">LD</a></li>
+<li><a title="blight.tool.STRIP" href="#blight.tool.STRIP">STRIP</a></li>
+</ul>
+<h3>Static methods</h3>
+<dl>
+<dt id="blight.tool.Tool.blight_tool"><code class="name flex">
+<span>def <span class="ident">blight_tool</span></span>(<span>) ‑> <a title="blight.enums.BlightTool" href="enums.html#blight.enums.BlightTool">BlightTool</a></span>
+</code></dt>
+<dd>
+<div class="desc"><p>Returns the <code>BlightTool</code> enum associated with this <code><a title="blight.tool.Tool" href="#blight.tool.Tool">Tool</a></code>.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@classmethod
+def blight_tool(cls) -&gt; BlightTool:
+    &#34;&#34;&#34;
+    Returns the `BlightTool` enum associated with this `Tool`.
+    &#34;&#34;&#34;
+    return cls.build_tool().blight_tool</code></pre>
+</details>
+</dd>
+<dt id="blight.tool.Tool.build_tool"><code class="name flex">
+<span>def <span class="ident">build_tool</span></span>(<span>) ‑> <a title="blight.enums.BuildTool" href="enums.html#blight.enums.BuildTool">BuildTool</a></span>
+</code></dt>
+<dd>
+<div class="desc"><p>Returns the <code>BuildTool</code> enum associated with this <code><a title="blight.tool.Tool" href="#blight.tool.Tool">Tool</a></code>.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@classmethod
+def build_tool(cls) -&gt; BuildTool:
+    &#34;&#34;&#34;
+    Returns the `BuildTool` enum associated with this `Tool`.
+    &#34;&#34;&#34;
+    return BuildTool(cls.__name__)</code></pre>
+</details>
+</dd>
+<dt id="blight.tool.Tool.wrapped_tool"><code class="name flex">
+<span>def <span class="ident">wrapped_tool</span></span>(<span>) ‑> str</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Returns the executable name or path of the tool that this blight tool wraps.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@classmethod
+def wrapped_tool(cls) -&gt; str:
+    &#34;&#34;&#34;
+    Returns the executable name or path of the tool that this blight tool wraps.
+    &#34;&#34;&#34;
+    wrapped_tool = os.getenv(cls.blight_tool().env)
+    if wrapped_tool is None:
+        raise BlightError(f&#34;No wrapped tool found for {cls.build_tool()}&#34;)
+    return wrapped_tool</code></pre>
+</details>
+</dd>
+</dl>
+<h3>Instance variables</h3>
+<dl>
+<dt id="blight.tool.Tool.args"><code class="name">var <span class="ident">args</span> : List[str]</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@property
+def args(self) -&gt; List[str]:
+    return self._args</code></pre>
+</details>
+</dd>
+<dt id="blight.tool.Tool.canonicalized_args"><code class="name">var <span class="ident">canonicalized_args</span> : List[str]</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@property
+def canonicalized_args(self) -&gt; List[str]:
+    # NOTE(ww): `canonicalized_args` doesn&#39;t need an explicit setter property,
+    # since all specializations of it are expected to modify the underlying
+    # list.
+    return self._canonicalized_args</code></pre>
+</details>
+</dd>
+<dt id="blight.tool.Tool.cwd"><code class="name">var <span class="ident">cwd</span> : pathlib.Path</code></dt>
+<dd>
+<div class="desc"><p>Returns the directory that this tool was run in.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@property
+def cwd(self) -&gt; Path:
+    &#34;&#34;&#34;
+    Returns the directory that this tool was run in.
+    &#34;&#34;&#34;
+    return self._cwd</code></pre>
+</details>
+</dd>
+<dt id="blight.tool.Tool.inputs"><code class="name">var <span class="ident">inputs</span> : List[str]</code></dt>
+<dd>
+<div class="desc"><p>Returns all explicit "inputs" to the tool. "Inputs" is subjectively
+defined to be the "main" inputs to a tool, i.e. source files and <strong>not</strong>
+additional files that <em>may</em> be passed in via options.</p>
+<p>Tools may further refine the behavior of this property
+by overriding it with their own, more specific behavior.</p>
+<p><strong>NOTE</strong>: This property, more so than others, relies on heuristics.</p>
+<h2 id="returns">Returns</h2>
+<p>A list of <code>str</code>s, representing the tool's inputs.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@property
+def inputs(self) -&gt; List[str]:
+    &#34;&#34;&#34;
+    Returns all explicit &#34;inputs&#34; to the tool. &#34;Inputs&#34; is subjectively
+    defined to be the &#34;main&#34; inputs to a tool, i.e. source files and **not**
+    additional files that *may* be passed in via options.
+
+    Tools may further refine the behavior of this property
+    by overriding it with their own, more specific behavior.
+
+    **NOTE**: This property, more so than others, relies on heuristics.
+
+    Returns:
+        A list of `str`s, representing the tool&#39;s inputs.
+    &#34;&#34;&#34;
+
+    # Our strategy here is as follows:
+    # * Filter out any arguments that begin with &#34;-&#34; or &#34;@&#34; and
+    #   aren&#39;t *just&#34; &#34;-&#34; (since that indicates stdin).
+    # * Then, look for arguments that are files in the tool&#39;s current
+    #   directory.
+    inputs = []
+    for idx, arg in enumerate(self.canonicalized_args):
+        if arg.startswith(&#34;-&#34;) or arg.startswith(&#34;@&#34;):
+            if arg == &#34;-&#34;:
+                inputs.append(arg)
+            continue
+
+        candidate = Path(arg)
+        if not candidate.is_file() and not (self.cwd / candidate).is_file():
+            # NOTE(ww): pathlib&#39;s is_file returns False for device files, e.g. /dev/stdin.
+            # It would be perverse for a build system to use these, but maybe worth
+            # handling.
+            continue
+
+        # Annoying edge cases: most other flags that take filenames do so in
+        # -flag=filename form, but -aux-info does it without the &#34;=&#34;.
+        # Similarly, we need to make sure not to catch an output flag&#39;s
+        # argument here.
+        if idx == 0 or self.canonicalized_args[idx - 1] not in [&#34;-aux-info&#34;, &#34;-o&#34;]:
+            inputs.append(arg)
+
+    return inputs</code></pre>
+</details>
+</dd>
+<dt id="blight.tool.Tool.outputs"><code class="name">var <span class="ident">outputs</span> : List[str]</code></dt>
+<dd>
+<div class="desc"><p>Returns all "outputs" produced by the tool. "Outputs" is subjectively
+defined to be the "main" products of a tool, i.e. results of a particular
+stage or invocation and <strong>not</strong> any incidental or metadata files that
+might otherwise be created in the process.</p>
+<p>Tools may further refine the behavior of this mixin-supplied property
+by overriding it with their own, more specific behavior.</p>
+<h2 id="returns">Returns</h2>
+<p>A list of <code>str</code>, each of which is an output</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@property
+def outputs(self) -&gt; List[str]:
+    &#34;&#34;&#34;
+    Returns all &#34;outputs&#34; produced by the tool. &#34;Outputs&#34; is subjectively
+    defined to be the &#34;main&#34; products of a tool, i.e. results of a particular
+    stage or invocation and **not** any incidental or metadata files that
+    might otherwise be created in the process.
+
+    Tools may further refine the behavior of this mixin-supplied property
+    by overriding it with their own, more specific behavior.
+
+    Returns:
+        A list of `str`, each of which is an output
+    &#34;&#34;&#34;
+
+    o_flag_index = util.rindex_prefix(self.canonicalized_args, &#34;-o&#34;)
+    if o_flag_index is None:
+        return []
+
+    if self.canonicalized_args[o_flag_index] == &#34;-o&#34;:
+        return [self.canonicalized_args[o_flag_index + 1]]
+
+    # NOTE(ww): Outputs like -ofoo. Gross, but valid according to GCC.
+    return [self.canonicalized_args[o_flag_index][2:]]</code></pre>
+</details>
+</dd>
+</dl>
+<h3>Methods</h3>
+<dl>
+<dt id="blight.tool.Tool.asdict"><code class="name flex">
+<span>def <span class="ident">asdict</span></span>(<span>self) ‑> Dict[str, Any]</span>
+</code></dt>
+<dd>
+<div class="desc"><h2 id="returns">Returns</h2>
+<p>A dictionary representation of this tool</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def asdict(self) -&gt; Dict[str, Any]:
+    &#34;&#34;&#34;
+    Returns:
+        A dictionary representation of this tool
+    &#34;&#34;&#34;
+
+    return {
+        &#34;name&#34;: self.__class__.__name__,
+        &#34;wrapped_tool&#34;: self.wrapped_tool(),
+        &#34;args&#34;: self.args,
+        &#34;canonicalized_args&#34;: self.canonicalized_args,
+        &#34;cwd&#34;: str(self._cwd),
+        &#34;env&#34;: self._env,
+    }</code></pre>
+</details>
+</dd>
+<dt id="blight.tool.Tool.run"><code class="name flex">
+<span>def <span class="ident">run</span></span>(<span>self) ‑> NoneType</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Runs the wrapped tool with the original arguments.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def run(self) -&gt; None:
+    &#34;&#34;&#34;
+    Runs the wrapped tool with the original arguments.
+    &#34;&#34;&#34;
+    self._before_run()
+
+    if not self._skip_run:
+        status = subprocess.run([self.wrapped_tool(), *self.args], env=self._env)
+        if status.returncode != 0:
+            raise BuildError(
+                f&#34;{self.wrapped_tool()} exited with status code {status.returncode}&#34;
+            )
+
+    self._after_run()</code></pre>
+</details>
+</dd>
+</dl>
+</dd>
+</dl>
+</section>
+</article>
+<nav id="sidebar">
+<h1>Index</h1>
+<div class="toc">
+<ul></ul>
+</div>
+<ul id="index">
+<li><h3>Super-module</h3>
+<ul>
+<li><code><a title="blight" href="index.html">blight</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-variables">Global variables</a></h3>
+<ul class="">
+<li><code><a title="blight.tool.RESPONSE_FILE_RECURSION_LIMIT" href="#blight.tool.RESPONSE_FILE_RECURSION_LIMIT">RESPONSE_FILE_RECURSION_LIMIT</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-classes">Classes</a></h3>
+<ul>
+<li>
+<h4><code><a title="blight.tool.AR" href="#blight.tool.AR">AR</a></code></h4>
+</li>
+<li>
+<h4><code><a title="blight.tool.AS" href="#blight.tool.AS">AS</a></code></h4>
+</li>
+<li>
+<h4><code><a title="blight.tool.CC" href="#blight.tool.CC">CC</a></code></h4>
+</li>
+<li>
+<h4><code><a title="blight.tool.CPP" href="#blight.tool.CPP">CPP</a></code></h4>
+</li>
+<li>
+<h4><code><a title="blight.tool.CXX" href="#blight.tool.CXX">CXX</a></code></h4>
+</li>
+<li>
+<h4><code><a title="blight.tool.CodeModelMixin" href="#blight.tool.CodeModelMixin">CodeModelMixin</a></code></h4>
+<ul class="">
+<li><code><a title="blight.tool.CodeModelMixin.code_model" href="#blight.tool.CodeModelMixin.code_model">code_model</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="blight.tool.CompilerTool" href="#blight.tool.CompilerTool">CompilerTool</a></code></h4>
+<ul class="">
+<li><code><a title="blight.tool.CompilerTool.outputs" href="#blight.tool.CompilerTool.outputs">outputs</a></code></li>
+<li><code><a title="blight.tool.CompilerTool.stage" href="#blight.tool.CompilerTool.stage">stage</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="blight.tool.DefinesMixin" href="#blight.tool.DefinesMixin">DefinesMixin</a></code></h4>
+<ul class="">
+<li><code><a title="blight.tool.DefinesMixin.defines" href="#blight.tool.DefinesMixin.defines">defines</a></code></li>
+<li><code><a title="blight.tool.DefinesMixin.indexed_undefines" href="#blight.tool.DefinesMixin.indexed_undefines">indexed_undefines</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="blight.tool.LD" href="#blight.tool.LD">LD</a></code></h4>
+<ul class="">
+<li><code><a title="blight.tool.LD.outputs" href="#blight.tool.LD.outputs">outputs</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="blight.tool.LangMixin" href="#blight.tool.LangMixin">LangMixin</a></code></h4>
+<ul class="">
+<li><code><a title="blight.tool.LangMixin.lang" href="#blight.tool.LangMixin.lang">lang</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="blight.tool.OptMixin" href="#blight.tool.OptMixin">OptMixin</a></code></h4>
+<ul class="">
+<li><code><a title="blight.tool.OptMixin.opt" href="#blight.tool.OptMixin.opt">opt</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="blight.tool.ResponseFileMixin" href="#blight.tool.ResponseFileMixin">ResponseFileMixin</a></code></h4>
+<ul class="">
+<li><code><a title="blight.tool.ResponseFileMixin.canonicalized_args" href="#blight.tool.ResponseFileMixin.canonicalized_args">canonicalized_args</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="blight.tool.STRIP" href="#blight.tool.STRIP">STRIP</a></code></h4>
+</li>
+<li>
+<h4><code><a title="blight.tool.StdMixin" href="#blight.tool.StdMixin">StdMixin</a></code></h4>
+<ul class="">
+<li><code><a title="blight.tool.StdMixin.std" href="#blight.tool.StdMixin.std">std</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="blight.tool.Tool" href="#blight.tool.Tool">Tool</a></code></h4>
+<ul class="two-column">
+<li><code><a title="blight.tool.Tool.args" href="#blight.tool.Tool.args">args</a></code></li>
+<li><code><a title="blight.tool.Tool.asdict" href="#blight.tool.Tool.asdict">asdict</a></code></li>
+<li><code><a title="blight.tool.Tool.blight_tool" href="#blight.tool.Tool.blight_tool">blight_tool</a></code></li>
+<li><code><a title="blight.tool.Tool.build_tool" href="#blight.tool.Tool.build_tool">build_tool</a></code></li>
+<li><code><a title="blight.tool.Tool.canonicalized_args" href="#blight.tool.Tool.canonicalized_args">canonicalized_args</a></code></li>
+<li><code><a title="blight.tool.Tool.cwd" href="#blight.tool.Tool.cwd">cwd</a></code></li>
+<li><code><a title="blight.tool.Tool.inputs" href="#blight.tool.Tool.inputs">inputs</a></code></li>
+<li><code><a title="blight.tool.Tool.outputs" href="#blight.tool.Tool.outputs">outputs</a></code></li>
+<li><code><a title="blight.tool.Tool.run" href="#blight.tool.Tool.run">run</a></code></li>
+<li><code><a title="blight.tool.Tool.wrapped_tool" href="#blight.tool.Tool.wrapped_tool">wrapped_tool</a></code></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</nav>
+</main>
+<footer id="footer">
+<p>Generated by <a href="https://pdoc3.github.io/pdoc"><cite>pdoc</cite> 0.9.2</a>.</p>
+</footer>
+</body>
+</html>
