@@ -1,5 +1,5 @@
 """
-The `BitcodeExtract` action.
+The `ExtractBitcode` action.
 """
 
 import hashlib
@@ -16,7 +16,7 @@ from blight.tool import CompilerTool
 logger = logging.getLogger(__name__)
 
 
-class BitcodeExtract(CompilerAction):
+class ExtractBitcode(CompilerAction):
     """
     Action to compile and extract bitcode.
 
@@ -28,7 +28,7 @@ class BitcodeExtract(CompilerAction):
     Example:
 
     ```bash
-    export BLIGHT_ACTIONS="BitcodeExtract"
+    export BLIGHT_ACTIONS="ExtractBitcode"
     BLIGHT_ACTION_BITCODEEXTRACT="store=/path/to/dst/dir llvm-bitcode-flags='-flto'"
     make CC=blight-cc
 

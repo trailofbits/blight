@@ -2,12 +2,12 @@ import hashlib
 import os
 from pathlib import Path
 
-from blight.actions import BitcodeExtract
+from blight.actions import ExtractBitcode
 from blight.tool import CC
 
 
 def test_extract_bitcode_output(tmp_path):
-    bitcode_extract = BitcodeExtract({"store": tmp_path.__str__()})
+    bitcode_extract = ExtractBitcode({"store": tmp_path.__str__()})
     foo_path = "test/fixtures/foo.c"
     cc = CC(["-o", "foo", foo_path])
 
@@ -17,7 +17,7 @@ def test_extract_bitcode_output(tmp_path):
 
 
 def test_extract_bitcode_no_specified_output(tmp_path):
-    bitcode_extract = BitcodeExtract({"store": tmp_path.__str__()})
+    bitcode_extract = ExtractBitcode({"store": tmp_path.__str__()})
     foo_path = "test/fixtures/foo.c"
     cc = CC([foo_path])
 
@@ -27,7 +27,7 @@ def test_extract_bitcode_no_specified_output(tmp_path):
 
 
 def test_extract_bitcode_wrong_stage(tmp_path):
-    bitcode_extract = BitcodeExtract({"store": tmp_path.__str__()})
+    bitcode_extract = ExtractBitcode({"store": tmp_path.__str__()})
     foo_path = "test/fixtures/foo.c"
     cc = CC(["-o", "foo", "-S", foo_path])
 
@@ -36,7 +36,7 @@ def test_extract_bitcode_wrong_stage(tmp_path):
 
 
 def test_extract_bitcode_no_store(tmp_path):
-    bitcode_extract = BitcodeExtract({})
+    bitcode_extract = ExtractBitcode({})
     foo_path = "test/fixtures/foo.c"
     cc = CC(["-o", "foo", foo_path])
 
@@ -45,7 +45,7 @@ def test_extract_bitcode_no_store(tmp_path):
 
 
 def test_extract_bitcode_gen_flags(tmp_path):
-    bitcode_extract = BitcodeExtract({"store": tmp_path.__str__(), "llvm-bitcode-flags": "-flto"})
+    bitcode_extract = ExtractBitcode({"store": tmp_path.__str__(), "llvm-bitcode-flags": "-flto"})
     foo_path = "test/fixtures/foo.c"
     cc = CC(["-o", "foo", foo_path])
 

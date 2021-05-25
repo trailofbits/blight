@@ -3,7 +3,7 @@ Actions supported by blight.
 """
 
 from .benchmark import Benchmark  # noqa: F401
-from .bitcode_extract import BitcodeExtract  # noqa: F401
+from .extract_bitcode import ExtractBitcode  # noqa: F401
 from .cc_for_cxx import CCForCXX  # noqa: F401
 from .find_outputs import FindOutputs  # noqa: F401
 from .ignore_werror import IgnoreWerror  # noqa: F401
