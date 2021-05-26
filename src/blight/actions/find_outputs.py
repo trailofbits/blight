@@ -5,6 +5,7 @@ The `FindOutputs` action.
 import enum
 import hashlib
 import logging
+import re
 import shutil
 from pathlib import Path
 from typing import List, Optional
@@ -106,6 +107,18 @@ This mapping is not exhaustive.
 """
 
 
+OUTPUT_SUFFIX_PATTERN_MAP = {
+    r".*\.so\.\d+\.\d+\.\d+$": OutputKind.SharedLibrary,  # anything with libtool
+    r".*\.so\.\d+\.\d+$": OutputKind.SharedLibrary,  # libssl.so.1.1
+    r".*\.so\.\d+$": OutputKind.SharedLibrary,  # libc.so.6
+}
+"""
+A mapping of common output suffix patterns to their (expected) file kinds.
+
+This mapping is not exhaustive.
+"""
+
+
 class FindOutputs(Action):
     def before_run(self, tool: Tool) -> None:
         outputs = []
@@ -119,6 +132,18 @@ class FindOutputs(Action):
                 kind = OutputKind.Executable
             else:
                 kind = OUTPUT_SUFFIX_KIND_MAP.get(output_path.suffix, OutputKind.Unknown)
+
+                # Last attempt: try some common patterns for output kinds if we can't
+                # match the suffix precisely.
+                if kind == OutputKind.Unknown:
+                    kind = next(
+                        (
+                            k
+                            for (p, k) in OUTPUT_SUFFIX_PATTERN_MAP.items()
+                            if re.match(p, str(output_path))
+                        ),
+                        OutputKind.Unknown,
+                    )
 
             outputs.append(Output(kind=kind, path=output_path))
 

@@ -1,6 +1,8 @@
 import hashlib
 import json
 
+import pytest
+
 from blight.actions import FindOutputs
 from blight.actions.find_outputs import OutputKind
 from blight.tool import CC
@@ -105,6 +107,33 @@ def test_find_outputs_store_output_does_not_exist(tmp_path):
         {
             "kind": OutputKind.Object.value,
             "path": str(dummy_foo_o),
+            "store_path": None,
+        }
+    ]
+
+
+@pytest.mark.parametrize(
+    ("soname",),
+    [
+        ("foo.so",),
+        ("foo.so.1",),
+        ("foo.so.1.2",),
+        ("foo.so.1.2.3",),
+    ],
+)
+def test_find_outputs_annoying_so_prefixes(tmp_path, soname):
+    output = tmp_path / "outputs.jsonl"
+
+    find_outputs = FindOutputs({"output": output})
+    cc = CC(["cc", "-shared", "-o", soname, "foo.c"])
+    find_outputs.before_run(cc)
+    find_outputs.after_run(cc)
+
+    outputs = json.loads(output.read_text())["outputs"]
+    assert outputs == [
+        {
+            "kind": OutputKind.SharedLibrary.value,
+            "path": str(cc.cwd / soname),
             "store_path": None,
         }
     ]
