@@ -475,3 +475,19 @@ class CodeModel(enum.Enum):
     """
     An unknown machine code model.
     """
+
+
+@enum.unique
+class OutputKind(str, enum.Enum):
+    """
+    A collection of common output kinds for build tools.
+
+    This enumeration is not exhaustive.
+    """
+
+    Object: str = "object"
+    SharedLibrary: str = "shared"
+    StaticLibrary: str = "static"
+    Executable: str = "executable"
+    KernelModule: str = "kernel"
+    Unknown: str = "unknown"
