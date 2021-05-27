@@ -379,6 +379,23 @@ def test_ar():
     }
 
 
+@pytest.mark.parametrize(
+    ("flags", "outputs"),
+    [
+        ("cr foo.a a.o b.o", ["foo.a"]),
+        ("-X64_32 cr foo.a a.o b.o", ["foo.a"]),
+        ("r foo.a bar.o", ["foo.a"]),
+        ("ru foo.a bar.o", ["foo.a"]),
+        ("d foo.a bar.o", ["foo.a"]),
+        ("--help", []),
+    ],
+)
+def test_ar_output_forms(flags, outputs):
+    ar = tool.AR(shlex.split(flags))
+
+    assert ar.outputs == outputs
+
+
 def test_strip():
     strip = tool.STRIP([])
 
