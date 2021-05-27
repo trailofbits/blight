@@ -789,10 +789,17 @@ class AS(ResponseFileMixin, Tool):
         return f"<AS {self.wrapped_tool()}>"
 
 
-class AR(Tool):
+class AR(ResponseFileMixin, Tool):
     """
     Represents the archiver.
     """
+
+    @property
+    def outputs(self) -> List[str]:
+        """
+        Specializes `Tool.outputs` for the archiver.
+        """
+        return []
 
     def __repr__(self) -> str:
         return f"<AR {self.wrapped_tool()}>"
