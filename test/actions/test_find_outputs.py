@@ -125,7 +125,7 @@ def test_find_outputs_annoying_so_prefixes(tmp_path, soname):
     output = tmp_path / "outputs.jsonl"
 
     find_outputs = FindOutputs({"output": output})
-    cc = CC(["cc", "-shared", "-o", soname, "foo.c"])
+    cc = CC(["-shared", "-o", soname, "foo.c"])
     find_outputs.before_run(cc)
     find_outputs.after_run(cc)
 

@@ -789,10 +789,39 @@ class AS(ResponseFileMixin, Tool):
         return f"<AS {self.wrapped_tool()}>"
 
 
-class AR(Tool):
+class AR(ResponseFileMixin, Tool):
     """
     Represents the archiver.
     """
+
+    @property
+    def outputs(self) -> List[str]:
+        """
+        Specializes `Tool.outputs` for the archiver.
+        """
+
+        # TODO(ww): This doesn't support `ar x`, which explodes the archive
+        # (i.e., treats it as input) instead of treats it as output.
+        # It would be pretty strange for a build system to do this, but it's
+        # probably something we should detect at the very least.
+
+        # TODO(ww): We also don't support `ar t`, which queries the given
+        # archive to provide a table listing of its contents.
+
+        # NOTE(ww): `ar`'s POSIX and GNU CLIs are annoyingly complicated.
+        # We save ourselves some pain by scanning from left-to-right, looking
+        # for the first argument that looks like an archive output
+        # (since the archiver only ever produces one output at a time).
+        for arg in self.canonicalized_args:
+            if arg.startswith("-"):
+                continue
+
+            maybe_archive_suffixes = Path(arg).suffixes
+            if len(maybe_archive_suffixes) > 0 and maybe_archive_suffixes[0] == ".a":
+                return [arg]
+
+        logger.debug("couldn't infer output for archiver")
+        return []
 
     def __repr__(self) -> str:
         return f"<AR {self.wrapped_tool()}>"
