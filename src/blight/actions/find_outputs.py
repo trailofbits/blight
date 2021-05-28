@@ -30,6 +30,14 @@ class Output(BaseModel):
     The kind of output.
     """
 
+    prenormalized_path: str
+    """
+    The path to the output, as passed directly to the tool itself.
+
+    This copy of the path may be relative; consumers should prefer
+    `path` for an absolute copy.
+    """
+
     path: Path
     """
     The path to the output, as created by the tool.
@@ -95,7 +103,7 @@ class FindOutputs(Action):
                         OutputKind.Unknown,
                     )
 
-            outputs.append(Output(kind=kind, path=output_path))
+            outputs.append(Output(prenormalized_path=output, kind=kind, path=output_path))
 
         self._outputs = outputs
 
