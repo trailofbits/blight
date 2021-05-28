@@ -20,6 +20,7 @@ def test_find_outputs(tmp_path):
     assert outputs == [
         {
             "kind": OutputKind.Executable.value,
+            "prenormalized_path": "foo",
             "path": str(cc.cwd / "foo"),
             "store_path": None,
         }
@@ -41,6 +42,7 @@ def test_find_outputs_multiple(tmp_path):
     assert outputs == [
         {
             "kind": OutputKind.Object.value,
+            "prenormalized_path": fake_c.with_suffix(".o").name,
             "path": str(cc.cwd / fake_c.with_suffix(".o").name),
             "store_path": None,
         }
@@ -60,6 +62,7 @@ def test_find_outputs_handles_a_out(tmp_path):
     assert outputs == [
         {
             "kind": OutputKind.Executable.value,
+            "prenormalized_path": "a.out",
             "path": str(cc.cwd / "a.out"),
             "store_path": None,
         }
@@ -85,6 +88,7 @@ def test_find_outputs_store(tmp_path):
     assert outputs == [
         {
             "kind": OutputKind.Object.value,
+            "prenormalized_path": str(dummy_foo_o),
             "path": str(dummy_foo_o),
             "store_path": str(dummy_foo_o_store),
         }
@@ -106,6 +110,7 @@ def test_find_outputs_store_output_does_not_exist(tmp_path):
     assert outputs == [
         {
             "kind": OutputKind.Object.value,
+            "prenormalized_path": str(dummy_foo_o),
             "path": str(dummy_foo_o),
             "store_path": None,
         }
@@ -133,6 +138,7 @@ def test_find_outputs_annoying_so_prefixes(tmp_path, soname):
     assert outputs == [
         {
             "kind": OutputKind.SharedLibrary.value,
+            "prenormalized_path": soname,
             "path": str(cc.cwd / soname),
             "store_path": None,
         }
