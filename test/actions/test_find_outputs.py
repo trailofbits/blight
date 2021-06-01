@@ -23,6 +23,7 @@ def test_find_outputs(tmp_path):
             "prenormalized_path": "foo",
             "path": str(cc.cwd / "foo"),
             "store_path": None,
+            "content_hash": None,
         }
     ]
 
@@ -45,6 +46,7 @@ def test_find_outputs_multiple(tmp_path):
             "prenormalized_path": fake_c.with_suffix(".o").name,
             "path": str(cc.cwd / fake_c.with_suffix(".o").name),
             "store_path": None,
+            "content_hash": None,
         }
         for fake_c in fake_cs
     ]
@@ -65,6 +67,7 @@ def test_find_outputs_handles_a_out(tmp_path):
             "prenormalized_path": "a.out",
             "path": str(cc.cwd / "a.out"),
             "store_path": None,
+            "content_hash": None,
         }
     ]
 
@@ -91,6 +94,7 @@ def test_find_outputs_store(tmp_path):
             "prenormalized_path": str(dummy_foo_o),
             "path": str(dummy_foo_o),
             "store_path": str(dummy_foo_o_store),
+            "content_hash": contents_digest,
         }
     ]
     assert dummy_foo_o_store.read_bytes() == contents
@@ -113,6 +117,7 @@ def test_find_outputs_store_output_does_not_exist(tmp_path):
             "prenormalized_path": str(dummy_foo_o),
             "path": str(dummy_foo_o),
             "store_path": None,
+            "content_hash": None,
         }
     ]
 
@@ -141,5 +146,6 @@ def test_find_outputs_annoying_so_prefixes(tmp_path, soname):
             "prenormalized_path": soname,
             "path": str(cc.cwd / soname),
             "store_path": None,
+            "content_hash": None,
         }
     ]
