@@ -51,7 +51,15 @@ class Output(BaseModel):
     An optional stable path to the output, as preserved by the `FindOutputs` action.
 
     `store_path` is only present if the `store=/some/dir/` setting is passed in the
-    `FindActions` configuration **and** the tool actually produces the expected output.
+    `FindOutputs` configuration **and** the tool actually produces the expected output.
+    """
+
+    content_hash: Optional[str]
+    """
+    A SHA256 hash of the output's content.
+
+    `content_hash` is only present if the `store=/some/dir/` setting is passed in the
+    `FindOuputs` configuration **and** the tool actually produces the expected output.
     """
 
 
@@ -127,6 +135,7 @@ class FindOutputs(Action):
                 if not output_store_path.exists():
                     shutil.copy(output.path, output_store_path)
                 output.store_path = output_store_path
+                output.content_hash = content_hash
 
         outputs_record = OutputsRecord(tool=tool, outputs=self._outputs)
         output_path = Path(self._config["output"])
