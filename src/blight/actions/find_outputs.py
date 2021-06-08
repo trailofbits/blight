@@ -14,7 +14,7 @@ from pydantic import BaseModel
 from blight.action import Action
 from blight.constants import OUTPUT_SUFFIX_KIND_MAP, OUTPUT_SUFFIX_PATTERN_MAP
 from blight.enums import OutputKind
-from blight.tool import CC, CXX, LD, Tool
+from blight.tool import CC, CXX, INSTALL, LD, Tool
 from blight.util import flock_append
 
 logger = logging.getLogger(__name__)
@@ -93,9 +93,12 @@ class FindOutputs(Action):
             if not output_path.is_absolute():
                 output_path = tool.cwd / output_path
 
-            # Special case: a.out is produced by both the linker and compiler tools by default.
+            # Special cases: a.out is produced by both the linker and compiler tools by default,
+            # and some tools (like `install`) have modes that produce directories as outputs.
             if output_path.name == "a.out" and tool.__class__ in [CC, CXX, LD]:
                 kind = OutputKind.Executable
+            elif tool.__class__ == INSTALL and tool.directory_mode:  # type: ignore
+                kind = OutputKind.Directory
             else:
                 kind = OUTPUT_SUFFIX_KIND_MAP.get(output_path.suffix, OutputKind.Unknown)
 
@@ -122,6 +125,10 @@ class FindOutputs(Action):
             store_path.mkdir(parents=True, exist_ok=True)
 
             for output in self._outputs:
+                # We don't copy output directories into the store, for now.
+                if output.path.is_dir():
+                    continue
+
                 if not output.path.exists():
                     logger.warning(f"tool={tool}'s output ({output.path}) does not exist")
                     continue

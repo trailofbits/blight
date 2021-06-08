@@ -926,9 +926,15 @@ class INSTALL(Tool):
             logger.debug(f"install called with no positionals (hint: unknown args: {self._unknown}")
             return []
 
-        # Outside of directory mode, we only have a single output that's
-        # either a directory or a file.
-        return [self._matches.trailing[-1]]
+        # If we're installing multiple files to a destination directory,
+        # then our outputs are every input, under the destination.
+        # Otherwise, our output is a single file.
+        maybe_dir = self._cwd / self._matches.trailing[-1]
+        if maybe_dir.is_dir():
+            inputs = [Path(input_) for input_ in self._matches.trailing[0:-1]]
+            return [str(maybe_dir / input_.name) for input_ in inputs]
+        else:
+            return [self._matches.trailing[-1]]
 
     def __repr__(self) -> str:
         return f"<INSTALL {self.wrapped_tool()}>"

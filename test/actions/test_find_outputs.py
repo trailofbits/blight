@@ -5,7 +5,7 @@ import pytest
 
 from blight.actions import FindOutputs
 from blight.actions.find_outputs import OutputKind
-from blight.tool import CC
+from blight.tool import CC, INSTALL
 
 
 def test_find_outputs(tmp_path):
@@ -145,6 +145,72 @@ def test_find_outputs_annoying_so_prefixes(tmp_path, soname):
             "kind": OutputKind.SharedLibrary.value,
             "prenormalized_path": soname,
             "path": str(cc.cwd / soname),
+            "store_path": None,
+            "content_hash": None,
+        }
+    ]
+
+
+def test_find_outputs_install(tmp_path):
+    output = tmp_path / "outputs.jsonl"
+
+    find_outputs = FindOutputs({"output": output})
+    install = INSTALL(["-c", "foo", "bar", "baz", "/tmp"])
+    find_outputs.before_run(install)
+    find_outputs.after_run(install)
+
+    outputs = json.loads(output.read_text())["outputs"]
+    assert outputs == [
+        {
+            "kind": OutputKind.Executable.value,
+            "prenormalized_path": f"/tmp/{name}",
+            "path": f"/tmp/{name}",
+            "store_path": None,
+            "content_hash": None,
+        }
+        for name in ["foo", "bar", "baz"]
+    ]
+
+
+def test_find_outputs_install_directory_mode(tmp_path):
+    output = tmp_path / "outputs.jsonl"
+
+    find_outputs = FindOutputs({"output": output})
+    install = INSTALL(["-d", "foo", "bar", "baz"])
+    find_outputs.before_run(install)
+    find_outputs.after_run(install)
+
+    outputs = json.loads(output.read_text())["outputs"]
+    assert outputs == [
+        {
+            "kind": OutputKind.Directory.value,
+            "prenormalized_path": name,
+            "path": str(install.cwd / name),
+            "store_path": None,
+            "content_hash": None,
+        }
+        for name in ["foo", "bar", "baz"]
+    ]
+
+
+def test_find_outputs_install_directory_mode_skip_copy(tmp_path):
+    output = tmp_path / "outputs.jsonl"
+    dummy = tmp_path / "dummy"
+    store = tmp_path / "store"
+
+    find_outputs = FindOutputs({"output": output, "store": store})
+    install = INSTALL(["-d", str(dummy)])
+    find_outputs.before_run(install)
+    # Simulate `install -d`.
+    dummy.mkdir()
+    find_outputs.after_run(install)
+
+    outputs = json.loads(output.read_text())["outputs"]
+    assert outputs == [
+        {
+            "kind": OutputKind.Directory.value,
+            "prenormalized_path": str(dummy),
+            "path": str(dummy),
             "store_path": None,
             "content_hash": None,
         }

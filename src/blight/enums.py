@@ -498,4 +498,5 @@ class OutputKind(str, enum.Enum):
     StaticLibrary: str = "static"
     Executable: str = "executable"
     KernelModule: str = "kernel"
+    Directory: str = "directory"
     Unknown: str = "unknown"
