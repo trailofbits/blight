@@ -10,6 +10,7 @@ def test_buildtool_cmd():
     assert enums.BuildTool.AS.cmd == "as"
     assert enums.BuildTool.AR.cmd == "ar"
     assert enums.BuildTool.STRIP.cmd == "strip"
+    assert enums.BuildTool.INSTALL.cmd == "install"
 
 
 def test_optlevel_predictates():

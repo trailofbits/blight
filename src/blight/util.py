@@ -2,6 +2,7 @@
 Helper utilities for blight.
 """
 
+import argparse
 import contextlib
 import fcntl
 import os
@@ -186,3 +187,22 @@ def load_actions():
 
         actions.append(action_class(action_config))
     return actions
+
+
+class ArgumentParser(argparse.ArgumentParser):
+    """
+    A wrapper around `argparse.ArgumentParser` with non-exiting error behavior.
+
+    Parsing errors raise `ValueError` instead.
+    """
+
+    def error(self, message) -> NoReturn:
+        raise ValueError(message)
+
+    def default_namespace(self) -> argparse.Namespace:
+        """
+        Returns a default `argparse.Namespace`, suitable for contexts where
+        argument parsing fails completely.
+        """
+        defaults = {action.dest: self.get_default(action.dest) for action in self._actions}
+        return argparse.Namespace(**defaults)
