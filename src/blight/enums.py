@@ -22,6 +22,7 @@ class BuildTool(str, enum.Enum):
     AS: str = "AS"
     AR: str = "AR"
     STRIP: str = "STRIP"
+    INSTALL: str = "INSTALL"
 
     @property
     def cmd(self) -> str:
@@ -42,6 +43,8 @@ class BuildTool(str, enum.Enum):
             return "ar"
         elif self is BuildTool.STRIP:
             return "strip"
+        elif self is BuildTool.INSTALL:
+            return "install"
         else:
             assert_never(self)  # pragma: no cover
 
@@ -65,6 +68,8 @@ class BuildTool(str, enum.Enum):
             return BlightTool.AR
         elif self is BuildTool.STRIP:
             return BlightTool.STRIP
+        elif self is BuildTool.INSTALL:
+            return BlightTool.INSTALL
         else:
             assert_never(self)  # pragma: no cover
 
@@ -82,6 +87,7 @@ class BlightTool(str, enum.Enum):
     AS: str = "blight-as"
     AR: str = "blight-ar"
     STRIP: str = "blight-strip"
+    INSTALL: str = "blight-install"
 
     @property
     def build_tool(self) -> BuildTool:
@@ -102,6 +108,8 @@ class BlightTool(str, enum.Enum):
             return BuildTool.AR
         elif self is BlightTool.STRIP:
             return BuildTool.STRIP
+        elif self is BlightTool.INSTALL:
+            return BuildTool.INSTALL
         else:
             assert_never(self)  # pragma: no cover
 
@@ -490,4 +498,5 @@ class OutputKind(str, enum.Enum):
     StaticLibrary: str = "static"
     Executable: str = "executable"
     KernelModule: str = "kernel"
+    Directory: str = "directory"
     Unknown: str = "unknown"

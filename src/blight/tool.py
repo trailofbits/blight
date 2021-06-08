@@ -834,3 +834,107 @@ class STRIP(ResponseFileMixin, Tool):
 
     def __repr__(self) -> str:
         return f"<STRIP {self.wrapped_tool()}>"
+
+
+class INSTALL(Tool):
+    """
+    Represents the install tool.
+    """
+
+    def _install_parser(self) -> util.ArgumentParser:
+        parser = util.ArgumentParser(
+            prog=self.build_tool().value, add_help=False, allow_abbrev=False
+        )
+
+        def add_flag(short: str, dest: str, **kwargs) -> None:
+            parser.add_argument(short, action="store_true", dest=dest, **kwargs)
+
+        add_flag("-b", "overwrite")
+        add_flag("-C", "copy_no_mtime")
+        add_flag("-c", "copy", default=True)
+        add_flag("-d", "directory_mode")
+        add_flag("-M", "disable_mmap")
+        add_flag("-p", "preserve_mtime")
+        add_flag("-S", "safe_copy")
+        add_flag("-s", "exec_strip")
+        add_flag("-v", "verbose")
+        parser.add_argument("-f", dest="flags")
+        parser.add_argument("-g", dest="group")
+        parser.add_argument("-m", dest="mode")
+        parser.add_argument("-o", dest="owner")
+        parser.add_argument("trailing", nargs="+", default=[])
+
+        return parser
+
+    def __init__(self, args: List[str]) -> None:
+        super().__init__(args)
+        self._parser = self._install_parser()
+
+        try:
+            (self._matches, self._unknown) = self._parser.parse_known_args(args)
+        except ValueError as e:
+            logger.error(f"argparse error: {e}")
+            self._matches = self._parser.default_namespace()
+            self._unknown = args
+
+    @property
+    def directory_mode(self) -> bool:
+        """
+        Returns whether this `install` invocation is in "directory mode," i.e.
+        is creating directories instead of installing files.
+        """
+        return self._matches.directory_mode
+
+    @property
+    def inputs(self) -> List[str]:
+        """
+        Specializes `Tool.inputs` for the install tool.
+        """
+
+        # Directory mode: all positionals are new directories, i.e. outputs.
+        if self.directory_mode:
+            return []
+
+        # `install` requires at least two positionals outside of directory mode,
+        # so this probably indicates an unknown GNUism like `--help`.
+        if len(self._matches.trailing) < 2:
+            logger.debug(f"install called with no positionals (hint: unknown args: {self._unknown}")
+            return []
+
+        # Otherwise, we're either installing one file to another or we're
+        # installing multiple files to a directory. Test the last positional
+        # to determine which mode we're in.
+        maybe_dir = self._cwd / self._matches.trailing[-1]
+        if maybe_dir.is_dir():
+            return self._matches.trailing[0:-1]
+        else:
+            return [self._matches.trailing[0]]
+
+    @property
+    def outputs(self) -> List[str]:
+        """
+        Specializes `Tool.outputs` for the install tool.
+        """
+
+        # Directory mode: treat created directories as outputs.
+        if self.directory_mode:
+            return self._matches.trailing
+
+        # `install` requires at least two positionals outside of directory mode,
+        # so this probably indicates an unknown GNUism like `--help`.
+        if len(self._matches.trailing) < 2:
+            logger.debug(f"install called with no positionals (hint: unknown args: {self._unknown}")
+            return []
+
+        # If we're installing multiple files to a destination directory,
+        # then our outputs are every input, under the destination.
+        # Otherwise, our output is a single file.
+        maybe_dir = self._cwd / self._matches.trailing[-1]
+        if maybe_dir.is_dir():
+            inputs = [Path(input_) for input_ in self._matches.trailing[0:-1]]
+            return [str(maybe_dir / input_.name) for input_ in inputs]
+        else:
+            return [self._matches.trailing[-1]]
+
+    def __repr__(self) -> str:
+        return f"<INSTALL {self.wrapped_tool()}>"

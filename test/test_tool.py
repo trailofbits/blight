@@ -409,3 +409,63 @@ def test_strip():
         "cwd": str(strip.cwd),
         "env": dict(os.environ),
     }
+
+
+def test_install():
+    install = tool.INSTALL([])
+
+    assert install.wrapped_tool() == shutil.which("install")
+    assert repr(install) == f"<INSTALL {install.wrapped_tool()}>"
+    assert install.asdict() == {
+        "name": install.__class__.__name__,
+        "wrapped_tool": install.wrapped_tool(),
+        "args": [],
+        "canonicalized_args": [],
+        "cwd": str(install.cwd),
+        "env": dict(os.environ),
+    }
+
+
+@pytest.mark.parametrize(
+    ("flags", "directory_mode", "inputs", "outputs"),
+    [
+        # Reasonable inputs.
+        ("-d foo bar baz", True, [], ["foo", "bar", "baz"]),
+        ("-d -g wheel -o root -m 0755 foo bar baz", True, [], ["foo", "bar", "baz"]),
+        ("-c foo bar", False, ["foo"], ["bar"]),
+        ("-c foo bar baz /tmp", False, ["foo", "bar", "baz"], ["/tmp/foo", "/tmp/bar", "/tmp/baz"]),
+        (
+            "-cv foo bar baz /tmp",
+            False,
+            ["foo", "bar", "baz"],
+            ["/tmp/foo", "/tmp/bar", "/tmp/baz"],
+        ),
+        (
+            "-c -v foo bar baz /tmp",
+            False,
+            ["foo", "bar", "baz"],
+            ["/tmp/foo", "/tmp/bar", "/tmp/baz"],
+        ),
+        (
+            "-cbCM foo bar baz /tmp",
+            False,
+            ["foo", "bar", "baz"],
+            ["/tmp/foo", "/tmp/bar", "/tmp/baz"],
+        ),
+        (
+            "-g wheel -o root -m 0755 foo bar baz /tmp",
+            False,
+            ["foo", "bar", "baz"],
+            ["/tmp/foo", "/tmp/bar", "/tmp/baz"],
+        ),
+        # Broken inputs.
+        ("", False, [], []),
+        ("foo", False, [], []),
+    ],
+)
+def test_install_inputs_and_outputs(flags, directory_mode, inputs, outputs):
+    install = tool.INSTALL(shlex.split(flags))
+
+    assert install.directory_mode == directory_mode
+    assert install.inputs == inputs
+    assert install.outputs == outputs
