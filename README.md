@@ -18,7 +18,7 @@ $ cat /tmp/demo.jsonl
 
 ## Goals
 
-* Wrapping `CC`, `CXX`, `CPP`, `LD`, `AS`, `AR`, and `STRIP`.
+* Wrapping `CC`, `CXX`, `CPP`, `LD`, `AS`, `AR`, `STRIP`, and `INSTALL`.
 * Providing a visitor-style API for each of the above, pre- and post-execution.
 * Providing a nice set of default actions.
 * Being as non-invasive as possible.
