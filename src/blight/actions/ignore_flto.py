@@ -5,7 +5,6 @@ The `IgnoreFlto` action.
 import logging
 
 from blight.action import CompilerAction
-from blight.enums import Lang
 from blight.tool import CompilerTool
 
 logger = logging.getLogger(__name__)
