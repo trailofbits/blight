@@ -26,6 +26,13 @@ def test_load_actions(monkeypatch):
     assert actions[0]._config == {"key": "value", "key2": "a=b"}
 
 
+def test_load_actions_dedupes(monkeypatch):
+    monkeypatch.setenv("BLIGHT_ACTIONS", "Record:Record")
+
+    actions = util.load_actions()
+    assert len(actions) == 1
+
+
 def test_load_actions_nonexistent(monkeypatch):
     monkeypatch.setenv("BLIGHT_ACTIONS", "ThisActionDoesNotExist")
 
