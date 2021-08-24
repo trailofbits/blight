@@ -139,7 +139,7 @@ def load_actions():
     Loads any blight actions requested via the environment.
 
     Each action is loaded from the `BLIGHT_ACTIONS` environment variable,
-    separated by colons.
+    separated by colons. Duplicate actions are removed.
 
     For example, the following loads the `Record` and `Benchmark` actions:
 
@@ -173,7 +173,7 @@ def load_actions():
         return []
 
     actions = []
-    for action_name in action_names.split(":"):
+    for action_name in set(action_names.split(":")):
         action_class = getattr(blight.actions, action_name, None)
         if action_class is None:
             raise BlightError(f"Unknown action: {action_name}")
