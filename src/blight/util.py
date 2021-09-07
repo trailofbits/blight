@@ -169,7 +169,7 @@ def load_actions():
     import blight.actions
 
     action_names = os.getenv("BLIGHT_ACTIONS")
-    if action_names is None:
+    if not action_names:
         return []
 
     actions = []

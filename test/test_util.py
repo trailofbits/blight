@@ -40,6 +40,13 @@ def test_load_actions_nonexistent(monkeypatch):
         util.load_actions()
 
 
+def test_load_actions_empty_variable(monkeypatch):
+    monkeypatch.setenv("BLIGHT_ACTIONS", "")
+
+    actions = util.load_actions()
+    assert actions == []
+
+
 def test_load_actions_empty_config(monkeypatch):
     monkeypatch.setenv("BLIGHT_ACTIONS", "Record")
 
