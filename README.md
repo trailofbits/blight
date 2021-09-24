@@ -2,6 +2,8 @@ blight
 ======
 
 ![CI](https://github.com/trailofbits/blight/workflows/CI/badge.svg)
+[![PyPI version](https://badge.fury.io/py/blight.svg)](https://badge.fury.io/py/blight)
+
 
 `blight` is a framework for wrapping and instrumenting build tools.
 
