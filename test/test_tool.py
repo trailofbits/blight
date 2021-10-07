@@ -154,13 +154,27 @@ def test_tool_response_file_recursion_limit(tmp_path):
 
 
 def test_tool_explicit_library_search_paths():
-    cc = tool.CC(["-L.", "-L..", "-L../foo", "-L", "foo", "-L/lib"])
+    cc = tool.CC(
+        [
+            "-L.",
+            "--library-path",
+            "./bar",
+            "-L..",
+            "-L../foo",
+            "-L",
+            "foo",
+            "-L/lib",
+            "--library-path=../../baz",
+        ]
+    )
     assert cc.explicit_library_search_paths == [
         cc.cwd,
+        cc.cwd / "bar",
         cc.cwd.parent,
         cc.cwd.parent / "foo",
         cc.cwd / "foo",
         Path("/lib").resolve(),
+        cc.cwd.parent.parent / "baz",
     ]
 
 

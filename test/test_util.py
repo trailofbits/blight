@@ -13,14 +13,18 @@ def test_die():
 def test_collect_option_values():
     args = ["foo", "-foo", "baz", "-fooquux", "-Dfoo"]
 
-    assert util.collect_option_values(args, "-foo") == ["baz", "quux"]
-    assert util.collect_option_values(args, "-foo", style=util.OptionValueStyle.Mash) == ["quux"]
-    assert util.collect_option_values(args, "-foo", style=util.OptionValueStyle.Space) == ["baz"]
+    assert util.collect_option_values(args, "-foo") == [(1, "baz"), (3, "quux")]
+    assert util.collect_option_values(args, "-foo", style=util.OptionValueStyle.Mash) == [
+        (3, "quux")
+    ]
+    assert util.collect_option_values(args, "-foo", style=util.OptionValueStyle.Space) == [
+        (1, "baz")
+    ]
 
     args = ["foo", "-foo=bar", "-foo", "baz"]
     assert util.collect_option_values(args, "-foo", style=util.OptionValueStyle.EqualOrSpace) == [
-        "bar",
-        "baz",
+        (1, "bar"),
+        (2, "baz"),
     ]
 
 

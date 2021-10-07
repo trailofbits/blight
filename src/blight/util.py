@@ -10,7 +10,7 @@ import os
 import shlex
 import sys
 from pathlib import Path
-from typing import Any, List, NoReturn, Optional, Sequence
+from typing import Any, List, NoReturn, Optional, Sequence, Tuple
 
 from blight.exceptions import BlightError
 
@@ -87,7 +87,7 @@ def collect_option_values(
     option: str,
     *,
     style: OptionValueStyle = OptionValueStyle.MashOrSpace,
-) -> List[str]:
+) -> List[Tuple[int, str]]:
     """
     Given a list of arguments, collect the ones that look like options with values.
 
@@ -99,12 +99,13 @@ def collect_option_values(
         style: (OptionValueStyle): The option style to search for
 
     Returns:
-        A list of values for the matching options.
+        A list of tuples of (index, value) for matching options. The index in each
+        tuple is the argument index for the option itself.
     """
 
     # TODO(ww): There are a lot of error cases here. They should be thought out more.
 
-    values: List[str] = []
+    values: List[Tuple[int, str]] = []
     for (idx, arg) in enumerate(args):
         if not arg.startswith(option):
             continue
@@ -112,7 +113,7 @@ def collect_option_values(
         is_exact = arg == option
         if is_exact and style.permits_space():
             # -o foo is the only style that make sense here.
-            values.append(args[idx + 1])
+            values.append((idx, args[idx + 1]))
         elif not is_exact:
             # We have -oSOMETHING, where SOMETHING might be:
             # * A "mash", like `-Dfoo`
@@ -120,9 +121,9 @@ def collect_option_values(
             if style.permits_mash():
                 # NOTE(ww): Assignment to work around black's confusing formatting.
                 suff = len(option)
-                values.append(arg[suff:])
+                values.append((idx, arg[suff:]))
             elif style.permits_equal():
-                values.append(arg.split("=", 1)[1])
+                values.append((idx, arg.split("=", 1)[1]))
 
     return values
 
