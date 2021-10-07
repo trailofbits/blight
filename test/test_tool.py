@@ -160,7 +160,7 @@ def test_tool_explicit_library_search_paths():
         cc.cwd.parent,
         cc.cwd.parent / "foo",
         cc.cwd / "foo",
-        Path("/lib"),
+        Path("/lib").resolve(),
     ]
 
 
