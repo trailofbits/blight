@@ -2,6 +2,7 @@
 Encapsulations of the tools supported by blight.
 """
 
+import itertools
 import logging
 import os
 import re
@@ -644,11 +645,14 @@ class LinkSearchMixin:
         which is tool-specific and host-dependent.
         """
 
-        # TODO(ww): ld.bfd and ld.gold support `--library-path foo`, but
-        # ld.lld doesn't seem to. Not sure if it's worth supporting.
+        shorts = util.collect_option_values(self.canonicalized_args, "-L")
+        longs = util.collect_option_values(
+            self.canonicalized_args, "--library-path", style=util.OptionValueStyle.EqualOrSpace
+        )
 
-        values = util.collect_option_values(self.canonicalized_args, "-L")
-        return [(self.cwd / value).resolve() for value in values]
+        sorted_values = sorted(itertools.chain(shorts, longs), key=lambda v: v[0])
+
+        return [(self.cwd / value[1]).resolve() for value in sorted_values]
 
     @property
     def library_names(self: CanonicalizedArgsProtocol) -> List[str]:
@@ -660,11 +664,14 @@ class LinkSearchMixin:
         listed as "inputs" to the tool rather than as linkage specifications.
         """
 
-        # TODO(ww): Like above: ld.bfd and ld.gold support `--library foo`, but
-        # ld.lld doesn't seem to. Not sure if it's worth supporting.
+        shorts = util.collect_option_values(self.canonicalized_args, "-l")
+        longs = util.collect_option_values(
+            self.canonicalized_args, "--library", style=util.OptionValueStyle.EqualOrSpace
+        )
 
-        values = util.collect_option_values(self.canonicalized_args, "-l")
-        return [f"lib{lib}" for lib in values]
+        sorted_values = sorted(itertools.chain(shorts, longs), key=lambda v: v[0])
+
+        return [f"lib{value[1]}" for value in sorted_values]
 
 
 # NOTE(ww): The funny mixin order here (`ResponseFileMixin` before `Tool`) and elsewhere
