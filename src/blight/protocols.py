@@ -4,6 +4,7 @@ Substructural typing protocols for blight.
 These are, generally speaking, an implementation detail.
 """
 
+from pathlib import Path
 from typing import Dict, List
 
 from typing_extensions import Protocol
@@ -11,7 +12,13 @@ from typing_extensions import Protocol
 from blight.enums import Lang
 
 
-class ArgsProtocol(Protocol):
+class CwdProtocol(Protocol):
+    @property
+    def cwd(self) -> Path:
+        ...  # pragma: no cover
+
+
+class ArgsProtocol(CwdProtocol, Protocol):
     @property
     def args(self) -> List[str]:
         ...  # pragma: no cover
