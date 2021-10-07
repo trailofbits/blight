@@ -644,8 +644,8 @@ class LinkSearchMixin:
         which is tool-specific and host-dependent.
         """
 
-        # TODO(ww): GNU ld supports `--library-path foo`, but LLVM's lld doesn't.
-        # Is it worth supporting here? I've never seen it in the wild.
+        # TODO(ww): ld.bfd and ld.gold support `--library-path foo`, but
+        # ld.lld doesn't seem to. Not sure if it's worth supporting.
 
         values = util.collect_option_values(self.canonicalized_args, "-L")
         return [(self.cwd / value).resolve() for value in values]
@@ -659,6 +659,10 @@ class LinkSearchMixin:
         NOTE: This list does not include any libraries that are
         listed as "inputs" to the tool rather than as linkage specifications.
         """
+
+        # TODO(ww): Like above: ld.bfd and ld.gold support `--library foo`, but
+        # ld.lld doesn't seem to. Not sure if it's worth supporting.
+
         values = util.collect_option_values(self.canonicalized_args, "-l")
         return [f"lib{lib}" for lib in values]
 
