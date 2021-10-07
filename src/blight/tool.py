@@ -627,10 +627,52 @@ class CodeModelMixin:
         return code_model_map.get(code_model, CodeModel.Unknown)
 
 
+class LinkSearchMixin:
+    """
+    A mixin for tools that support the `-Lpath` and `-llib` syntaxes for specifying
+    library paths and libraries, respectively.
+    """
+
+    @property
+    def explicit_library_search_paths(self: CanonicalizedArgsProtocol) -> List[Path]:
+        """
+        Returns a list of library search paths that are explicitly specified in
+        the tool's invocation. Semantically, these paths are (normally) given
+        priority over all other search paths.
+
+        NOTE: This is **not** the same as the complete list of library search paths,
+        which is tool-specific and host-dependent.
+        """
+
+        # TODO(ww): ld.bfd and ld.gold support `--library-path foo`, but
+        # ld.lld doesn't seem to. Not sure if it's worth supporting.
+
+        values = util.collect_option_values(self.canonicalized_args, "-L")
+        return [(self.cwd / value).resolve() for value in values]
+
+    @property
+    def library_names(self: CanonicalizedArgsProtocol) -> List[str]:
+        """
+        Returns a list of library names (without suffixes) for libraries that
+        are explicitly specified in the tool's invocation.
+
+        NOTE: This list does not include any libraries that are
+        listed as "inputs" to the tool rather than as linkage specifications.
+        """
+
+        # TODO(ww): Like above: ld.bfd and ld.gold support `--library foo`, but
+        # ld.lld doesn't seem to. Not sure if it's worth supporting.
+
+        values = util.collect_option_values(self.canonicalized_args, "-l")
+        return [f"lib{lib}" for lib in values]
+
+
 # NOTE(ww): The funny mixin order here (`ResponseFileMixin` before `Tool`) and elsewhere
 # is because Python defines its class hierarchy from right to left. `ResponseFileMixin`
 # therefore needs to come first in order to properly override `canonicalized_args`.
-class CompilerTool(ResponseFileMixin, Tool, StdMixin, OptMixin, DefinesMixin, CodeModelMixin):
+class CompilerTool(
+    LinkSearchMixin, ResponseFileMixin, Tool, StdMixin, OptMixin, DefinesMixin, CodeModelMixin
+):
     """
     Represents a generic (C or C++) compiler frontend.
 
@@ -748,7 +790,7 @@ class CPP(Tool, StdMixin, DefinesMixin):
         return {**super().asdict(), "lang": self.lang.name, "std": self.std.name}
 
 
-class LD(ResponseFileMixin, Tool):
+class LD(LinkSearchMixin, ResponseFileMixin, Tool):
     """
     Represents the linker.
     """

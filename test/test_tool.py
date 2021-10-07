@@ -2,6 +2,7 @@ import json
 import os
 import shlex
 import shutil
+from pathlib import Path
 
 import pytest
 
@@ -150,6 +151,22 @@ def test_tool_response_file_recursion_limit(tmp_path):
     cc = tool.CC([f"@{response_file}"])
     assert cc.args == [f"@{response_file}"]
     assert cc.canonicalized_args == ["-foo"] * tool.RESPONSE_FILE_RECURSION_LIMIT
+
+
+def test_tool_explicit_library_search_paths():
+    cc = tool.CC(["-L.", "-L..", "-L../foo", "-L", "foo", "-L/lib"])
+    assert cc.explicit_library_search_paths == [
+        cc.cwd,
+        cc.cwd.parent,
+        cc.cwd.parent / "foo",
+        cc.cwd / "foo",
+        Path("/lib").resolve(),
+    ]
+
+
+def test_tool_library_names():
+    cc = tool.CC(["-lfoo", "-l", "bar", "-liberty"])
+    assert cc.library_names == ["libfoo", "libbar", "libiberty"]
 
 
 @pytest.mark.parametrize(

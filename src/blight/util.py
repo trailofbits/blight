@@ -4,6 +4,7 @@ Helper utilities for blight.
 
 import argparse
 import contextlib
+import enum
 import fcntl
 import os
 import shlex
@@ -14,6 +15,53 @@ from typing import Any, List, NoReturn, Optional, Sequence
 from blight.exceptions import BlightError
 
 SWIZZLE_SENTINEL = "@blight-swizzle@"
+
+
+@enum.unique
+class OptionValueStyle(enum.Enum):
+    """
+    A collection of common option formatting styles in build tools.
+
+    This enumeration is not exhaustive.
+    """
+
+    Space = enum.auto()
+    """
+    Options that look like `-O foo`.
+    """
+
+    Mash = enum.auto()
+    """
+    Options that look like `-Ofoo`.
+    """
+
+    MashOrSpace = enum.auto()
+    """
+    Options that look like `-Ofoo` or `-O foo`.
+    """
+
+    Equal = enum.auto()
+    """
+    Options that look like `-O=foo`.
+    """
+
+    EqualOrSpace = enum.auto()
+    """
+    Options that look like `-O=foo` or `-O foo`.
+    """
+
+    def permits_equal(self) -> bool:
+        return self in [OptionValueStyle.Equal, OptionValueStyle.EqualOrSpace]
+
+    def permits_mash(self) -> bool:
+        return self in [OptionValueStyle.Mash, OptionValueStyle.MashOrSpace]
+
+    def permits_space(self) -> bool:
+        return self in [
+            OptionValueStyle.Space,
+            OptionValueStyle.MashOrSpace,
+            OptionValueStyle.EqualOrSpace,
+        ]
 
 
 def die(message: str) -> NoReturn:
@@ -32,6 +80,51 @@ def assert_never(x: NoReturn) -> NoReturn:
     A hint to the typechecker that a branch can never occur.
     """
     assert False, f"unhandled type: {type(x).__name__}"  # pragma: no cover
+
+
+def collect_option_values(
+    args: Sequence[str],
+    option: str,
+    *,
+    style: OptionValueStyle = OptionValueStyle.MashOrSpace,
+) -> List[str]:
+    """
+    Given a list of arguments, collect the ones that look like options with values.
+
+    Supports multiple option "styles" via `OptionValueStyle`.
+
+    Args:
+        args (sequence): The arguments to search
+        option (str): The option prefix to search for
+        style: (OptionValueStyle): The option style to search for
+
+    Returns:
+        A list of values for the matching options.
+    """
+
+    # TODO(ww): There are a lot of error cases here. They should be thought out more.
+
+    values: List[str] = []
+    for (idx, arg) in enumerate(args):
+        if not arg.startswith(option):
+            continue
+
+        is_exact = arg == option
+        if is_exact and style.permits_space():
+            # -o foo is the only style that make sense here.
+            values.append(args[idx + 1])
+        elif not is_exact:
+            # We have -oSOMETHING, where SOMETHING might be:
+            # * A "mash", like `-Dfoo`
+            # * An equals, like `-D=foo`
+            if style.permits_mash():
+                # NOTE(ww): Assignment to work around black's confusing formatting.
+                suff = len(option)
+                values.append(arg[suff:])
+            elif style.permits_equal():
+                values.append(arg.split("=", 1)[1])
+
+    return values
 
 
 def rindex(items: Sequence[Any], needle: Any) -> Optional[int]:

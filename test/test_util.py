@@ -10,6 +10,20 @@ def test_die():
         util.die(":(")
 
 
+def test_collect_option_values():
+    args = ["foo", "-foo", "baz", "-fooquux", "-Dfoo"]
+
+    assert util.collect_option_values(args, "-foo") == ["baz", "quux"]
+    assert util.collect_option_values(args, "-foo", style=util.OptionValueStyle.Mash) == ["quux"]
+    assert util.collect_option_values(args, "-foo", style=util.OptionValueStyle.Space) == ["baz"]
+
+    args = ["foo", "-foo=bar", "-foo", "baz"]
+    assert util.collect_option_values(args, "-foo", style=util.OptionValueStyle.EqualOrSpace) == [
+        "bar",
+        "baz",
+    ]
+
+
 def test_rindex():
     assert util.rindex([1, 1, 2, 3, 4, 5], 1) == 1
     assert util.rindex([1, 1, 2, 3, 4, 5], 6) is None
