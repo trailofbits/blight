@@ -3,6 +3,7 @@ Encapsulations of the tools supported by blight.
 """
 
 import itertools
+import json
 import logging
 import os
 import re
@@ -88,6 +89,8 @@ class Tool:
         self._cwd = Path(os.getcwd()).resolve()
         self._actions = util.load_actions()
         self._skip_run = False
+        self._action_results: Dict[str, Dict[str, Any]] = {}
+        self._journal_path = os.getenv("BLIGHT_JOURNAL_PATH")
 
     def _fixup_env(self) -> Dict[str, str]:
         """
@@ -109,6 +112,14 @@ class Tool:
         for action in self._actions:
             action._after_run(self, run_skipped=self._skip_run)
 
+            if self.is_journaling():
+                self._action_results[action.__class__.__name__] = action.result
+
+    def _commit_journal(self) -> None:
+        if self.is_journaling():
+            with util.flock_append(self._journal_path) as io:  # type: ignore
+                json.dump(self._action_results, io)
+
     def run(self) -> None:
         """
         Runs the wrapped tool with the original arguments.
@@ -123,6 +134,15 @@ class Tool:
                 )
 
         self._after_run()
+
+        self._commit_journal()
+
+    def is_journaling(self) -> bool:
+        """
+        Returns:
+            `True` if this `Tool` is in "journaling" mode.
+        """
+        return self._journal_path is not None
 
     def asdict(self) -> Dict[str, Any]:
         """

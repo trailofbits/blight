@@ -56,6 +56,19 @@ def test_tool_run(monkeypatch, tmp_path):
     assert isinstance(bench_record["elapsed"], int)
 
 
+def test_tool_run_journaling(monkeypatch, tmp_path):
+    journal_output = tmp_path / "journal.jsonl"
+    monkeypatch.setenv("BLIGHT_ACTIONS", "Record:Benchmark:FindOutputs")
+    monkeypatch.setenv("BLIGHT_JOURNAL_PATH", str(journal_output))
+
+    cc = tool.CC(["-v"])
+    cc.run()
+
+    journal = json.loads(journal_output.read_text())
+    assert set(journal.keys()) == {"Record", "Benchmark", "FindOutputs"}
+    assert all(isinstance(v, dict) for v in journal.values())
+
+
 def test_tool_args_property():
     cpp = tool.CPP(["a", "b", "c"])
 

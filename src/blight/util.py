@@ -199,7 +199,7 @@ def insert_items_at_idx(parent_items: Sequence[Any], idx: int, items: Sequence[A
 
 
 @contextlib.contextmanager
-def flock_append(filename):
+def flock_append(filename: os.PathLike):
     """
     Open the given file for appending, acquiring an exclusive lock on it in
     the process.

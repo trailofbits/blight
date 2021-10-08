@@ -144,7 +144,15 @@ class FindOutputs(Action):
                 output.store_path = output_store_path
                 output.content_hash = content_hash
 
-        outputs_record = OutputsRecord(tool=tool, outputs=self._outputs)
-        output_path = Path(self._config["output"])
-        with flock_append(output_path) as io:
-            print(outputs_record.json(), file=io)
+        outputs = OutputsRecord(tool=tool, outputs=self._outputs)
+
+        if tool.is_journaling():
+            # HACK(ww): Pydantic's `dict()` doesn't respect `json_encoders`,
+            # so we have to manually convert the "tool" attribute.
+            outputs_record = outputs.dict()
+            outputs_record["tool"] = outputs_record["tool"].asdict()
+            self._result = outputs_record
+        else:
+            output_path = Path(self._config["output"])
+            with flock_append(output_path) as io:
+                print(outputs.json(), file=io)

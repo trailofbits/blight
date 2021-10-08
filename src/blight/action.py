@@ -2,7 +2,7 @@
 The different actions supported by blight.
 """
 
-from typing import Dict
+from typing import Any, Dict, Optional
 
 import blight.tool
 from blight.tool import Tool
@@ -15,6 +15,7 @@ class Action:
 
     def __init__(self, config: Dict[str, str]):
         self._config = config
+        self._result: Optional[Dict[str, Any]] = None
 
     def _should_run_on(self, tool: Tool) -> bool:
         return True
@@ -44,6 +45,13 @@ class Action:
     def _after_run(self, tool: Tool, *, run_skipped=False) -> None:
         if self._should_run_on(tool):
             self.after_run(tool, run_skipped=run_skipped)
+
+    @property
+    def result(self) -> Optional[Dict[str, Any]]:
+        """
+        Returns the result computed by this action, if there is one.
+        """
+        return self._result
 
 
 class CCAction(Action):
