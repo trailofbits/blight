@@ -46,8 +46,15 @@ class Benchmark(Action):
 
     def after_run(self, tool: Tool, *, run_skipped: bool = False) -> None:
         elapsed = (time.monotonic_ns() - self._start_nanos) // 1000
+        bench = BenchmarkRecord(tool=tool, elapsed=elapsed, run_skipped=run_skipped)
 
-        bench_file = Path(self._config["output"])
-        with flock_append(bench_file) as io:
-            bench = BenchmarkRecord(tool=tool, elapsed=elapsed, run_skipped=run_skipped)
-            print(bench.json(), file=io)
+        if tool.is_journaling():
+            # HACK(ww): Pydantic's `dict()` doesn't respect `json_encoders`,
+            # so we have to manually convert the "tool" attribute.
+            bench_record = bench.dict()
+            bench_record["tool"] = bench_record["tool"].asdict()
+            self._result = bench_record
+        else:
+            bench_file = Path(self._config["output"])
+            with flock_append(bench_file) as io:
+                print(bench.json(), file=io)
