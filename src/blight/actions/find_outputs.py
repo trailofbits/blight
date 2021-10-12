@@ -7,7 +7,7 @@ import logging
 import re
 import shutil
 from pathlib import Path
-from typing import List, Optional
+from typing import Any, Dict, List, Optional
 
 from pydantic import BaseModel
 
@@ -84,6 +84,27 @@ class OutputsRecord(BaseModel):
         arbitrary_types_allowed = True
         json_encoders = {Tool: lambda t: t.asdict()}
 
+    def asdict(self) -> Dict[str, Any]:
+        """
+        Converts this `OutputsRecord` into a JSON-serializable dictionary.
+
+        Complex types are reduced into JSON-compatible types.
+        """
+
+        result = self.dict()
+
+        # Pydantic does 99% of the work for us, but doesn't reduce `Tool` or
+        # the `Path` members in `outputs`.
+        result["tool"] = result["tool"].asdict()
+
+        for output in result["outputs"]:
+            output["path"] = str(output["path"])
+            store_path = output.get("store_path")
+            if store_path is not None:
+                output["store_path"] = str(store_path)
+
+        return result
+
 
 class FindOutputs(Action):
     def before_run(self, tool: Tool) -> None:
@@ -147,11 +168,7 @@ class FindOutputs(Action):
         outputs = OutputsRecord(tool=tool, outputs=self._outputs)
 
         if tool.is_journaling():
-            # HACK(ww): Pydantic's `dict()` doesn't respect `json_encoders`,
-            # so we have to manually convert the "tool" attribute.
-            outputs_record = outputs.dict()
-            outputs_record["tool"] = outputs_record["tool"].asdict()
-            self._result = outputs_record
+            self._result = outputs.asdict()
         else:
             output_path = Path(self._config["output"])
             with flock_append(output_path) as io:
