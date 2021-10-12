@@ -119,6 +119,8 @@ class Tool:
         if self.is_journaling():
             with util.flock_append(self._journal_path) as io:  # type: ignore
                 json.dump(self._action_results, io)
+                # NOTE(ww): `json.dump` doesn't do this for us.
+                io.write("\n")
 
     def run(self) -> None:
         """

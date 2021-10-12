@@ -69,6 +69,26 @@ def test_tool_run_journaling(monkeypatch, tmp_path):
     assert all(isinstance(v, dict) for v in journal.values())
 
 
+def test_tool_run_journaling_multiple(monkeypatch, tmp_path):
+    journal_output = tmp_path / "journal.jsonl"
+    monkeypatch.setenv("BLIGHT_ACTIONS", "Record:Benchmark:FindOutputs")
+    monkeypatch.setenv("BLIGHT_JOURNAL_PATH", str(journal_output))
+
+    for _ in range(0, 10):
+        cc = tool.CC(["-v"])
+        cc.run()
+
+    count = 0
+    with journal_output.open() as journal:
+        for line in journal:
+            count += 1
+            record = json.loads(line)
+            assert set(record.keys()) == {"Record", "Benchmark", "FindOutputs"}
+            assert all(isinstance(v, dict) for v in record.values())
+
+    assert count == 10
+
+
 def test_tool_args_property():
     cpp = tool.CPP(["a", "b", "c"])
 
