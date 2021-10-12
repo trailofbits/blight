@@ -28,6 +28,37 @@ def test_find_outputs(tmp_path):
     ]
 
 
+def test_find_outputs_journaling(monkeypatch, tmp_path):
+    journal_output = tmp_path / "journal.jsonl"
+    monkeypatch.setenv("BLIGHT_JOURNAL_PATH", str(journal_output))
+
+    store = tmp_path / "store"
+    contents = b"not a real object file"
+    contents_digest = hashlib.sha256(contents).hexdigest()
+    dummy_foo_o = tmp_path / "foo.o"
+    dummy_foo_o_store = store / f"{dummy_foo_o.name}-{contents_digest}"
+
+    find_outputs = FindOutputs({"store": store})
+    cc = CC(["-c", "foo.c", "-o", str(dummy_foo_o)])
+    find_outputs.before_run(cc)
+    # Pretend to be the compiler: write some junk to dummy_foo_o
+    dummy_foo_o.write_bytes(contents)
+
+    find_outputs.after_run(cc)
+
+    outputs = find_outputs._result["outputs"]
+    assert len(outputs) == 1
+    assert outputs[0] == {
+        "kind": OutputKind.Object.value,
+        "prenormalized_path": str(dummy_foo_o),
+        "path": str(dummy_foo_o),
+        "store_path": str(dummy_foo_o_store),
+        "content_hash": contents_digest,
+    }
+    assert dummy_foo_o_store.read_bytes() == contents
+    assert json.dumps(outputs)
+
+
 def test_find_outputs_multiple(tmp_path):
     fake_cs = [tmp_path / fake_c for fake_c in ["foo.c", "bar.c", "baz.c"]]
     [fake_c.touch() for fake_c in fake_cs]
