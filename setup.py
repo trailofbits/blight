@@ -39,7 +39,7 @@ setup(
     platforms="any",
     python_requires=">=3.7",
     install_requires=[
-        "click >= 8.0,< 9.0",
+        "click >= 7.1,< 9.0",
         "typing_extensions",
         "pydantic ~= 1.7",
     ],
