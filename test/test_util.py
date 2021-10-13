@@ -51,6 +51,13 @@ def test_load_actions_dedupes(monkeypatch):
     assert len(actions) == 1
 
 
+def test_load_actions_preserves_order(monkeypatch):
+    monkeypatch.setenv("BLIGHT_ACTIONS", "Benchmark:Record:FindOutputs")
+
+    actions = util.load_actions()
+    assert [a.__class__.__name__ for a in actions] == ["Benchmark", "Record", "FindOutputs"]
+
+
 def test_load_actions_nonexistent(monkeypatch):
     monkeypatch.setenv("BLIGHT_ACTIONS", "ThisActionDoesNotExist")
 

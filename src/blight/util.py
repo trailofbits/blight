@@ -266,8 +266,13 @@ def load_actions():
     if not action_names:
         return []
 
+    seen = set()
     actions = []
-    for action_name in set(action_names.split(":")):
+    for action_name in action_names.split(":"):
+        if action_name in seen:
+            continue
+        seen.add(action_name)
+
         action_class = getattr(blight.actions, action_name, None)
         if action_class is None:
             raise BlightError(f"Unknown action: {action_name}")
