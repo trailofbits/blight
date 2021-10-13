@@ -10,6 +10,24 @@ def test_die():
         util.die(":(")
 
 
+def test_collect_option_values():
+    args = ["foo", "-foo", "baz", "-fooquux", "-Dfoo"]
+
+    assert util.collect_option_values(args, "-foo") == [(1, "baz"), (3, "quux")]
+    assert util.collect_option_values(args, "-foo", style=util.OptionValueStyle.Mash) == [
+        (3, "quux")
+    ]
+    assert util.collect_option_values(args, "-foo", style=util.OptionValueStyle.Space) == [
+        (1, "baz")
+    ]
+
+    args = ["foo", "-foo=bar", "-foo", "baz"]
+    assert util.collect_option_values(args, "-foo", style=util.OptionValueStyle.EqualOrSpace) == [
+        (1, "bar"),
+        (2, "baz"),
+    ]
+
+
 def test_rindex():
     assert util.rindex([1, 1, 2, 3, 4, 5], 1) == 1
     assert util.rindex([1, 1, 2, 3, 4, 5], 6) is None
@@ -26,11 +44,25 @@ def test_load_actions(monkeypatch):
     assert actions[0]._config == {"key": "value", "key2": "a=b"}
 
 
+def test_load_actions_dedupes(monkeypatch):
+    monkeypatch.setenv("BLIGHT_ACTIONS", "Record:Record")
+
+    actions = util.load_actions()
+    assert len(actions) == 1
+
+
 def test_load_actions_nonexistent(monkeypatch):
     monkeypatch.setenv("BLIGHT_ACTIONS", "ThisActionDoesNotExist")
 
     with pytest.raises(BlightError):
         util.load_actions()
+
+
+def test_load_actions_empty_variable(monkeypatch):
+    monkeypatch.setenv("BLIGHT_ACTIONS", "")
+
+    actions = util.load_actions()
+    assert actions == []
 
 
 def test_load_actions_empty_config(monkeypatch):

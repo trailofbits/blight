@@ -33,6 +33,7 @@ SHIM_MAP = {
     "as": BuildTool.AS,
     "ar": BuildTool.AR,
     "strip": BuildTool.STRIP,
+    "install": BuildTool.INSTALL,
 
     # GNU shims.
     "gcc": BuildTool.CC,

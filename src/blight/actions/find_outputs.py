@@ -2,36 +2,22 @@
 The `FindOutputs` action.
 """
 
-import enum
 import hashlib
 import logging
+import re
 import shutil
 from pathlib import Path
-from typing import List, Optional
+from typing import Any, Dict, List, Optional
 
 from pydantic import BaseModel
 
 from blight.action import Action
-from blight.tool import CC, CXX, LD, Tool
+from blight.constants import OUTPUT_SUFFIX_KIND_MAP, OUTPUT_SUFFIX_PATTERN_MAP
+from blight.enums import OutputKind
+from blight.tool import CC, CXX, INSTALL, LD, Tool
 from blight.util import flock_append
 
 logger = logging.getLogger(__name__)
-
-
-@enum.unique
-class OutputKind(str, enum.Enum):
-    """
-    A collection of common output kinds for build tools.
-
-    This enumeration is not exhaustive.
-    """
-
-    Object: str = "object"
-    SharedLibrary: str = "shared"
-    StaticLibrary: str = "static"
-    Executable: str = "executable"
-    KernelModule: str = "kernel"
-    Unknown: str = "unknown"
 
 
 class Output(BaseModel):
@@ -42,6 +28,14 @@ class Output(BaseModel):
     kind: OutputKind
     """
     The kind of output.
+    """
+
+    prenormalized_path: str
+    """
+    The path to the output, as passed directly to the tool itself.
+
+    This copy of the path may be relative; consumers should prefer
+    `path` for an absolute copy.
     """
 
     path: Path
@@ -57,7 +51,15 @@ class Output(BaseModel):
     An optional stable path to the output, as preserved by the `FindOutputs` action.
 
     `store_path` is only present if the `store=/some/dir/` setting is passed in the
-    `FindActions` configuration **and** the tool actually produces the expected output.
+    `FindOutputs` configuration **and** the tool actually produces the expected output.
+    """
+
+    content_hash: Optional[str]
+    """
+    A SHA256 hash of the output's content.
+
+    `content_hash` is only present if the `store=/some/dir/` setting is passed in the
+    `FindOuputs` configuration **and** the tool actually produces the expected output.
     """
 
 
@@ -82,28 +84,26 @@ class OutputsRecord(BaseModel):
         arbitrary_types_allowed = True
         json_encoders = {Tool: lambda t: t.asdict()}
 
+    def asdict(self) -> Dict[str, Any]:
+        """
+        Converts this `OutputsRecord` into a JSON-serializable dictionary.
 
-OUTPUT_SUFFIX_KIND_MAP = {
-    ".o": OutputKind.Object,
-    ".obj": OutputKind.Object,
-    ".so": OutputKind.SharedLibrary,
-    ".dylib": OutputKind.SharedLibrary,
-    ".dll": OutputKind.SharedLibrary,
-    ".a": OutputKind.StaticLibrary,
-    ".lib": OutputKind.StaticLibrary,
-    "": OutputKind.Executable,
-    ".exe": OutputKind.Executable,
-    ".bin": OutputKind.Executable,
-    ".elf": OutputKind.Executable,
-    ".com": OutputKind.Executable,
-    ".ko": OutputKind.KernelModule,
-    ".sys": OutputKind.KernelModule,
-}
-"""
-A mapping of common output suffixes to their (expected) file kinds.
+        Complex types are reduced into JSON-compatible types.
+        """
 
-This mapping is not exhaustive.
-"""
+        result = self.dict()
+
+        # Pydantic does 99% of the work for us, but doesn't reduce `Tool` or
+        # the `Path` members in `outputs`.
+        result["tool"] = result["tool"].asdict()
+
+        for output in result["outputs"]:
+            output["path"] = str(output["path"])
+            store_path = output.get("store_path")
+            if store_path is not None:
+                output["store_path"] = str(store_path)
+
+        return result
 
 
 class FindOutputs(Action):
@@ -114,13 +114,28 @@ class FindOutputs(Action):
             if not output_path.is_absolute():
                 output_path = tool.cwd / output_path
 
-            # Special case: a.out is produced by both the linker and compiler tools by default.
+            # Special cases: a.out is produced by both the linker and compiler tools by default,
+            # and some tools (like `install`) have modes that produce directories as outputs.
             if output_path.name == "a.out" and tool.__class__ in [CC, CXX, LD]:
                 kind = OutputKind.Executable
+            elif tool.__class__ == INSTALL and tool.directory_mode:  # type: ignore
+                kind = OutputKind.Directory
             else:
                 kind = OUTPUT_SUFFIX_KIND_MAP.get(output_path.suffix, OutputKind.Unknown)
 
-            outputs.append(Output(kind=kind, path=output_path))
+                # Last attempt: try some common patterns for output kinds if we can't
+                # match the suffix precisely.
+                if kind == OutputKind.Unknown:
+                    kind = next(
+                        (
+                            k
+                            for (p, k) in OUTPUT_SUFFIX_PATTERN_MAP.items()
+                            if re.match(p, str(output_path))
+                        ),
+                        OutputKind.Unknown,
+                    )
+
+            outputs.append(Output(prenormalized_path=output, kind=kind, path=output_path))
 
         self._outputs = outputs
 
@@ -131,6 +146,10 @@ class FindOutputs(Action):
             store_path.mkdir(parents=True, exist_ok=True)
 
             for output in self._outputs:
+                # We don't copy output directories into the store, for now.
+                if output.path.is_dir():
+                    continue
+
                 if not output.path.exists():
                     logger.warning(f"tool={tool}'s output ({output.path}) does not exist")
                     continue
@@ -144,8 +163,13 @@ class FindOutputs(Action):
                 if not output_store_path.exists():
                     shutil.copy(output.path, output_store_path)
                 output.store_path = output_store_path
+                output.content_hash = content_hash
 
-        outputs_record = OutputsRecord(tool=tool, outputs=self._outputs)
-        output_path = Path(self._config["output"])
-        with flock_append(output_path) as io:
-            print(outputs_record.json(), file=io)
+        outputs = OutputsRecord(tool=tool, outputs=self._outputs)
+
+        if tool.is_journaling():
+            self._result = outputs.asdict()
+        else:
+            output_path = Path(self._config["output"])
+            with flock_append(output_path) as io:
+                print(outputs.json(), file=io)

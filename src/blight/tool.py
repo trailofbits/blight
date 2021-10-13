@@ -2,6 +2,8 @@
 Encapsulations of the tools supported by blight.
 """
 
+import itertools
+import json
 import logging
 import os
 import re
@@ -87,6 +89,8 @@ class Tool:
         self._cwd = Path(os.getcwd()).resolve()
         self._actions = util.load_actions()
         self._skip_run = False
+        self._action_results: Dict[str, Dict[str, Any]] = {}
+        self._journal_path = os.getenv("BLIGHT_JOURNAL_PATH")
 
     def _fixup_env(self) -> Dict[str, str]:
         """
@@ -108,6 +112,16 @@ class Tool:
         for action in self._actions:
             action._after_run(self, run_skipped=self._skip_run)
 
+            if self.is_journaling():
+                self._action_results[action.__class__.__name__] = action.result
+
+    def _commit_journal(self) -> None:
+        if self.is_journaling():
+            with util.flock_append(self._journal_path) as io:  # type: ignore
+                json.dump(self._action_results, io)
+                # NOTE(ww): `json.dump` doesn't do this for us.
+                io.write("\n")
+
     def run(self) -> None:
         """
         Runs the wrapped tool with the original arguments.
@@ -122,6 +136,15 @@ class Tool:
                 )
 
         self._after_run()
+
+        self._commit_journal()
+
+    def is_journaling(self) -> bool:
+        """
+        Returns:
+            `True` if this `Tool` is in "journaling" mode.
+        """
+        return self._journal_path is not None
 
     def asdict(self) -> Dict[str, Any]:
         """
@@ -627,10 +650,58 @@ class CodeModelMixin:
         return code_model_map.get(code_model, CodeModel.Unknown)
 
 
+class LinkSearchMixin:
+    """
+    A mixin for tools that support the `-Lpath` and `-llib` syntaxes for specifying
+    library paths and libraries, respectively.
+    """
+
+    @property
+    def explicit_library_search_paths(self: CanonicalizedArgsProtocol) -> List[Path]:
+        """
+        Returns a list of library search paths that are explicitly specified in
+        the tool's invocation. Semantically, these paths are (normally) given
+        priority over all other search paths.
+
+        NOTE: This is **not** the same as the complete list of library search paths,
+        which is tool-specific and host-dependent.
+        """
+
+        shorts = util.collect_option_values(self.canonicalized_args, "-L")
+        longs = util.collect_option_values(
+            self.canonicalized_args, "--library-path", style=util.OptionValueStyle.EqualOrSpace
+        )
+
+        sorted_values = sorted(itertools.chain(shorts, longs), key=lambda v: v[0])
+
+        return [(self.cwd / value[1]).resolve() for value in sorted_values]
+
+    @property
+    def library_names(self: CanonicalizedArgsProtocol) -> List[str]:
+        """
+        Returns a list of library names (without suffixes) for libraries that
+        are explicitly specified in the tool's invocation.
+
+        NOTE: This list does not include any libraries that are
+        listed as "inputs" to the tool rather than as linkage specifications.
+        """
+
+        shorts = util.collect_option_values(self.canonicalized_args, "-l")
+        longs = util.collect_option_values(
+            self.canonicalized_args, "--library", style=util.OptionValueStyle.EqualOrSpace
+        )
+
+        sorted_values = sorted(itertools.chain(shorts, longs), key=lambda v: v[0])
+
+        return [f"lib{value[1]}" for value in sorted_values]
+
+
 # NOTE(ww): The funny mixin order here (`ResponseFileMixin` before `Tool`) and elsewhere
 # is because Python defines its class hierarchy from right to left. `ResponseFileMixin`
 # therefore needs to come first in order to properly override `canonicalized_args`.
-class CompilerTool(ResponseFileMixin, Tool, StdMixin, OptMixin, DefinesMixin, CodeModelMixin):
+class CompilerTool(
+    LinkSearchMixin, ResponseFileMixin, Tool, StdMixin, OptMixin, DefinesMixin, CodeModelMixin
+):
     """
     Represents a generic (C or C++) compiler frontend.
 
@@ -748,7 +819,7 @@ class CPP(Tool, StdMixin, DefinesMixin):
         return {**super().asdict(), "lang": self.lang.name, "std": self.std.name}
 
 
-class LD(ResponseFileMixin, Tool):
+class LD(LinkSearchMixin, ResponseFileMixin, Tool):
     """
     Represents the linker.
     """
@@ -789,10 +860,39 @@ class AS(ResponseFileMixin, Tool):
         return f"<AS {self.wrapped_tool()}>"
 
 
-class AR(Tool):
+class AR(ResponseFileMixin, Tool):
     """
     Represents the archiver.
     """
+
+    @property
+    def outputs(self) -> List[str]:
+        """
+        Specializes `Tool.outputs` for the archiver.
+        """
+
+        # TODO(ww): This doesn't support `ar x`, which explodes the archive
+        # (i.e., treats it as input) instead of treats it as output.
+        # It would be pretty strange for a build system to do this, but it's
+        # probably something we should detect at the very least.
+
+        # TODO(ww): We also don't support `ar t`, which queries the given
+        # archive to provide a table listing of its contents.
+
+        # NOTE(ww): `ar`'s POSIX and GNU CLIs are annoyingly complicated.
+        # We save ourselves some pain by scanning from left-to-right, looking
+        # for the first argument that looks like an archive output
+        # (since the archiver only ever produces one output at a time).
+        for arg in self.canonicalized_args:
+            if arg.startswith("-"):
+                continue
+
+            maybe_archive_suffixes = Path(arg).suffixes
+            if len(maybe_archive_suffixes) > 0 and maybe_archive_suffixes[0] == ".a":
+                return [arg]
+
+        logger.debug("couldn't infer output for archiver")
+        return []
 
     def __repr__(self) -> str:
         return f"<AR {self.wrapped_tool()}>"
@@ -805,3 +905,107 @@ class STRIP(ResponseFileMixin, Tool):
 
     def __repr__(self) -> str:
         return f"<STRIP {self.wrapped_tool()}>"
+
+
+class INSTALL(Tool):
+    """
+    Represents the install tool.
+    """
+
+    def _install_parser(self) -> util.ArgumentParser:
+        parser = util.ArgumentParser(
+            prog=self.build_tool().value, add_help=False, allow_abbrev=False
+        )
+
+        def add_flag(short: str, dest: str, **kwargs) -> None:
+            parser.add_argument(short, action="store_true", dest=dest, **kwargs)
+
+        add_flag("-b", "overwrite")
+        add_flag("-C", "copy_no_mtime")
+        add_flag("-c", "copy", default=True)
+        add_flag("-d", "directory_mode")
+        add_flag("-M", "disable_mmap")
+        add_flag("-p", "preserve_mtime")
+        add_flag("-S", "safe_copy")
+        add_flag("-s", "exec_strip")
+        add_flag("-v", "verbose")
+        parser.add_argument("-f", dest="flags")
+        parser.add_argument("-g", dest="group")
+        parser.add_argument("-m", dest="mode")
+        parser.add_argument("-o", dest="owner")
+        parser.add_argument("trailing", nargs="+", default=[])
+
+        return parser
+
+    def __init__(self, args: List[str]) -> None:
+        super().__init__(args)
+        self._parser = self._install_parser()
+
+        try:
+            (self._matches, self._unknown) = self._parser.parse_known_args(args)
+        except ValueError as e:
+            logger.error(f"argparse error: {e}")
+            self._matches = self._parser.default_namespace()
+            self._unknown = args
+
+    @property
+    def directory_mode(self) -> bool:
+        """
+        Returns whether this `install` invocation is in "directory mode," i.e.
+        is creating directories instead of installing files.
+        """
+        return self._matches.directory_mode
+
+    @property
+    def inputs(self) -> List[str]:
+        """
+        Specializes `Tool.inputs` for the install tool.
+        """
+
+        # Directory mode: all positionals are new directories, i.e. outputs.
+        if self.directory_mode:
+            return []
+
+        # `install` requires at least two positionals outside of directory mode,
+        # so this probably indicates an unknown GNUism like `--help`.
+        if len(self._matches.trailing) < 2:
+            logger.debug(f"install called with no positionals (hint: unknown args: {self._unknown}")
+            return []
+
+        # Otherwise, we're either installing one file to another or we're
+        # installing multiple files to a directory. Test the last positional
+        # to determine which mode we're in.
+        maybe_dir = self._cwd / self._matches.trailing[-1]
+        if maybe_dir.is_dir():
+            return self._matches.trailing[0:-1]
+        else:
+            return [self._matches.trailing[0]]
+
+    @property
+    def outputs(self) -> List[str]:
+        """
+        Specializes `Tool.outputs` for the install tool.
+        """
+
+        # Directory mode: treat created directories as outputs.
+        if self.directory_mode:
+            return self._matches.trailing
+
+        # `install` requires at least two positionals outside of directory mode,
+        # so this probably indicates an unknown GNUism like `--help`.
+        if len(self._matches.trailing) < 2:
+            logger.debug(f"install called with no positionals (hint: unknown args: {self._unknown}")
+            return []
+
+        # If we're installing multiple files to a destination directory,
+        # then our outputs are every input, under the destination.
+        # Otherwise, our output is a single file.
+        maybe_dir = self._cwd / self._matches.trailing[-1]
+        if maybe_dir.is_dir():
+            inputs = [Path(input_) for input_ in self._matches.trailing[0:-1]]
+            return [str(maybe_dir / input_.name) for input_ in inputs]
+        else:
+            return [self._matches.trailing[-1]]
+
+    def __repr__(self) -> str:
+        return f"<INSTALL {self.wrapped_tool()}>"

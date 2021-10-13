@@ -2,17 +2,66 @@
 Helper utilities for blight.
 """
 
+import argparse
 import contextlib
+import enum
 import fcntl
 import os
 import shlex
 import sys
 from pathlib import Path
-from typing import Any, List, NoReturn, Optional, Sequence
+from typing import Any, List, NoReturn, Optional, Sequence, Tuple
 
 from blight.exceptions import BlightError
 
 SWIZZLE_SENTINEL = "@blight-swizzle@"
+
+
+@enum.unique
+class OptionValueStyle(enum.Enum):
+    """
+    A collection of common option formatting styles in build tools.
+
+    This enumeration is not exhaustive.
+    """
+
+    Space = enum.auto()
+    """
+    Options that look like `-O foo`.
+    """
+
+    Mash = enum.auto()
+    """
+    Options that look like `-Ofoo`.
+    """
+
+    MashOrSpace = enum.auto()
+    """
+    Options that look like `-Ofoo` or `-O foo`.
+    """
+
+    Equal = enum.auto()
+    """
+    Options that look like `-O=foo`.
+    """
+
+    EqualOrSpace = enum.auto()
+    """
+    Options that look like `-O=foo` or `-O foo`.
+    """
+
+    def permits_equal(self) -> bool:
+        return self in [OptionValueStyle.Equal, OptionValueStyle.EqualOrSpace]
+
+    def permits_mash(self) -> bool:
+        return self in [OptionValueStyle.Mash, OptionValueStyle.MashOrSpace]
+
+    def permits_space(self) -> bool:
+        return self in [
+            OptionValueStyle.Space,
+            OptionValueStyle.MashOrSpace,
+            OptionValueStyle.EqualOrSpace,
+        ]
 
 
 def die(message: str) -> NoReturn:
@@ -31,6 +80,52 @@ def assert_never(x: NoReturn) -> NoReturn:
     A hint to the typechecker that a branch can never occur.
     """
     assert False, f"unhandled type: {type(x).__name__}"  # pragma: no cover
+
+
+def collect_option_values(
+    args: Sequence[str],
+    option: str,
+    *,
+    style: OptionValueStyle = OptionValueStyle.MashOrSpace,
+) -> List[Tuple[int, str]]:
+    """
+    Given a list of arguments, collect the ones that look like options with values.
+
+    Supports multiple option "styles" via `OptionValueStyle`.
+
+    Args:
+        args (sequence): The arguments to search
+        option (str): The option prefix to search for
+        style: (OptionValueStyle): The option style to search for
+
+    Returns:
+        A list of tuples of (index, value) for matching options. The index in each
+        tuple is the argument index for the option itself.
+    """
+
+    # TODO(ww): There are a lot of error cases here. They should be thought out more.
+
+    values: List[Tuple[int, str]] = []
+    for (idx, arg) in enumerate(args):
+        if not arg.startswith(option):
+            continue
+
+        is_exact = arg == option
+        if is_exact and style.permits_space():
+            # -o foo is the only style that make sense here.
+            values.append((idx, args[idx + 1]))
+        elif not is_exact:
+            # We have -oSOMETHING, where SOMETHING might be:
+            # * A "mash", like `-Dfoo`
+            # * An equals, like `-D=foo`
+            if style.permits_mash():
+                # NOTE(ww): Assignment to work around black's confusing formatting.
+                suff = len(option)
+                values.append((idx, arg[suff:]))
+            elif style.permits_equal():
+                values.append((idx, arg.split("=", 1)[1]))
+
+    return values
 
 
 def rindex(items: Sequence[Any], needle: Any) -> Optional[int]:
@@ -104,7 +199,7 @@ def insert_items_at_idx(parent_items: Sequence[Any], idx: int, items: Sequence[A
 
 
 @contextlib.contextmanager
-def flock_append(filename):
+def flock_append(filename: os.PathLike):
     """
     Open the given file for appending, acquiring an exclusive lock on it in
     the process.
@@ -138,7 +233,7 @@ def load_actions():
     Loads any blight actions requested via the environment.
 
     Each action is loaded from the `BLIGHT_ACTIONS` environment variable,
-    separated by colons.
+    separated by colons. Duplicate actions are removed.
 
     For example, the following loads the `Record` and `Benchmark` actions:
 
@@ -168,11 +263,11 @@ def load_actions():
     import blight.actions
 
     action_names = os.getenv("BLIGHT_ACTIONS")
-    if action_names is None:
+    if not action_names:
         return []
 
     actions = []
-    for action_name in action_names.split(":"):
+    for action_name in set(action_names.split(":")):
         action_class = getattr(blight.actions, action_name, None)
         if action_class is None:
             raise BlightError(f"Unknown action: {action_name}")
@@ -186,3 +281,22 @@ def load_actions():
 
         actions.append(action_class(action_config))
     return actions
+
+
+class ArgumentParser(argparse.ArgumentParser):
+    """
+    A wrapper around `argparse.ArgumentParser` with non-exiting error behavior.
+
+    Parsing errors raise `ValueError` instead.
+    """
+
+    def error(self, message) -> NoReturn:
+        raise ValueError(message)
+
+    def default_namespace(self) -> argparse.Namespace:
+        """
+        Returns a default `argparse.Namespace`, suitable for contexts where
+        argument parsing fails completely.
+        """
+        defaults = {action.dest: self.get_default(action.dest) for action in self._actions}
+        return argparse.Namespace(**defaults)

@@ -33,6 +33,7 @@ setup(
             "blight-as = blight.cli:tool",
             "blight-ar = blight.cli:tool",
             "blight-strip = blight.cli:tool",
+            "blight-install = blight.cli:tool",
         ]
     },
     platforms="any",
@@ -58,7 +59,6 @@ setup(
     classifiers=[
         "Programming Language :: Python :: 3",
         "License :: OSI Approved :: Apache Software License",
-        "Development Status :: 4 - Beta",
         "Intended Audience :: Developers",
         "Topic :: Software Development :: Build Tools",
     ],

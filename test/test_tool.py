@@ -2,6 +2,7 @@ import json
 import os
 import shlex
 import shutil
+from pathlib import Path
 
 import pytest
 
@@ -53,6 +54,39 @@ def test_tool_run(monkeypatch, tmp_path):
     bench_record = json.loads(bench_output.read_text())
     assert bench_record["tool"] == cc.asdict()
     assert isinstance(bench_record["elapsed"], int)
+
+
+def test_tool_run_journaling(monkeypatch, tmp_path):
+    journal_output = tmp_path / "journal.jsonl"
+    monkeypatch.setenv("BLIGHT_ACTIONS", "Record:Benchmark:FindOutputs")
+    monkeypatch.setenv("BLIGHT_JOURNAL_PATH", str(journal_output))
+
+    cc = tool.CC(["-v"])
+    cc.run()
+
+    journal = json.loads(journal_output.read_text())
+    assert set(journal.keys()) == {"Record", "Benchmark", "FindOutputs"}
+    assert all(isinstance(v, dict) for v in journal.values())
+
+
+def test_tool_run_journaling_multiple(monkeypatch, tmp_path):
+    journal_output = tmp_path / "journal.jsonl"
+    monkeypatch.setenv("BLIGHT_ACTIONS", "Record:Benchmark:FindOutputs")
+    monkeypatch.setenv("BLIGHT_JOURNAL_PATH", str(journal_output))
+
+    for _ in range(0, 10):
+        cc = tool.CC(["-v"])
+        cc.run()
+
+    count = 0
+    with journal_output.open() as journal:
+        for line in journal:
+            count += 1
+            record = json.loads(line)
+            assert set(record.keys()) == {"Record", "Benchmark", "FindOutputs"}
+            assert all(isinstance(v, dict) for v in record.values())
+
+    assert count == 10
 
 
 def test_tool_args_property():
@@ -150,6 +184,36 @@ def test_tool_response_file_recursion_limit(tmp_path):
     cc = tool.CC([f"@{response_file}"])
     assert cc.args == [f"@{response_file}"]
     assert cc.canonicalized_args == ["-foo"] * tool.RESPONSE_FILE_RECURSION_LIMIT
+
+
+def test_tool_explicit_library_search_paths():
+    cc = tool.CC(
+        [
+            "-L.",
+            "--library-path",
+            "./bar",
+            "-L..",
+            "-L../foo",
+            "-L",
+            "foo",
+            "-L/lib",
+            "--library-path=../../baz",
+        ]
+    )
+    assert cc.explicit_library_search_paths == [
+        cc.cwd,
+        cc.cwd / "bar",
+        cc.cwd.parent,
+        cc.cwd.parent / "foo",
+        cc.cwd / "foo",
+        Path("/lib").resolve(),
+        cc.cwd.parent.parent / "baz",
+    ]
+
+
+def test_tool_library_names():
+    cc = tool.CC(["-lfoo", "-l", "bar", "-liberty"])
+    assert cc.library_names == ["libfoo", "libbar", "libiberty"]
 
 
 @pytest.mark.parametrize(
@@ -379,6 +443,23 @@ def test_ar():
     }
 
 
+@pytest.mark.parametrize(
+    ("flags", "outputs"),
+    [
+        ("cr foo.a a.o b.o", ["foo.a"]),
+        ("-X64_32 cr foo.a a.o b.o", ["foo.a"]),
+        ("r foo.a bar.o", ["foo.a"]),
+        ("ru foo.a bar.o", ["foo.a"]),
+        ("d foo.a bar.o", ["foo.a"]),
+        ("--help", []),
+    ],
+)
+def test_ar_output_forms(flags, outputs):
+    ar = tool.AR(shlex.split(flags))
+
+    assert ar.outputs == outputs
+
+
 def test_strip():
     strip = tool.STRIP([])
 
@@ -392,3 +473,63 @@ def test_strip():
         "cwd": str(strip.cwd),
         "env": dict(os.environ),
     }
+
+
+def test_install():
+    install = tool.INSTALL([])
+
+    assert install.wrapped_tool() == shutil.which("install")
+    assert repr(install) == f"<INSTALL {install.wrapped_tool()}>"
+    assert install.asdict() == {
+        "name": install.__class__.__name__,
+        "wrapped_tool": install.wrapped_tool(),
+        "args": [],
+        "canonicalized_args": [],
+        "cwd": str(install.cwd),
+        "env": dict(os.environ),
+    }
+
+
+@pytest.mark.parametrize(
+    ("flags", "directory_mode", "inputs", "outputs"),
+    [
+        # Reasonable inputs.
+        ("-d foo bar baz", True, [], ["foo", "bar", "baz"]),
+        ("-d -g wheel -o root -m 0755 foo bar baz", True, [], ["foo", "bar", "baz"]),
+        ("-c foo bar", False, ["foo"], ["bar"]),
+        ("-c foo bar baz /tmp", False, ["foo", "bar", "baz"], ["/tmp/foo", "/tmp/bar", "/tmp/baz"]),
+        (
+            "-cv foo bar baz /tmp",
+            False,
+            ["foo", "bar", "baz"],
+            ["/tmp/foo", "/tmp/bar", "/tmp/baz"],
+        ),
+        (
+            "-c -v foo bar baz /tmp",
+            False,
+            ["foo", "bar", "baz"],
+            ["/tmp/foo", "/tmp/bar", "/tmp/baz"],
+        ),
+        (
+            "-cbCM foo bar baz /tmp",
+            False,
+            ["foo", "bar", "baz"],
+            ["/tmp/foo", "/tmp/bar", "/tmp/baz"],
+        ),
+        (
+            "-g wheel -o root -m 0755 foo bar baz /tmp",
+            False,
+            ["foo", "bar", "baz"],
+            ["/tmp/foo", "/tmp/bar", "/tmp/baz"],
+        ),
+        # Broken inputs.
+        ("", False, [], []),
+        ("foo", False, [], []),
+    ],
+)
+def test_install_inputs_and_outputs(flags, directory_mode, inputs, outputs):
+    install = tool.INSTALL(shlex.split(flags))
+
+    assert install.directory_mode == directory_mode
+    assert install.inputs == inputs
+    assert install.outputs == outputs
