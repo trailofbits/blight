@@ -3,7 +3,7 @@ blight
 
 ![CI](https://github.com/trailofbits/blight/workflows/CI/badge.svg)
 [![PyPI version](https://badge.fury.io/py/blight.svg)](https://badge.fury.io/py/blight)
-
+[![Downloads](https://pepy.tech/badge/blight)](https://pepy.tech/project/blight)
 
 `blight` is a framework for wrapping and instrumenting build tools.
 
