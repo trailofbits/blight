@@ -140,11 +140,22 @@ def env(unset, guess_wrapped, swizzle_path, stubs, shims):
     "--guess-wrapped", help="Attempt to guess the appropriate programs to wrap", is_flag=True
 )
 @click.option("--swizzle-path", help="Wrap via PATH swizzling", is_flag=True)
-@click.option("--stub", "stubs", help="Stub a command out while swizzling", multiple=True)
-@click.option("--shim", "shims", help="Add a custom shim while swizzling", multiple=True)
+@click.option(
+    "--stub", "stubs", metavar="STUB", help="Stub a command out while swizzling", multiple=True
+)
+@click.option(
+    "--shim", "shims", metavar="SHIM", help="Add a custom shim while swizzling", multiple=True
+)
+@click.option("--action", "actions", metavar="ACTION", help="Enable an action", multiple=True)
+@click.option(
+    "--journal-path",
+    metavar="PATH",
+    help="The path to use for action journaling",
+    type=click.Path(dir_okay=False, exists=False, path_type=Path),
+)
 @click.argument("target")
 @click.argument("args", nargs=-1)
-def exec_(guess_wrapped, swizzle_path, stubs, shims, target, args):
+def exec_(guess_wrapped, swizzle_path, stubs, shims, actions, journal_path, target, args):
     env = dict(os.environ)
 
     if guess_wrapped:
@@ -155,7 +166,15 @@ def exec_(guess_wrapped, swizzle_path, stubs, shims, target, args):
     if swizzle_path:
         env["PATH"] = _swizzle_path(stubs, shims)
 
+    if len(actions) > 0:
+        env["BLIGHT_ACTIONS"] = ":".join(actions)
+
+    if journal_path is not None:
+        env["BLIGHT_JOURNAL"] = str(journal_path)
+
     env.update({tool.env: tool.blight_tool.value for tool in BuildTool})
+
+    logger.debug(f"built environment: {env}")
 
     os.execvpe(target, [target, *args], env)
 
