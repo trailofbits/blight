@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       # NOTE: Needed to create GitHub releases.
-      content: write
+      contents: write
     steps:
     - uses: actions/checkout@v2
 
