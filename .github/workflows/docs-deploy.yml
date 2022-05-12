@@ -1,6 +1,7 @@
 name: docs-deploy
 
 on:
+  workflow_dispatch:
   push:
     branches:
       - master
@@ -8,14 +9,15 @@ on:
 jobs:
   docs:
     runs-on: ubuntu-latest
+    permissions:
+      # NOTE: Needed to push to the repository.
+      contents: write
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
         with:
           submodules: true
 
-      - uses: actions/setup-python@v1
-        with:
-          python-version: "3.9"
+      - uses: actions/setup-python@v3
 
       - name: deps
         run: make dev
@@ -24,7 +26,7 @@ jobs:
         run: make doc
 
       - name: deploy
-        uses: peaceiris/actions-gh-pages@v3.6.1
+        uses: peaceiris/actions-gh-pages@v3.8.0
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./html/blight
