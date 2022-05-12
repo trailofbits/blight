@@ -131,6 +131,35 @@ def test_find_outputs_store(tmp_path):
     assert dummy_foo_o_store.read_bytes() == contents
 
 
+def test_find_outputs_store_no_hash(tmp_path):
+    output = tmp_path / "outputs.jsonl"
+    store = tmp_path / "store"
+    contents = b"not a real object file"
+    contents_digest = hashlib.sha256(contents).hexdigest()
+    dummy_foo_o = tmp_path / "foo.o"
+    # Store filename should not have its hash appended
+    dummy_foo_o_store = store / dummy_foo_o.name
+
+    find_outputs = FindOutputs({"output": output, "store": store, "append_hash": "false"})
+    cc = CC(["-c", "foo.c", "-o", str(dummy_foo_o)])
+    find_outputs.before_run(cc)
+    # Pretend to be the compiler: write some junk to dummy_foo_o
+    dummy_foo_o.write_bytes(contents)
+    find_outputs.after_run(cc)
+
+    outputs = json.loads(output.read_text())["outputs"]
+    assert outputs == [
+        {
+            "kind": OutputKind.Object.value,
+            "prenormalized_path": str(dummy_foo_o),
+            "path": str(dummy_foo_o),
+            "store_path": str(dummy_foo_o_store),
+            "content_hash": contents_digest,
+        }
+    ]
+    assert dummy_foo_o_store.read_bytes() == contents
+
+
 def test_find_outputs_store_output_does_not_exist(tmp_path):
     output = tmp_path / "outputs.jsonl"
     store = tmp_path / "store"
