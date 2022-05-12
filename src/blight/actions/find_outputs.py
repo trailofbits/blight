@@ -159,7 +159,10 @@ class FindOutputs(Action):
                 # in-place, so we give each output a `store_path` based on a hash
                 # of its content.
                 content_hash = hashlib.sha256(output.path.read_bytes()).hexdigest()
-                output_store_path = store_path / f"{output.path.name}-{content_hash}"
+                # Append hash to the filename unless `append_hash=false` is specified in the config
+                append_hash = self._config.get("append_hash") != "false"
+                filename = f"{output.path.name}-{content_hash}" if append_hash else output.path.name
+                output_store_path = store_path / filename
                 if not output_store_path.exists():
                     shutil.copy(output.path, output_store_path)
                 output.store_path = output_store_path
