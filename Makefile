@@ -1,5 +1,4 @@
-ALL_PY_SRCS := setup.py \
-	$(shell find src -name '*.py') \
+ALL_PY_SRCS := $(shell find src -name '*.py') \
 	$(shell find test -name '*.py')
 
 .PHONY: all
@@ -8,7 +7,7 @@ all:
 
 .PHONY: dev
 dev:
-	test -d env || python3 -m venv env
+	test -d env || python -m venv env
 	. env/bin/activate && \
 		pip install --upgrade pip && \
 		pip install -e .[dev]
@@ -36,7 +35,7 @@ doc:
 .PHONY: package
 package:
 	. env/bin/activate && \
-		python3 setup.py sdist && \
+		python -m build && \
 		twine upload --repository pypi dist/*
 
 .PHONY: edit

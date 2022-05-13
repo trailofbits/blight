@@ -1,4 +1,4 @@
-from blight.version import __version__  # noqa: F401
+__version__ = "0.0.47"
 
 # These don't need library documentation.
-__pdoc__ = {"cli": False, "version": False}
+__pdoc__ = {"cli": False}
