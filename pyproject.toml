@@ -1,3 +1,60 @@
+[build-system]
+requires = ["flit_core >=3.2,<4"]
+build-backend = "flit_core.buildapi"
+
+[project]
+name = "blight"
+dynamic = ["version"]
+description = "A catch-all compile-tool wrapper"
+readme = "README.md"
+license = { file = "LICENSE" }
+authors = [
+  { name = "William Woodruff", email = "william@trailofbits.com" }
+]
+classifiers = [
+  "Programming Language :: Python :: 3",
+  "License :: OSI Approved :: Apache Software License",
+  "Intended Audience :: Developers",
+  "Topic :: Software Development :: Build Tools",
+]
+dependencies = [
+  "click >= 7.1,< 9.0",
+  "typing_extensions",
+  "pydantic ~= 1.7",
+]
+requires-python = ">=3.7"
+
+[project.optional-dependencies]
+dev = [
+  "flake8",
+  "black",
+  "isort",
+  "pytest",
+  "pytest-cov",
+  "coverage[toml]",
+  "twine",
+  "pdoc3",
+  "mypy",
+]
+
+[project.scripts]
+"blight-env" = "blight.cli:env"
+"blight-exec" = "blight.cli:exec_"
+"blight-cc" = "blight.cli:tool"
+"blight-c++" = "blight.cli:tool"
+"blight-cpp" = "blight.cli:tool"
+"blight-ld" = "blight.cli:tool"
+"blight-as" = "blight.cli:tool"
+"blight-ar" = "blight.cli:tool"
+"blight-strip" = "blight.cli:tool"
+"blight-install" = "blight.cli:tool"
+
+[project.urls]
+Homepage = "https://pypi.org/project/blight"
+Documentation = "https://trailofbits.github.io/blight/"
+Issues = "https://github.com/trailofbits/blight/issues"
+Source = "https://github.com/trailofbits/blight"
+
 [tool.isort]
 line_length = 100
 multi_line_output = 3
