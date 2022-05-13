@@ -10,7 +10,7 @@ blight
 ## Usage
 
 ```bash
-$ pip3 install blight
+$ pip install blight
 $ eval $(blight-env --guess-wrapped)
 $ export BLIGHT_ACTIONS="Record"
 $ export BLIGHT_ACTION_RECORD="output=/tmp/demo.jsonl"

@@ -7,7 +7,7 @@ all:
 
 .PHONY: dev
 dev:
-	test -d env || python3 -m venv env
+	test -d env || python -m venv env
 	. env/bin/activate && \
 		pip install --upgrade pip && \
 		pip install -e .[dev]
