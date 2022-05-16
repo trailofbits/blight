@@ -7,14 +7,27 @@ blight
 
 `blight` is a framework for wrapping and instrumenting build tools.
 
+## Installation
+
+`blight` is available on PyPI and is installable via `pip`:
+
+```console
+$ python -m pip install blight
+```
+
+Python 3.7 or newer is required.
+
 ## Usage
 
-```bash
-$ pip install blight
-$ eval $(blight-env --guess-wrapped)
-$ export BLIGHT_ACTIONS="Record"
+```console
+$ # go to whatever source tree you'd like to build
+$ cd /your/project
+
+$ # configure blight and run your build system under it
 $ export BLIGHT_ACTION_RECORD="output=/tmp/demo.jsonl"
-$ cd /your/project && make
+$ blight-exec --action=Record --guess-wrapped make
+
+$ # check the configured output
 $ cat /tmp/demo.jsonl
 ```
 
