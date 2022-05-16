@@ -49,11 +49,7 @@ class Benchmark(Action):
         bench = BenchmarkRecord(tool=tool, elapsed=elapsed, run_skipped=run_skipped)
 
         if tool.is_journaling():
-            # HACK(ww): Pydantic's `dict()` doesn't respect `json_encoders`,
-            # so we have to manually convert the "tool" attribute.
-            bench_record = bench.dict()
-            bench_record["tool"] = bench_record["tool"].asdict()
-            self._result = bench_record
+            self._result = bench.dict()
         else:
             bench_file = Path(self._config["output"])
             with flock_append(bench_file) as io:
