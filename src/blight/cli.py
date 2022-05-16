@@ -19,7 +19,7 @@ logging.basicConfig(level=os.environ.get("BLIGHT_LOGLEVEL", "INFO").upper())
 logger = logging.getLogger(__name__)
 
 # Particularly common clang version suffixes.
-CLANG_VERSION_SUFFIXES = ["3.8", "7", "9", "10", "11", "12"]
+CLANG_VERSION_SUFFIXES = ["3.8", "7", "9", "10", "11", "12", "13", "14"]
 
 # A mapping of shim name -> tool name for default shim generation.
 # Each shim will ultimately call `blight-{tool}`, completing the interposition.
