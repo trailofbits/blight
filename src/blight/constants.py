@@ -4,6 +4,12 @@ Constant tables and maps for various blight APIs and actions.
 
 from blight.enums import OutputKind
 
+COMPILER_FLAG_INJECTION_VARIABLES = {"CL", "_CL_", "CCC_OVERRIDE_OPTIONS"}
+"""
+Environment variables that some compiler frontends use to do their own
+flag injection.
+"""
+
 OUTPUT_SUFFIX_KIND_MAP = {
     ".o": OutputKind.Object,
     ".obj": OutputKind.Object,

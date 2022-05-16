@@ -13,6 +13,7 @@ from pathlib import Path
 from typing import Any, Dict, List, Tuple
 
 from blight import util
+from blight.constants import COMPILER_FLAG_INJECTION_VARIABLES
 from blight.enums import BlightTool, BuildTool, CodeModel, CompilerStage, Lang, OptLevel, Std
 from blight.exceptions import BlightError, BuildError, SkipRun
 from blight.protocols import CanonicalizedArgsProtocol, IndexedUndefinesProtocol, LangProtocol
@@ -711,7 +712,14 @@ class CompilerTool(
     def __init__(self, args) -> None:
         if self.__class__ == CompilerTool:
             raise NotImplementedError(f"can't instantiate {self.__class__.__name__} directly")
+
         super().__init__(args)
+
+        # #40 and #41: These should be handled in an overridden implementation
+        # of `canonicalized_args`.
+        injection_vars = COMPILER_FLAG_INJECTION_VARIABLES & self._env.keys()
+        if injection_vars:
+            logger.warning(f"not tracking compiler's own instrumentation: {injection_vars}")
 
     @property
     def stage(self) -> CompilerStage:
