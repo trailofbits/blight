@@ -288,6 +288,17 @@ def load_actions():
     return actions
 
 
+def json_helper(value: Any):
+    """
+    A `default` helper for Python's `json`, intended to facilitate
+    serialization of blight classes that use the `asdict` pattern.
+    """
+
+    if hasattr(value, "asdict"):
+        return value.asdict()
+    raise TypeError
+
+
 class ArgumentParser(argparse.ArgumentParser):
     """
     A wrapper around `argparse.ArgumentParser` with non-exiting error behavior.

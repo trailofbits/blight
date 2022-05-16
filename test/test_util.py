@@ -1,3 +1,4 @@
+import pretend
 import pytest
 
 from blight import util
@@ -79,3 +80,16 @@ def test_load_actions_empty_config(monkeypatch):
     assert len(actions) == 1
     assert actions[0].__class__ == Record
     assert actions[0]._config == {}
+
+
+def test_json_helper_asdict():
+    has_asdict = pretend.stub(asdict=lambda: {"foo": "bar"})
+
+    assert util.json_helper(has_asdict) == {"foo": "bar"}
+
+
+def test_json_helper_typeerror():
+    junk = pretend.stub()
+
+    with pytest.raises(TypeError):
+        util.json_helper(junk)

@@ -17,6 +17,7 @@ from blight.constants import COMPILER_FLAG_INJECTION_VARIABLES
 from blight.enums import BlightTool, BuildTool, CodeModel, CompilerStage, Lang, OptLevel, Std
 from blight.exceptions import BlightError, BuildError, SkipRun
 from blight.protocols import CanonicalizedArgsProtocol, IndexedUndefinesProtocol, LangProtocol
+from blight.util import json_helper
 
 logger = logging.getLogger(__name__)
 
@@ -119,7 +120,7 @@ class Tool:
     def _commit_journal(self) -> None:
         if self.is_journaling():
             with util.flock_append(self._journal_path) as io:  # type: ignore
-                json.dump(self._action_results, io)
+                json.dump(self._action_results, io, default=json_helper)
                 # NOTE(ww): `json.dump` doesn't do this for us.
                 io.write("\n")
 
