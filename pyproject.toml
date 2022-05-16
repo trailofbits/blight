@@ -31,6 +31,7 @@ dev = [
   "isort",
   "pytest",
   "pytest-cov",
+  "pretend",
   "coverage[toml]",
   "twine",
   "pdoc3",

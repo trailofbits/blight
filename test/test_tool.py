@@ -4,6 +4,7 @@ import shlex
 import shutil
 from pathlib import Path
 
+import pretend
 import pytest
 
 from blight import tool, util
@@ -19,6 +20,18 @@ def test_tool_doesnt_instantiate():
 def test_compilertool_doesnt_instantiate():
     with pytest.raises(NotImplementedError):
         tool.CompilerTool([])
+
+
+def test_compilertool_env_warns_on_injection(monkeypatch):
+    monkeypatch.setenv("_CL_", "foo")
+
+    logger = pretend.stub(warning=pretend.call_recorder(lambda s: None))
+    monkeypatch.setattr(tool, "logger", logger)
+
+    _ = tool.CC([])
+    assert logger.warning.calls == [
+        pretend.call("not tracking compiler's own instrumentation: {'_CL_'}")
+    ]
 
 
 def test_tool_missing_wrapped_tool(monkeypatch):
