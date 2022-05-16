@@ -51,12 +51,11 @@ def test_find_outputs_journaling(monkeypatch, tmp_path):
     assert outputs[0] == {
         "kind": OutputKind.Object.value,
         "prenormalized_path": str(dummy_foo_o),
-        "path": str(dummy_foo_o),
-        "store_path": str(dummy_foo_o_store),
+        "path": dummy_foo_o,
+        "store_path": dummy_foo_o_store,
         "content_hash": contents_digest,
     }
     assert dummy_foo_o_store.read_bytes() == contents
-    assert json.dumps(outputs)
 
 
 def test_find_outputs_multiple(tmp_path):
