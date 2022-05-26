@@ -1,7 +1,5 @@
-import hashlib
 import json
 import os
-
 from pathlib import Path
 
 from blight.actions import FindInputs

@@ -3,14 +3,14 @@ The `FindInputs` action.
 """
 
 from pathlib import Path
-from typing import Optional, List
+from typing import List, Optional
 
 from pydantic import BaseModel
 
 from blight.action import Action
+from blight.constants import INPUT_SUFFIX_KIND_MAP
 from blight.enums import InputKind
 from blight.tool import Tool
-from blight.constants import INPUT_SUFFIX_KIND_MAP
 from blight.util import flock_append
 
 
