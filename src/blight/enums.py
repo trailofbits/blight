@@ -500,3 +500,19 @@ class OutputKind(str, enum.Enum):
     KernelModule: str = "kernel"
     Directory: str = "directory"
     Unknown: str = "unknown"
+
+
+@enum.unique
+class InputKind(str, enum.Enum):
+    """
+    A collection of common input kinds for build tools.
+
+    This enumeration is not exhaustive.
+    """
+
+    Source: str = "source"
+    Object: str = "object"
+    SharedLibrary: str = "shared"
+    StaticLibrary: str = "static"
+    Directory: str = "directory"
+    Unknown: str = "unknown"

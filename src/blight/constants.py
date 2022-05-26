@@ -2,7 +2,7 @@
 Constant tables and maps for various blight APIs and actions.
 """
 
-from blight.enums import OutputKind
+from blight.enums import InputKind, OutputKind
 
 COMPILER_FLAG_INJECTION_VARIABLES = {"CL", "_CL_", "CCC_OVERRIDE_OPTIONS"}
 """
@@ -40,6 +40,24 @@ OUTPUT_SUFFIX_PATTERN_MAP = {
 }
 """
 A mapping of common output suffix patterns to their (expected) file kinds.
+
+This mapping is not exhaustive.
+"""
+
+INPUT_SUFFIX_KIND_MAP = {
+    ".c": InputKind.Source,
+    ".cc": InputKind.Source,
+    ".cpp": InputKind.Source,
+    ".o": InputKind.Object,
+    ".obj": InputKind.Object,
+    ".so": InputKind.SharedLibrary,
+    ".dylib": InputKind.SharedLibrary,
+    ".dll": InputKind.SharedLibrary,
+    ".a": InputKind.StaticLibrary,
+    ".lib": InputKind.StaticLibrary,
+}
+"""
+A mapping of common input suffixes to their (expected) file kinds.
 
 This mapping is not exhaustive.
 """
