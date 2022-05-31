@@ -40,12 +40,12 @@ def test_find_outputs_journaling(monkeypatch, tmp_path):
     foo_input = (tmp_path / "foo.c").resolve()
     foo_input.touch()
 
-    find_outputs = FindInputs({})
+    find_inputs = FindInputs({})
     cc = CC(["-c", str(foo_input), "-o", "foo"])
-    find_outputs.before_run(cc)
-    find_outputs.after_run(cc)
+    find_inputs.before_run(cc)
+    find_inputs.after_run(cc)
 
-    inputs = find_outputs._result["inputs"]
+    inputs = find_inputs._result["inputs"]
     assert len(inputs) == 1
     assert inputs[0] == {
         "kind": InputKind.Source.value,

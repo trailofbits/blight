@@ -45,7 +45,7 @@ class Input(BaseModel):
     An optional stable path to the input, as preserved by the `FindInputs` action.
 
     `store_path` is only present if the `store=/some/dir/` setting is passed in the
-    `FindInputs` configuration **and** the tool actually produces the expected input.
+    `FindInputs` configuration **and** the tool actually consumes the expected input.
     """
 
     content_hash: Optional[str]
