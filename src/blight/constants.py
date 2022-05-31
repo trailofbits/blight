@@ -48,6 +48,7 @@ INPUT_SUFFIX_KIND_MAP = {
     ".c": InputKind.Source,
     ".cc": InputKind.Source,
     ".cpp": InputKind.Source,
+    ".cxx": InputKind.Source,
     ".o": InputKind.Object,
     ".obj": InputKind.Object,
     ".so": InputKind.SharedLibrary,
