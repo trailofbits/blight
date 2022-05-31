@@ -170,7 +170,7 @@ def exec_(guess_wrapped, swizzle_path, stubs, shims, actions, journal_path, targ
         env["BLIGHT_ACTIONS"] = ":".join(actions)
 
     if journal_path is not None:
-        env["BLIGHT_JOURNAL"] = str(journal_path)
+        env["BLIGHT_JOURNAL_PATH"] = str(journal_path)
 
     env.update({tool.env: tool.blight_tool.value for tool in BuildTool})
 
