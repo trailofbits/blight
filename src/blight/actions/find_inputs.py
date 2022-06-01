@@ -32,7 +32,7 @@ class Input(BaseModel):
     `path` for an absolute copy.
     """
 
-    path: Path
+    path: str
     """
     The path to the input, as created by the tool.
 
@@ -89,7 +89,7 @@ class FindInputs(Action):
 
             kind = INPUT_SUFFIX_KIND_MAP.get(input_path.suffix, InputKind.Unknown)
 
-            inputs.append(Input(prenormalized_path=input, kind=kind, path=input_path))
+            inputs.append(Input(prenormalized_path=input, kind=kind, path=str(input_path)))
 
         self._inputs = inputs
 
@@ -97,7 +97,8 @@ class FindInputs(Action):
         inputs = InputsRecord(tool=tool, inputs=self._inputs)
 
         if tool.is_journaling():
-            self._result = inputs.dict()
+            # NOTE(ms): The `tool` member is excluded to avoid journal bloat.
+            self._result = inputs.dict(exclude={"tool"})
         else:
             output_path = Path(self._config["output"])
             with flock_append(output_path) as io:

@@ -38,7 +38,7 @@ class Output(BaseModel):
     `path` for an absolute copy.
     """
 
-    path: Path
+    path: str
     """
     The path to the output, as created by the tool.
 
@@ -114,7 +114,7 @@ class FindOutputs(Action):
                         OutputKind.Unknown,
                     )
 
-            outputs.append(Output(prenormalized_path=output, kind=kind, path=output_path))
+            outputs.append(Output(prenormalized_path=output, kind=kind, path=str(output_path)))
 
         self._outputs = outputs
 
@@ -125,11 +125,12 @@ class FindOutputs(Action):
             store_path.mkdir(parents=True, exist_ok=True)
 
             for output in self._outputs:
+                output_path = Path(output.path)
                 # We don't copy output directories into the store, for now.
-                if output.path.is_dir():
+                if output_path.is_dir():
                     continue
 
-                if not output.path.exists():
+                if not output_path.exists():
                     logger.warning(f"tool={tool}'s output ({output.path}) does not exist")
                     continue
 
@@ -137,10 +138,10 @@ class FindOutputs(Action):
                 # steps in the build system could even modify a particular output
                 # in-place, so we give each output a `store_path` based on a hash
                 # of its content.
-                content_hash = hashlib.sha256(output.path.read_bytes()).hexdigest()
+                content_hash = hashlib.sha256(output_path.read_bytes()).hexdigest()
                 # Append hash to the filename unless `append_hash=false` is specified in the config
                 append_hash = self._config.get("append_hash") != "false"
-                filename = f"{output.path.name}-{content_hash}" if append_hash else output.path.name
+                filename = f"{output_path.name}-{content_hash}" if append_hash else output_path.name
                 output_store_path = store_path / filename
                 if not output_store_path.exists():
                     shutil.copy(output.path, output_store_path)
@@ -150,7 +151,8 @@ class FindOutputs(Action):
         outputs = OutputsRecord(tool=tool, outputs=self._outputs)
 
         if tool.is_journaling():
-            self._result = outputs.dict()
+            # NOTE(ms): The `tool` member is excluded to avoid journal bloat.
+            self._result = outputs.dict(exclude={"tool"})
         else:
             output_path = Path(self._config["output"])
             with flock_append(output_path) as io:
