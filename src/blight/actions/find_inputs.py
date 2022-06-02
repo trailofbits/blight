@@ -32,7 +32,7 @@ class Input(BaseModel):
     `path` for an absolute copy.
     """
 
-    path: str
+    path: Path
     """
     The path to the input, as created by the tool.
 
