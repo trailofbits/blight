@@ -89,7 +89,7 @@ class FindInputs(Action):
 
             kind = INPUT_SUFFIX_KIND_MAP.get(input_path.suffix, InputKind.Unknown)
 
-            inputs.append(Input(prenormalized_path=input, kind=kind, path=str(input_path)))
+            inputs.append(Input(prenormalized_path=input, kind=kind, path=input_path))
 
         self._inputs = inputs
 
