@@ -33,7 +33,7 @@ def test_find_inputs(tmp_path):
     ]
 
 
-def test_find_outputs_journaling(monkeypatch, tmp_path):
+def test_find_inputs_journaling(monkeypatch, tmp_path):
     journal_output = tmp_path / "journal.jsonl"
     monkeypatch.setenv("BLIGHT_JOURNAL_PATH", str(journal_output))
 
