@@ -3,10 +3,11 @@ import os
 from pathlib import Path
 
 from blight.actions import FindInputs
+from blight.actions.find_inputs import Input
 from blight.enums import InputKind
 from blight.tool import CC
-from blight.actions.find_inputs import Input
 from blight.util import json_helper
+
 
 def test_find_inputs(tmp_path):
     output = tmp_path / "outputs.jsonl"
@@ -56,14 +57,10 @@ def test_find_inputs_journaling(monkeypatch, tmp_path):
         "content_hash": None,
     }
 
+
 def test_serialize_input(tmp_path):
-    journal_output = tmp_path / "journal.jsonl"
     foo_input = (tmp_path / "foo.c").resolve()
     input = Input(prenormalized_path="foo.c", kind=InputKind.Source, path=foo_input)
-    with open(journal_output, "w") as io:  # type: ignore
-        json.dump(input.dict(), io, default=json_helper)
-        io.write("\n")
-    
-    kwargs = json.loads(journal_output.read_text())
-
+    input_json = json.dumps(input.dict(), default=json_helper)
+    kwargs = json.loads(input_json)
     assert Input(**kwargs).dict() == input.dict()
