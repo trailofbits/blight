@@ -150,7 +150,8 @@ class FindOutputs(Action):
         outputs = OutputsRecord(tool=tool, outputs=self._outputs)
 
         if tool.is_journaling():
-            self._result = outputs.dict()
+            # NOTE(ms): The `tool` member is excluded to avoid journal bloat.
+            self._result = outputs.dict(exclude={"tool"})
         else:
             output_path = Path(self._config["output"])
             with flock_append(output_path) as io:

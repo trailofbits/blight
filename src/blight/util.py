@@ -291,11 +291,15 @@ def load_actions():
 def json_helper(value: Any):
     """
     A `default` helper for Python's `json`, intended to facilitate
-    serialization of blight classes that use the `asdict` pattern.
+    serialization of blight classes.
     """
 
     if hasattr(value, "asdict"):
         return value.asdict()
+
+    if isinstance(value, Path):
+        return str(value)
+
     raise TypeError
 
 

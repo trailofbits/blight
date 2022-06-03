@@ -1,3 +1,6 @@
+import os
+from pathlib import Path
+
 import pretend
 import pytest
 
@@ -86,6 +89,14 @@ def test_json_helper_asdict():
     has_asdict = pretend.stub(asdict=lambda: {"foo": "bar"})
 
     assert util.json_helper(has_asdict) == {"foo": "bar"}
+
+
+def test_json_helper_path():
+    cwd = os.getcwd()
+    path = cwd / Path("foo")
+    result = util.json_helper(path)
+    assert isinstance(result, str)
+    assert result == f"{cwd}/foo"
 
 
 def test_json_helper_typeerror():

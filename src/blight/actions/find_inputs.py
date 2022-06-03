@@ -97,7 +97,8 @@ class FindInputs(Action):
         inputs = InputsRecord(tool=tool, inputs=self._inputs)
 
         if tool.is_journaling():
-            self._result = inputs.dict()
+            # NOTE(ms): The `tool` member is excluded to avoid journal bloat.
+            self._result = inputs.dict(exclude={"tool"})
         else:
             output_path = Path(self._config["output"])
             with flock_append(output_path) as io:
