@@ -20,7 +20,7 @@ jobs:
 
       - run: make lint
 
-      - uses: trailofbits/gh-action-pip-audit@v0.0.1
+      - uses: trailofbits/gh-action-pip-audit@v0.0.2
         with:
           inputs: .
 
