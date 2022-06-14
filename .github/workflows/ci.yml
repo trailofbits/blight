@@ -20,6 +20,10 @@ jobs:
 
       - run: make lint
 
+      - uses: trailofbits/gh-action-pip-audit@v0.0.1
+        with:
+          inputs: .
+
   test:
     strategy:
       matrix:
