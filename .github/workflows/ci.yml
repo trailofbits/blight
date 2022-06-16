@@ -20,9 +20,9 @@ jobs:
 
       - run: make lint
 
-      - uses: trailofbits/gh-action-pip-audit@v0.0.2
+      - uses: trailofbits/gh-action-pip-audit@v0.0.3
         with:
-          inputs: .
+          virtual-environment: env/
 
   test:
     strategy:
