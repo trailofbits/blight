@@ -2,14 +2,18 @@ import json
 import os
 import shlex
 import shutil
+import sys
 from pathlib import Path
 
 import pretend
 import pytest
 
 from blight import tool, util
-from blight.enums import CodeModel, CompilerStage, Lang, OptLevel, Std
+from blight.enums import CodeModel, CompilerFamily, CompilerStage, Lang, OptLevel, Std
 from blight.exceptions import BlightError, BuildError
+
+needs_clang = pytest.mark.skipif(not shutil.which("clang"), reason="test requires clang")
+needs_gcc = pytest.mark.skipif(not shutil.which("gcc"), reason="test requires gcc")
 
 
 def test_tool_doesnt_instantiate():
@@ -31,6 +35,69 @@ def test_compilertool_env_warns_on_injection(monkeypatch):
     _ = tool.CC([])
     assert logger.warning.calls == [
         pretend.call("not tracking compiler's own instrumentation: {'_CL_'}")
+    ]
+
+
+@needs_clang
+def test_compilertool_family_clang(monkeypatch):
+    monkeypatch.setenv("BLIGHT_WRAPPED_CC", "clang")
+    cc = tool.CC([])
+
+    # The host `clang` can be either one of these, depending on the OS or
+    # user's configuration.
+    assert cc.family in [CompilerFamily.AppleLlvm, CompilerFamily.MainlineLlvm]
+
+
+@needs_gcc
+@pytest.mark.skipif(sys.platform.startswith("darwin"), reason="clang is aliased as gcc on macOS")
+def test_compilertool_family_gcc(monkeypatch):
+    monkeypatch.setenv("BLIGHT_WRAPPED_CC", "gcc")
+    cc = tool.CC([])
+
+    assert cc.family == CompilerFamily.Gcc
+
+
+@pytest.mark.parametrize(
+    ("stderr", "family"),
+    [
+        (b"Apple clang version 13.1.6 (clang-1316.0.21.2.5)", CompilerFamily.AppleLlvm),
+        (b"clang version 10.0.0-4ubuntu1", CompilerFamily.MainlineLlvm),
+        (b"gcc version 9.4.0 (Ubuntu 9.4.0-1ubuntu1~20.04.1)", CompilerFamily.Gcc),
+        (b"mystery compiler version 1.0.0", CompilerFamily.Unknown),
+        (b"", CompilerFamily.Unknown),
+    ],
+)
+def test_compilertool_family(monkeypatch, stderr, family):
+    logger = pretend.stub(warning=pretend.call_recorder(lambda s: None))
+    monkeypatch.setattr(tool, "logger", logger)
+
+    result = pretend.stub(returncode=0, stderr=stderr)
+    subprocess = pretend.stub(run=pretend.call_recorder(lambda args, **kw: result))
+    monkeypatch.setattr(tool, "subprocess", subprocess)
+
+    cc = tool.CC([])
+    assert cc.family == family
+
+    if stderr == b"":
+        assert logger.warning.calls == [
+            pretend.call("compiler fingerprint failed: frontend didn't produce output for -###?")
+        ]
+    else:
+        assert logger.warning.calls == []
+
+
+def test_compilertool_family_fingerprint_fails(monkeypatch):
+    logger = pretend.stub(warning=pretend.call_recorder(lambda s: None))
+    monkeypatch.setattr(tool, "logger", logger)
+
+    result = pretend.stub(returncode=1)
+    subprocess = pretend.stub(run=pretend.call_recorder(lambda args, **kw: result))
+    monkeypatch.setattr(tool, "subprocess", subprocess)
+
+    cc = tool.CC([])
+    assert cc.family == CompilerFamily.Unknown
+    assert logger.warning.calls == [
+        pretend.call("compiler fingerprint failed: frontend didn't recognize -###?")
     ]
 
 
