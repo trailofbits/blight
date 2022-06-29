@@ -119,6 +119,33 @@ class BlightTool(str, enum.Enum):
 
 
 @enum.unique
+class CompilerFamily(enum.Enum):
+    """
+    Models known compiler families (e.g. GCC, Clang, etc.)
+    """
+
+    Gcc = enum.auto()
+    """
+    The GCC family of compilers.
+    """
+
+    MainlineLlvm = enum.auto()
+    """
+    The "mainline" LLVM family, corresponding to upstream releases of LLVM.
+    """
+
+    AppleLlvm = enum.auto()
+    """
+    The "Apple" LLVM family, corresponding to Apple's builds of LLVM.
+    """
+
+    Unknown = enum.auto()
+    """
+    An unknown compiler family.
+    """
+
+
+@enum.unique
 class CompilerStage(enum.Enum):
     """
     Models the known stages that a compiler tool can be in.

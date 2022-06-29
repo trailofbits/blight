@@ -14,7 +14,16 @@ from typing import Any, Dict, List, Tuple
 
 from blight import util
 from blight.constants import COMPILER_FLAG_INJECTION_VARIABLES
-from blight.enums import BlightTool, BuildTool, CodeModel, CompilerStage, Lang, OptLevel, Std
+from blight.enums import (
+    BlightTool,
+    BuildTool,
+    CodeModel,
+    CompilerFamily,
+    CompilerStage,
+    Lang,
+    OptLevel,
+    Std
+)
 from blight.exceptions import BlightError, BuildError, SkipRun
 from blight.protocols import CanonicalizedArgsProtocol, IndexedUndefinesProtocol, LangProtocol
 from blight.util import json_helper
@@ -721,6 +730,42 @@ class CompilerTool(
         injection_vars = COMPILER_FLAG_INJECTION_VARIABLES & self._env.keys()
         if injection_vars:
             logger.warning(f"not tracking compiler's own instrumentation: {injection_vars}")
+
+    @property
+    def family(self) -> CompilerFamily:
+        """
+        Returns:
+            A `blight.enums.CompilerFamily` value representing the "family" of compilers
+            that this tool belongs to.
+        """
+
+        # NOTE(ww): Both GCC and Clang support -### as an alias for -v, but
+        # with additional guarantees around argument quoting. Do other families support it?
+
+        result = subprocess.run([self.wrapped_tool(), "-###"], capture_output=True)
+
+        # If the command exited with an error, we're likely dealing with a frontend
+        # that doesn't understand `-###`.
+        if result.returncode != 0:
+            logger.warning("compiler fingerprint failed: frontend didn't recognize -###?")
+            return CompilerFamily.Unknown
+
+        # We expect the relevant parts of `-###` on stderr. The lack of any output
+        # again suggests that the frontend doesn't understand the flag.
+        if not result.stderr:
+            logger.warning("compiler fingerprint failed: frontend didn't produce output for -###?")
+            return CompilerFamily.Unknown
+
+        # Finally, we do some silly substring checks.
+        # TODO(ww): Better heuristics here?
+        if b"Apple clang version" in result.stderr:
+            return CompilerFamily.AppleLlvm
+        elif b"clang version" in result.stderr:
+            return CompilerFamily.MainlineLlvm
+        elif b"gcc version" in result.stderr:
+            return CompilerFamily.Gcc
+        else:
+            return CompilerFamily.Unknown
 
     @property
     def stage(self) -> CompilerStage:
