@@ -2,6 +2,7 @@ import json
 import os
 import shlex
 import shutil
+import sys
 from pathlib import Path
 
 import pretend
@@ -10,6 +11,9 @@ import pytest
 from blight import tool, util
 from blight.enums import CodeModel, CompilerFamily, CompilerStage, Lang, OptLevel, Std
 from blight.exceptions import BlightError, BuildError
+
+needs_clang = pytest.mark.skipif(not shutil.which("clang"), reason="test requires clang")
+needs_gcc = pytest.mark.skipif(not shutil.which("gcc"), reason="test requires gcc")
 
 
 def test_tool_doesnt_instantiate():
@@ -32,6 +36,25 @@ def test_compilertool_env_warns_on_injection(monkeypatch):
     assert logger.warning.calls == [
         pretend.call("not tracking compiler's own instrumentation: {'_CL_'}")
     ]
+
+
+@needs_clang
+def test_compilertool_family_clang(monkeypatch):
+    monkeypatch.setenv("BLIGHT_WRAPPED_CC", "clang")
+    cc = tool.CC([])
+
+    # The host `clang` can be either one of these, depending on the OS or
+    # user's configuration.
+    assert cc.family in [CompilerFamily.AppleLlvm, CompilerFamily.MainlineLlvm]
+
+
+@needs_gcc
+@pytest.mark.skipif(sys.platform.startswith("darwin"), reason="clang is aliased as gcc on macOS")
+def test_compilertool_family_gcc(monkeypatch):
+    monkeypatch.setenv("BLIGHT_WRAPPED_CC", "gcc")
+    cc = tool.CC([])
+
+    assert cc.family == CompilerFamily.Gcc
 
 
 @pytest.mark.parametrize(
