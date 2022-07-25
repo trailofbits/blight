@@ -748,7 +748,11 @@ class CompilerTool(
         # that doesn't understand `-###`.
         if result.returncode != 0:
             logger.warning("compiler fingerprint failed: frontend didn't recognize -###?")
-            return CompilerFamily.Unknown
+            # ...but even still, we can infer a bit from the error message.
+            if b"tcc: error" in result.stderr:
+                return CompilerFamily.Tcc
+            else:
+                return CompilerFamily.Unknown
 
         # We expect the relevant parts of `-###` on stderr. The lack of any output
         # again suggests that the frontend doesn't understand the flag.

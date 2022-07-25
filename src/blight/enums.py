@@ -139,6 +139,11 @@ class CompilerFamily(enum.Enum):
     The "Apple" LLVM family, corresponding to Apple's builds of LLVM.
     """
 
+    Tcc = enum.auto()
+    """
+    The Tiny C Compiler.
+    """
+
     Unknown = enum.auto()
     """
     An unknown compiler family.

@@ -86,11 +86,26 @@ def test_compilertool_family(monkeypatch, stderr, family):
         assert logger.warning.calls == []
 
 
+def test_compilertool_family_tcc(monkeypatch):
+    logger = pretend.stub(warning=pretend.call_recorder(lambda s: None))
+    monkeypatch.setattr(tool, "logger", logger)
+
+    result = pretend.stub(returncode=1, stderr=b"tcc: error: invalid option -- '-###'")
+    subprocess = pretend.stub(run=pretend.call_recorder(lambda args, **kw: result))
+    monkeypatch.setattr(tool, "subprocess", subprocess)
+
+    cc = tool.CC([])
+    assert cc.family == CompilerFamily.Tcc
+    assert logger.warning.calls == [
+        pretend.call("compiler fingerprint failed: frontend didn't recognize -###?")
+    ]
+
+
 def test_compilertool_family_fingerprint_fails(monkeypatch):
     logger = pretend.stub(warning=pretend.call_recorder(lambda s: None))
     monkeypatch.setattr(tool, "logger", logger)
 
-    result = pretend.stub(returncode=1)
+    result = pretend.stub(returncode=1, stderr=b"")
     subprocess = pretend.stub(run=pretend.call_recorder(lambda args, **kw: result))
     monkeypatch.setattr(tool, "subprocess", subprocess)
 
