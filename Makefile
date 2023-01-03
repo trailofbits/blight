@@ -9,7 +9,7 @@ all:
 dev:
 	test -d env || python -m venv env
 	. env/bin/activate && \
-		pip install --upgrade pip && \
+		pip install --upgrade pip setuptools && \
 		pip install -e .[dev]
 
 .PHONY: lint
