@@ -25,19 +25,25 @@ lint: $(VENV_EXISTS)
 		flake8 $(ALL_PY_SRCS) && \
 		mypy src
 
+.PHONY: format
+format: $(VENV_EXISTS)
+	. $(VENV_BIN)/activate && \
+		black $(ALL_PY_SRCS) && \
+		isort $(ALL_PY_SRCS)
+
 .PHONY: test
-test:
+test: $(VENV_EXISTS)
 	. $(VENV)/bin/activate && \
 		pytest --cov=blight test/ && \
 		python -m coverage report -m --fail-under 100
 
 .PHONY: doc
-doc:
+doc: $(VENV_EXISTS)
 	. $(VENV)/bin/activate && \
 		PYTHONWARNINGS='error::UserWarning' pdoc --force --html blight
 
 .PHONY: package
-package:
+package: $(VENV_EXISTS)
 	. $(VENV)/bin/activate && \
 		python -m build && \
 		twine upload --repository pypi dist/*
