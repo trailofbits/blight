@@ -1,6 +1,10 @@
 VENV := env
 VENV_EXISTS := $(VENV)/pyvenv.cfg
 
+# Optionally overridden by the user/CI, to limit the installation to a specific
+# subset of development dependencies.
+BLIGHT_EXTRA := dev
+
 ALL_PY_SRCS := $(shell find src -name '*.py') \
 	$(shell find test -name '*.py')
 
@@ -12,7 +16,7 @@ $(VENV)/pyvenv.cfg: pyproject.toml
 	python -m venv env
 	. $(VENV)/bin/activate && \
 		pip install --upgrade pip setuptools && \
-		pip install -e .[dev]
+		pip install -e .[$(BLIGHT_EXTRA)]
 
 .PHONY: dev
 dev: $(VENV)/pyvenv.cfg
