@@ -1,3 +1,6 @@
+VENV := env
+VENV_EXISTS := $(VENV)/pyvenv.cfg
+
 ALL_PY_SRCS := $(shell find src -name '*.py') \
 	$(shell find test -name '*.py')
 
@@ -5,36 +8,37 @@ ALL_PY_SRCS := $(shell find src -name '*.py') \
 all:
 	@echo "Run my targets individually!"
 
-.PHONY: dev
-dev:
-	test -d env || python -m venv env
-	. env/bin/activate && \
+$(VENV)/pyvenv.cfg: pyproject.toml
+	python -m venv env
+	. $(VENV)/bin/activate && \
 		pip install --upgrade pip setuptools && \
 		pip install -e .[dev]
 
+.PHONY: dev
+dev: $(VENV)/pyvenv.cfg
+
 .PHONY: lint
-lint:
-	. env/bin/activate && \
-		black $(ALL_PY_SRCS) && \
-		isort $(ALL_PY_SRCS) && \
+lint: $(VENV_EXISTS)
+	. $(VENV)/bin/activate && \
+		black --check $(ALL_PY_SRCS) && \
+		isort --check $(ALL_PY_SRCS) && \
 		flake8 $(ALL_PY_SRCS) && \
-		mypy src && \
-		git diff --exit-code
+		mypy src
 
 .PHONY: test
 test:
-	. env/bin/activate && \
+	. $(VENV)/bin/activate && \
 		pytest --cov=blight test/ && \
 		python -m coverage report -m --fail-under 100
 
 .PHONY: doc
 doc:
-	. env/bin/activate && \
+	. $(VENV)/bin/activate && \
 		PYTHONWARNINGS='error::UserWarning' pdoc --force --html blight
 
 .PHONY: package
 package:
-	. env/bin/activate && \
+	. $(VENV)/bin/activate && \
 		python -m build && \
 		twine upload --repository pypi dist/*
 

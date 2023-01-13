@@ -22,7 +22,7 @@ from blight.enums import (
     CompilerStage,
     Lang,
     OptLevel,
-    Std
+    Std,
 )
 from blight.exceptions import BlightError, BuildError, SkipRun
 from blight.protocols import CanonicalizedArgsProtocol, IndexedUndefinesProtocol, LangProtocol
