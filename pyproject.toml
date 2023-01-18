@@ -64,5 +64,5 @@ omit = ["src/blight/cli.py"]
 
 [tool.ruff]
 line-length = 100
-select = ["E", "F", "W", "UP", "I", "N", "YTT"]
+select = ["E", "F", "W", "UP", "I", "N", "YTT", "BLE", "C4"]
 target-version = "py37"
