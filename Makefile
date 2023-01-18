@@ -38,8 +38,8 @@ lint: $(VENV_EXISTS)
 .PHONY: format
 format: $(VENV_EXISTS)
 	. $(VENV_BIN)/activate && \
-		black $(ALL_PY_SRCS) && \
-		ruff --fix $(ALL_PY_SRCS)
+		ruff --fix $(ALL_PY_SRCS) && \
+		black $(ALL_PY_SRCS)
 
 .PHONY: test
 test: $(VENV_EXISTS)
