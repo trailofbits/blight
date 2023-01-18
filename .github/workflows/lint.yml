@@ -9,7 +9,5 @@ on:
 jobs:
   lint:
     uses: trailofbits/.github/.github/workflows/lint.yml@ww/reusable-demo
-    env:
-      RUFF_FORMAT: github
     with:
       python-version: "3.7"

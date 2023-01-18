@@ -32,7 +32,7 @@ dev: $(VENV)/pyvenv.cfg
 lint: $(VENV_EXISTS)
 	. $(VENV_BIN)/activate && \
 		black --check $(ALL_PY_SRCS) && \
-		ruff $(ALL_PY_SRCS) && \
+		RUFF_FORMAT=github ruff $(ALL_PY_SRCS) && \
 		mypy src
 
 .PHONY: format
