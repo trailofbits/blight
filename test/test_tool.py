@@ -7,7 +7,6 @@ from pathlib import Path
 
 import pretend
 import pytest
-
 from blight import tool, util
 from blight.enums import CodeModel, CompilerFamily, CompilerStage, Lang, OptLevel, Std
 from blight.exceptions import BlightError, BuildError
