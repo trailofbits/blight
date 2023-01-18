@@ -35,8 +35,8 @@ lint: $(VENV_EXISTS)
 		ruff $(ALL_PY_SRCS) && \
 		mypy src
 
-.PHONY: format
-format: $(VENV_EXISTS)
+.PHONY: reformat
+reformat: $(VENV_EXISTS)
 	. $(VENV_BIN)/activate && \
 		ruff --fix $(ALL_PY_SRCS) && \
 		black $(ALL_PY_SRCS)
