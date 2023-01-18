@@ -82,7 +82,7 @@ class CompilerAction(CCAction, CXXAction):
     """
 
     def _should_run_on(self, tool: Tool) -> bool:
-        return isinstance(tool, blight.tool.CC) or isinstance(tool, blight.tool.CXX)
+        return isinstance(tool, (blight.tool.CC, blight.tool.CXX))
 
 
 class CPPAction(Action):

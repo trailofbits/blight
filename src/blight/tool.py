@@ -580,10 +580,7 @@ class DefinesMixin:
                 continue
 
             # Both `-Uname` and `-U name` work in GCC and Clang.
-            if arg == "-U":
-                undefine = self.canonicalized_args[idx + 1]
-            else:
-                undefine = arg[2:]
+            undefine = self.canonicalized_args[idx + 1] if arg == "-U" else arg[2:]
 
             indexed_undefines[undefine] = idx
 
@@ -604,10 +601,7 @@ class DefinesMixin:
                 continue
 
             # Both `-Dname[=value]` and `-D name[=value]` work in GCC and Clang.
-            if arg == "-D":
-                define = self.canonicalized_args[idx + 1]
-            else:
-                define = arg[2:]
+            define = self.canonicalized_args[idx + 1] if arg == "-D" else arg[2:]
 
             components = define.split("=", 1)
             name = components[0]
