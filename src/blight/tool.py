@@ -10,7 +10,7 @@ import re
 import shlex
 import subprocess
 from pathlib import Path
-from typing import Any, Dict, List, Tuple
+from typing import Any, Dict, List, Optional, Tuple
 
 from blight import util
 from blight.constants import COMPILER_FLAG_INJECTION_VARIABLES
@@ -100,7 +100,7 @@ class Tool:
         self._cwd = Path(os.getcwd()).resolve()
         self._actions = util.load_actions()
         self._skip_run = False
-        self._action_results: Dict[str, Dict[str, Any]] = {}
+        self._action_results: Dict[str, Optional[Dict[str, Any]]] = {}
         self._journal_path = os.getenv("BLIGHT_JOURNAL_PATH")
 
     def _fixup_env(self) -> Dict[str, str]:
@@ -555,7 +555,7 @@ class ResponseFileMixin:
             )
 
         self._canonicalized_args = expanded_args
-        return self._canonicalized_args
+        return self._canonicalized_args  # type: ignore[no-any-return]
 
 
 class DefinesMixin:
@@ -630,7 +630,7 @@ class CodeModelMixin:
     """
 
     @property
-    def code_model(self: CanonicalizedArgsProtocol):
+    def code_model(self: CanonicalizedArgsProtocol) -> CodeModel:
         """
         Returns:
             A `blight.enums.CodeModel` value representing the tool's code model
@@ -713,7 +713,7 @@ class CompilerTool(
     Like `Tool`, `CompilerTool` cannot be instantiated directly.
     """
 
-    def __init__(self, args) -> None:
+    def __init__(self, args: List[str]) -> None:
         if self.__class__ == CompilerTool:
             raise NotImplementedError(f"can't instantiate {self.__class__.__name__} directly")
 
@@ -969,7 +969,7 @@ class INSTALL(Tool):
             prog=self.build_tool().value, add_help=False, allow_abbrev=False
         )
 
-        def add_flag(short: str, dest: str, **kwargs) -> None:
+        def add_flag(short: str, dest: str, **kwargs: Any) -> None:
             parser.add_argument(short, action="store_true", dest=dest, **kwargs)
 
         add_flag("-b", "overwrite")
@@ -1006,7 +1006,7 @@ class INSTALL(Tool):
         Returns whether this `install` invocation is in "directory mode," i.e.
         is creating directories instead of installing files.
         """
-        return self._matches.directory_mode
+        return self._matches.directory_mode  # type: ignore[no-any-return]
 
     @property
     def inputs(self) -> List[str]:
@@ -1029,7 +1029,7 @@ class INSTALL(Tool):
         # to determine which mode we're in.
         maybe_dir = self._cwd / self._matches.trailing[-1]
         if maybe_dir.is_dir():
-            return self._matches.trailing[0:-1]
+            return self._matches.trailing[0:-1]  # type: ignore[no-any-return]
         else:
             return [self._matches.trailing[0]]
 
@@ -1041,7 +1041,7 @@ class INSTALL(Tool):
 
         # Directory mode: treat created directories as outputs.
         if self.directory_mode:
-            return self._matches.trailing
+            return self._matches.trailing  # type: ignore[no-any-return]
 
         # `install` requires at least two positionals outside of directory mode,
         # so this probably indicates an unknown GNUism like `--help`.

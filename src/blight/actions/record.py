@@ -11,7 +11,7 @@ from blight.util import flock_append
 
 
 class Record(Action):
-    def after_run(self, tool: Tool, *, run_skipped: bool = False):
+    def after_run(self, tool: Tool, *, run_skipped: bool = False) -> None:
         # TODO(ww): Restructure this dictionary; it should be more like:
         # { run: {...}, tool: {...}}
         tool_record = tool.asdict()

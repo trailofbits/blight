@@ -2,6 +2,8 @@
 Helper utilities for blight.
 """
 
+from __future__ import annotations
+
 import argparse
 import contextlib
 import enum
@@ -10,8 +12,10 @@ import os
 import shlex
 import sys
 from pathlib import Path
-from typing import Any, List, NoReturn, Optional, Sequence, Tuple
+from typing import IO, TYPE_CHECKING, Any, Iterator, NoReturn, Sequence
 
+if TYPE_CHECKING:
+    from blight.action import Action
 from blight.exceptions import BlightError
 
 SWIZZLE_SENTINEL = "@blight-swizzle@"
@@ -87,7 +91,7 @@ def collect_option_values(
     option: str,
     *,
     style: OptionValueStyle = OptionValueStyle.MashOrSpace,
-) -> List[Tuple[int, str]]:
+) -> list[tuple[int, str]]:
     """
     Given a list of arguments, collect the ones that look like options with values.
 
@@ -105,7 +109,7 @@ def collect_option_values(
 
     # TODO(ww): There are a lot of error cases here. They should be thought out more.
 
-    values: List[Tuple[int, str]] = []
+    values: list[tuple[int, str]] = []
     for (idx, arg) in enumerate(args):
         if not arg.startswith(option):
             continue
@@ -128,7 +132,7 @@ def collect_option_values(
     return values
 
 
-def rindex(items: Sequence[Any], needle: Any) -> Optional[int]:
+def rindex(items: Sequence[Any], needle: Any) -> int | None:
     """
     Args:
         items (sequence): The items to search
@@ -143,7 +147,7 @@ def rindex(items: Sequence[Any], needle: Any) -> Optional[int]:
     return None
 
 
-def rindex_prefix(items: Sequence[str], prefix: str) -> Optional[int]:
+def rindex_prefix(items: Sequence[str], prefix: str) -> int | None:
     """
     Args:
         items (sequence of str): The items to search
@@ -158,7 +162,7 @@ def rindex_prefix(items: Sequence[str], prefix: str) -> Optional[int]:
     return None
 
 
-def ritem_prefix(items: Sequence[str], prefix: str) -> Optional[str]:
+def ritem_prefix(items: Sequence[str], prefix: str) -> str | None:
     """
     Args:
         items (sequence of str): The items to search
@@ -173,7 +177,7 @@ def ritem_prefix(items: Sequence[str], prefix: str) -> Optional[str]:
     return None
 
 
-def insert_items_at_idx(parent_items: Sequence[Any], idx: int, items: Sequence[Any]) -> List[Any]:
+def insert_items_at_idx(parent_items: Sequence[Any], idx: int, items: Sequence[Any]) -> list[Any]:
     """
     Inserts `items` at `idx` in `parent_items`.
 
@@ -186,7 +190,9 @@ def insert_items_at_idx(parent_items: Sequence[Any], idx: int, items: Sequence[A
         A new list containing both the parent and inserted items
     """
 
-    def _insert_items_at_idx(parent_items, idx, items):
+    def _insert_items_at_idx(
+        parent_items: Sequence[Any], idx: int, items: Sequence[Any]
+    ) -> Iterator[Any]:
         for pidx, item in enumerate(parent_items):
             if pidx != idx:
                 print(item)
@@ -199,7 +205,7 @@ def insert_items_at_idx(parent_items: Sequence[Any], idx: int, items: Sequence[A
 
 
 @contextlib.contextmanager
-def flock_append(filename: os.PathLike):
+def flock_append(filename: os.PathLike) -> Iterator[IO]:
     """
     Open the given file for appending, acquiring an exclusive lock on it in
     the process.
@@ -228,7 +234,7 @@ def unswizzled_path() -> str:
     return os.pathsep.join(paths)
 
 
-def load_actions():
+def load_actions() -> list[Action]:
     """
     Loads any blight actions requested via the environment.
 
@@ -277,9 +283,9 @@ def load_actions():
         if action_class is None:
             raise BlightError(f"Unknown action: {action_name}")
 
-        action_config = os.getenv(f"BLIGHT_ACTION_{action_name.upper()}", None)
-        if action_config is not None:
-            action_config = shlex.split(action_config)
+        action_config_raw = os.getenv(f"BLIGHT_ACTION_{action_name.upper()}", None)
+        if action_config_raw is not None:
+            action_config = shlex.split(action_config_raw)
             action_config = dict(c.split("=", 1) for c in action_config)
         else:
             action_config = {}
@@ -288,7 +294,7 @@ def load_actions():
     return actions
 
 
-def json_helper(value: Any):
+def json_helper(value: Any) -> Any:
     """
     A `default` helper for Python's `json`, intended to facilitate
     serialization of blight classes.
@@ -310,7 +316,7 @@ class ArgumentParser(argparse.ArgumentParser):
     Parsing errors raise `ValueError` instead.
     """
 
-    def error(self, message) -> NoReturn:
+    def error(self, message: str) -> NoReturn:
         raise ValueError(message)
 
     def default_namespace(self) -> argparse.Namespace:
