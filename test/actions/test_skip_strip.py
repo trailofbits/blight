@@ -1,5 +1,4 @@
 import pytest
-
 from blight.actions import SkipStrip
 from blight.exceptions import SkipRun
 from blight.tool import CC, STRIP

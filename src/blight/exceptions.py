@@ -19,7 +19,7 @@ class BuildError(BlightError):
     pass
 
 
-class SkipRun(BlightError):
+class SkipRun(BlightError):  # noqa: N818
     """
     A special error that `before_run` actions can raise to tell the underlying
     tool not to actually run.

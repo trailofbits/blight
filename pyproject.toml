@@ -26,9 +26,7 @@ requires-python = ">=3.7"
 
 [project.optional-dependencies]
 dev = [
-  "flake8",
   "black",
-  "isort",
   "pytest",
   "pytest-cov",
   "pretend",
@@ -36,6 +34,7 @@ dev = [
   "twine",
   "pdoc3",
   "mypy",
+  "ruff",
 ]
 
 [project.scripts]
@@ -56,14 +55,14 @@ Documentation = "https://trailofbits.github.io/blight/"
 Issues = "https://github.com/trailofbits/blight/issues"
 Source = "https://github.com/trailofbits/blight"
 
-[tool.isort]
-line_length = 100
-multi_line_output = 3
-known_first_party = "blight"
-
 [tool.black]
 line-length = 100
 
 [tool.coverage.run]
 # don't attempt code coverage for the CLI entrypoints
 omit = ["src/blight/cli.py"]
+
+[tool.ruff]
+line-length = 100
+select = ["E", "F", "W", "UP", "I", "N", "YTT", "BLE", "C4", "SIM"]
+target-version = "py37"
