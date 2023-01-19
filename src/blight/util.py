@@ -15,7 +15,7 @@ from pathlib import Path
 from typing import IO, TYPE_CHECKING, Any, Iterator, NoReturn, Sequence
 
 if TYPE_CHECKING:
-    from blight.action import Action
+    from blight.action import Action  # pragma: no cover
 from blight.exceptions import BlightError
 
 SWIZZLE_SENTINEL = "@blight-swizzle@"
