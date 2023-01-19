@@ -119,7 +119,9 @@ def _swizzle_path(stubs: List[str], shim_specs: List[str]) -> str:
 @click.option("--stub", "stubs", help="Stub a command out while swizzling", multiple=True)
 @click.option("--shim", "shims", help="Add a custom shim while swizzling", multiple=True)
 @click.option("--unset", help="Unset the tool variables instead of setting them", is_flag=True)
-def env(unset, guess_wrapped, swizzle_path, stubs, shims):
+def env(
+    unset: bool, guess_wrapped: bool, swizzle_path: bool, stubs: List[str], shims: List[str]
+) -> None:
     if guess_wrapped:
         for (variable, value) in _guess_wrapped():
             if variable not in os.environ:
@@ -155,7 +157,16 @@ def env(unset, guess_wrapped, swizzle_path, stubs, shims):
 )
 @click.argument("target")
 @click.argument("args", nargs=-1)
-def exec_(guess_wrapped, swizzle_path, stubs, shims, actions, journal_path, target, args):
+def exec_(
+    guess_wrapped: bool,
+    swizzle_path: bool,
+    stubs: List[str],
+    shims: List[str],
+    actions: List[str],
+    journal_path: click.Path,
+    target: str,
+    args: List[str],
+) -> None:
     env = dict(os.environ)
 
     if guess_wrapped:
@@ -179,7 +190,7 @@ def exec_(guess_wrapped, swizzle_path, stubs, shims, actions, journal_path, targ
     os.execvpe(target, [target, *args], env)
 
 
-def tool():
+def tool() -> None:
     # NOTE(ww): Specifically *not* a click command!
     wrapped_basename = os.path.basename(sys.argv[0])
 

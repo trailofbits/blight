@@ -95,7 +95,7 @@ class FindOutputs(Action):
 
             # Special cases: a.out is produced by both the linker and compiler tools by default,
             # and some tools (like `install`) have modes that produce directories as outputs.
-            if output_path.name == "a.out" and tool.__class__ in [CC, CXX, LD]:
+            if output_path.name == "a.out" and isinstance(tool, (CC, CXX, LD)):
                 kind = OutputKind.Executable
             elif tool.__class__ == INSTALL and tool.directory_mode:  # type: ignore
                 kind = OutputKind.Directory

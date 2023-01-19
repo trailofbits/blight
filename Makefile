@@ -1,3 +1,5 @@
+PY_MODULE := blight
+
 # Optionally overriden by the user, if they're using a virtual environment manager.
 VENV ?= env
 VENV_EXISTS := $(VENV)/pyvenv.cfg
@@ -35,8 +37,8 @@ lint: $(VENV_EXISTS)
 		ruff $(ALL_PY_SRCS) && \
 		mypy src
 
-.PHONY: reformat
-reformat: $(VENV_EXISTS)
+.PHONY: format
+format: $(VENV_EXISTS)
 	. $(VENV_BIN)/activate && \
 		ruff --fix $(ALL_PY_SRCS) && \
 		black $(ALL_PY_SRCS)
@@ -44,13 +46,13 @@ reformat: $(VENV_EXISTS)
 .PHONY: test
 test: $(VENV_EXISTS)
 	. $(VENV_BIN)/activate && \
-		pytest --cov=blight test/ && \
+		pytest --cov=$(PY_MODULE) test/ && \
 		python -m coverage report -m --fail-under 100
 
 .PHONY: doc
 doc: $(VENV_EXISTS)
 	. $(VENV_BIN)/activate && \
-		PYTHONWARNINGS='error::UserWarning' pdoc --force --html blight
+		pdoc -o html $(PY_MODULE)
 
 .PHONY: package
 package: $(VENV_EXISTS)

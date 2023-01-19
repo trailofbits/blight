@@ -1,4 +1,5 @@
-__version__ = "0.0.47"
+"""
+`blight`'s public APIs.
+"""
 
-# These don't need library documentation.
-__pdoc__ = {"cli": False}
+__version__ = "0.0.47"

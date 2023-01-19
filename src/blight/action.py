@@ -33,7 +33,7 @@ class Action:
         if self._should_run_on(tool):
             self.before_run(tool)
 
-    def after_run(self, tool: Tool, *, run_skipped: bool = False):  # pragma: no cover
+    def after_run(self, tool: Tool, *, run_skipped: bool = False) -> None:  # pragma: no cover
         """
         Invoked right after the underlying tool is run.
 
@@ -42,7 +42,7 @@ class Action:
         """
         pass
 
-    def _after_run(self, tool: Tool, *, run_skipped=False) -> None:
+    def _after_run(self, tool: Tool, *, run_skipped: bool = False) -> None:
         if self._should_run_on(tool):
             self.after_run(tool, run_skipped=run_skipped)
 
