@@ -25,7 +25,7 @@ jobs:
           python-version: ${{ matrix.python }}
 
       - name: deps
-        run: make dev BLIGHT_EXTRA=test
+        run: make dev INSTALL_EXTRA=test
 
       - name: test
         run: make test
