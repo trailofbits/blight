@@ -10,4 +10,5 @@ jobs:
   lint:
     uses: trailofbits/.github/.github/workflows/lint.yml@multi-lint
     with:
+      language: python
       python-version: "3.7"
