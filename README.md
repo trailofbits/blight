@@ -10,7 +10,7 @@
 
 `blight` is available on PyPI and is installable via `pip`:
 
-```console
+```bash
 python -m pip install blight
 ```
 
@@ -18,7 +18,7 @@ Python 3.7 or newer is required.
 
 ## Usage
 
-```console
+```bash
 # go to whatever source tree you'd like to build
 cd /your/project
 
