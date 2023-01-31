@@ -19,15 +19,15 @@ Python 3.7 or newer is required.
 ## Usage
 
 ```console
-$ # go to whatever source tree you'd like to build
-$ cd /your/project
+# go to whatever source tree you'd like to build
+cd /your/project
 
-$ # configure blight and run your build system under it
-$ export BLIGHT_ACTION_RECORD="output=/tmp/demo.jsonl"
-$ blight-exec --action=Record --guess-wrapped make
+# configure blight and run your build system under it
+export BLIGHT_ACTION_RECORD="output=/tmp/demo.jsonl"
+blight-exec --action=Record --guess-wrapped make
 
-$ # check the configured output
-$ cat /tmp/demo.jsonl
+# check the configured output
+cat /tmp/demo.jsonl
 ```
 
 ## Goals
@@ -68,9 +68,9 @@ from printld import PrintLD  # noqa: F401
 ```
 
 ```bash
-$ eval $(blight-env --guess-wrapped)
-$ export BLIGHT_ACTIONS="PrintLD"
-$ make
+eval $(blight-env --guess-wrapped)
+export BLIGHT_ACTIONS="PrintLD"
+make
 ```
 
 Check out blight's [API documentation](https://trailofbits.github.io/blight) for more details,
