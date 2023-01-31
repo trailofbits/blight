@@ -11,7 +11,7 @@
 `blight` is available on PyPI and is installable via `pip`:
 
 ```console
-$ python -m pip install blight
+python -m pip install blight
 ```
 
 Python 3.7 or newer is required.
