@@ -1,5 +1,4 @@
-blight
-======
+# blight
 
 ![CI](https://github.com/trailofbits/blight/workflows/CI/badge.svg)
 [![PyPI version](https://badge.fury.io/py/blight.svg)](https://badge.fury.io/py/blight)
