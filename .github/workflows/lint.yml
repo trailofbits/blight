@@ -19,3 +19,4 @@ jobs:
     uses: trailofbits/.github/.github/workflows/lint.yml@ww/markdownlint
     with:
       language: markdown
+      org-repo-ref: ww/markdownlint
