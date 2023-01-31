@@ -9,14 +9,14 @@ on:
 jobs:
   lint-source:
     name: Lint Python
-    uses: trailofbits/.github/.github/workflows/lint.yml@v0.0.3
+    uses: trailofbits/.github/.github/workflows/lint.yml@v0.0.4
     with:
       language: python
       python-version: "3.7"
 
   lint-md:
     name: Lint Markdown
-    uses: trailofbits/.github/.github/workflows/lint.yml@ww/markdownlint
+    uses: trailofbits/.github/.github/workflows/lint.yml@v0.0.4
     with:
       language: markdown
       org-repo-ref: ww/markdownlint
