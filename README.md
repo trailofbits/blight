@@ -46,8 +46,8 @@ a la [Bear](https://github.com/rizsotto/Bear).
 
 ## Contributing a new action
 
-New blight actions are easy to write. For example, the following prints a message before every `ld`
-invocation:
+New blight actions are easy to write. For example, the following prints a
+message before every `ld` invocation:
 
 ```python
 # src/blight/actions/printld.py
@@ -73,9 +73,10 @@ export BLIGHT_ACTIONS="PrintLD"
 make
 ```
 
-Check out blight's [API documentation](https://trailofbits.github.io/blight) for more details,
-including the kinds of available actions.
+Check out blight's [API documentation](https://trailofbits.github.io/blight)
+for more details, including the kinds of available actions.
 
 ## The name?
 
-Build systems and tools that instrument build systems are a blight on my productivity.
+Build systems and tools that instrument build systems are a blight on my
+productivity.
