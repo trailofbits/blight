@@ -1,5 +1,4 @@
-blight
-======
+# blight
 
 ![CI](https://github.com/trailofbits/blight/workflows/CI/badge.svg)
 [![PyPI version](https://badge.fury.io/py/blight.svg)](https://badge.fury.io/py/blight)
@@ -11,24 +10,24 @@ blight
 
 `blight` is available on PyPI and is installable via `pip`:
 
-```console
-$ python -m pip install blight
+```bash
+python -m pip install blight
 ```
 
 Python 3.7 or newer is required.
 
 ## Usage
 
-```console
-$ # go to whatever source tree you'd like to build
-$ cd /your/project
+```bash
+# go to whatever source tree you'd like to build
+cd /your/project
 
-$ # configure blight and run your build system under it
-$ export BLIGHT_ACTION_RECORD="output=/tmp/demo.jsonl"
-$ blight-exec --action=Record --guess-wrapped make
+# configure blight and run your build system under it
+export BLIGHT_ACTION_RECORD="output=/tmp/demo.jsonl"
+blight-exec --action=Record --guess-wrapped make
 
-$ # check the configured output
-$ cat /tmp/demo.jsonl
+# check the configured output
+cat /tmp/demo.jsonl
 ```
 
 ## Goals
@@ -47,8 +46,8 @@ a la [Bear](https://github.com/rizsotto/Bear).
 
 ## Contributing a new action
 
-New blight actions are easy to write. For example, the following prints a message before every `ld`
-invocation:
+New blight actions are easy to write. For example, the following prints a
+message before every `ld` invocation:
 
 ```python
 # src/blight/actions/printld.py
@@ -69,14 +68,15 @@ from printld import PrintLD  # noqa: F401
 ```
 
 ```bash
-$ eval $(blight-env --guess-wrapped)
-$ export BLIGHT_ACTIONS="PrintLD"
-$ make
+eval $(blight-env --guess-wrapped)
+export BLIGHT_ACTIONS="PrintLD"
+make
 ```
 
-Check out blight's [API documentation](https://trailofbits.github.io/blight) for more details,
-including the kinds of available actions.
+Check out blight's [API documentation](https://trailofbits.github.io/blight)
+for more details, including the kinds of available actions.
 
 ## The name?
 
-Build systems and tools that instrument build systems are a blight on my productivity.
+Build systems and tools that instrument build systems are a blight on my
+productivity.
