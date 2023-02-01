@@ -123,7 +123,7 @@ def env(
     unset: bool, guess_wrapped: bool, swizzle_path: bool, stubs: List[str], shims: List[str]
 ) -> None:
     if guess_wrapped:
-        for (variable, value) in _guess_wrapped():
+        for variable, value in _guess_wrapped():
             if variable not in os.environ:
                 _export(variable, value)
 
