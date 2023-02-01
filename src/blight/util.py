@@ -110,7 +110,7 @@ def collect_option_values(
     # TODO(ww): There are a lot of error cases here. They should be thought out more.
 
     values: list[tuple[int, str]] = []
-    for (idx, arg) in enumerate(args):
+    for idx, arg in enumerate(args):
         if not arg.startswith(option):
             continue
 
