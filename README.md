@@ -23,7 +23,6 @@ systems. It contains:
 * [Anti-goals](#anti-goals)
 * [Contributing a new action](#contributing-a-new-action)
 
-
 ## Installation
 
 `blight` is available on PyPI and is installable via `pip`:
@@ -139,7 +138,7 @@ rather than using their symbolic counterparts. For these, you can use
 `--swizzle-path` to interpose shims that redirect those hardcoded tool
 invocations back to `blight`'s wrappers:
 
-```
+```bash
 blight-exec --guess-wrapped --swizzle-path -- make
 ```
 
