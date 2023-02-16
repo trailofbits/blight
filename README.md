@@ -120,8 +120,8 @@ $ which cc
 
 All the `Demo` action does is print a message before and after each tool run,
 allowing you to diagnose when a tool is or isn't correctly instrumented.
-See the [actions documentation](https://trailofbits.github.io/blight/blight/actions.html)
-for a full list of built-in actions.
+See the [actions documentation below](#enabling-actions) for information on
+using and configuring more interesting actions.
 
 ## Cookbook
 
@@ -145,6 +145,58 @@ blight-exec --guess-wrapped --swizzle-path -- make
 
 See [Taming an uncooperative build with shims and stubs](#taming-an-uncooperative-build-with-shims-and-stubs)
 for more advanced techniques for dealing with poorly written build systems.
+
+### Enabling actions
+
+Actions are where `blight` really shines: they allow you to run arbitrary Python
+code before and after each build tool invocation.
+
+`blight` comes with built-in actions, which are
+[documented here](https://trailofbits.github.io/blight/blight/actions.html).
+See each action's Python module for its documentation.
+
+Actions can be enabled in two different ways:
+
+* With the `--action` flag, which can be passed multiple times. For example,
+  `--action SkipStrip --action Record` enables both the
+  [`SkipStrip`](https://trailofbits.github.io/blight/blight/actions/skip_strip.html)
+  and [`Record`](https://trailofbits.github.io/blight/blight/actions/record.html)
+  actions.
+
+* With the `BLIGHT_ACTIONS` environment variable, which can take multiple
+  actions delimited by `:`. For example, `BLIGHT_ACTIONS=SkipStrip:Record`
+  is equivalent to `--action SkipStrip --action Record`.
+
+Actions are run in the order of specification with duplicates removed, meaning
+that `BLIGHT_ACTIONS=Foo:Bar:Foo` is equivalent to `BLIGHT_ACTIONS=Foo:Bar`
+but **not** `BLIGHT_ACTIONS=Bar:Foo`. This is important if actions have side
+effects, which they may (such as modifying the tool's flags).
+
+#### Action configuration
+
+Some actions accept or require additional configuration, which is passed
+through the `BLIGHT_ACTION_{ACTION}` environment variable in `key=value`
+format, where `{ACTION}` is the uppercased name of the action.
+
+For example, to configure `Record`'s output file:
+
+```bash
+BLIGHT_ACTION_RECORD="output=/tmp/output.jsonl"
+```
+
+#### Action outputs
+
+There are two ways to get output from actions under `blight`:
+
+* Many actions support an `output` configuration value, which should be a
+  filename to write to. This allows each action to write its own output
+  file.
+* `blight` supports a "journaling" mode, in which all action outputs
+  are written to a single file, keyed by action name.
+
+The "journaling" mode is generally encouraged over individual outputs,
+and can be enabled with either `BLIGHT_JOURNAL_PATH=/path/to/output.jsonl`
+in the environment or `blight-exec --journal-path /path/to/output.jsonl`.
 
 ### Configuring an environment with `blight-env`
 
