@@ -4,6 +4,7 @@ Actions supported by blight.
 
 from .benchmark import Benchmark  # noqa: F401
 from .cc_for_cxx import CCForCXX  # noqa: F401
+from .demo import Demo  # noqa: F401
 from .embed_bitcode import EmbedBitcode  # noqa: F401
 from .find_inputs import FindInputs  # noqa: F401
 from .find_outputs import FindOutputs  # noqa: F401
