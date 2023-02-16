@@ -1,6 +1,3 @@
-import json
-import shutil
-
 from blight.actions import Demo
 from blight.tool import CC
 
