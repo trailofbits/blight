@@ -2,7 +2,6 @@
 The `Demo` action.
 """
 
-from pathlib import Path
 import sys
 
 from blight.action import Action
