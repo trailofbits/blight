@@ -118,6 +118,11 @@ $ which cc
 /usr/bin/cc
 ```
 
+All the `Demo` action does is print a message before and after each tool run,
+allowing you to diagnose when a tool is or isn't correctly instrumented.
+See the [actions documentation](https://trailofbits.github.io/blight/blight/actions.html)
+for a full list of built-in actions.
+
 ## Cookbook
 
 ### Running `blight` against a `make`-based build
