@@ -605,13 +605,11 @@ class DefinesMixin:
 
             components = define.split("=", 1)
             name = components[0]
-            if len(components) == 1:
-                # NOTE(ww): 1 is the default macro value.
-                # It's actually an integer at the preprocessor level, but we model everything
-                # as strings here to avoid complicating things.
-                value = "1"
-            else:
-                value = components[1]
+
+            # NOTE(ww): 1 is the default macro value.
+            # It's actually an integer at the preprocessor level, but we model everything
+            # as strings here to avoid complicating things.
+            value = "1" if len(components) == 1 else components[1]
 
             # Is this macro subsequently undefined? If so, don't include it in
             # the defines list.

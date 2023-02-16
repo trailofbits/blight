@@ -62,9 +62,11 @@ def _export(variable: str, value: str) -> None:
 
 def _guess_wrapped() -> Iterator[Tuple[str, str]]:
     for tool in BuildTool:
-        tool_path = shutil.which(tool.cmd)
+        tool_path = os.getenv(tool.env)
         if tool_path is None:
-            die(f"Couldn't locate {tool} on the $PATH")
+            tool_path = shutil.which(tool.cmd)
+            if tool_path is None:
+                die(f"Couldn't locate {tool} on the $PATH")
 
         yield (tool.blight_tool.env, tool_path)
 
