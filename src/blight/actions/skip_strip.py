@@ -1,5 +1,8 @@
 """
 The `SkipStrip` action.
+
+All `SkipStrip` does is skip invocations of `strip`. No other commands
+are affected.
 """
 
 

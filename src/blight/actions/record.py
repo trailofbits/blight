@@ -1,5 +1,13 @@
 """
 The `Record` action.
+
+`Record` produces a transcript of each tool's invocation. It supports
+both journaling and a custom output path.
+
+Configuration:
+
+* `output`: a path on disk that each `Record` step's output will be written to
+
 """
 
 import json
