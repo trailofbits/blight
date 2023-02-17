@@ -66,8 +66,6 @@ warn_unreachable = true
 warn_unused_configs = true
 warn_unused_ignores = true
 
-exclude = ["test/"]
-
 [tool.ruff]
 line-length = 100
 select = ["E", "F", "W", "UP", "I", "N", "YTT", "BLE", "C4", "SIM"]

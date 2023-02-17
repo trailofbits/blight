@@ -2,6 +2,7 @@ import hashlib
 import json
 
 import pytest
+
 from blight.actions import FindOutputs
 from blight.actions.find_outputs import OutputKind
 from blight.tool import CC, INSTALL

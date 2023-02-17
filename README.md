@@ -15,13 +15,13 @@ systems. It contains:
 1. Command-line wrappers (`blight-env` and `blight-exec`) for instrumenting
    builds.
 
-* [Installation](#installation)
-* [Usage](#usage)
-* [Quickstart](#quickstart)
-* [Cookbook](#cookbook)
-* [Goals](#goals)
-* [Anti-goals](#anti-goals)
-* [Contributing a new action](#contributing-a-new-action)
+- [Installation](#installation)
+- [Usage](#usage)
+- [Quickstart](#quickstart)
+- [Cookbook](#cookbook)
+- [Goals](#goals)
+- [Anti-goals](#anti-goals)
+- [Contributing a new action](#contributing-a-new-action)
 
 ## Installation
 
@@ -37,9 +37,9 @@ Python 3.7 or newer is required.
 
 `blight` comes with two main entrypoints:
 
-* `blight-exec`: directly execute a command within a `blight`-instrumented
-   environment
-* `blight-env`: write a `sh`-compatible environment definition to `stdout`,
+- `blight-exec`: directly execute a command within a `blight`-instrumented
+  environment
+- `blight-env`: write a `sh`-compatible environment definition to `stdout`,
   which the shell or other tools can consume to enter a `blight`-instrumented
   environment
 
@@ -47,6 +47,7 @@ In most cases, you'll probably want `blight-exec`. `blight-env` can be thought
 of as the "advanced" or "plumbing" interface.
 
 <!-- @begin-blight-exec-help@ -->
+
 ```text
 Usage: blight-exec [OPTIONS] TARGET [ARGS]...
 
@@ -59,9 +60,11 @@ Options:
   --journal-path PATH  The path to use for action journaling
   --help               Show this message and exit.
 ```
+
 <!-- @end-blight-exec-help@ -->
 
 <!-- @begin-blight-env-help@ -->
+
 ```text
 Usage: blight-env [OPTIONS]
 
@@ -73,6 +76,7 @@ Options:
   --unset          Unset the tool variables instead of setting them
   --help           Show this message and exit.
 ```
+
 <!-- @end-blight-env-help@ -->
 
 ## Quickstart
@@ -81,9 +85,9 @@ The easiest way to get started with `blight` is to use `blight-exec` with
 `--guess-wrapped` and `--swizzle-path`. These flags tell `blight` to configure
 the environment with some common-sense defaults:
 
-* `--guess-wrapped`: guess the appropriate underlying tools to invoke from
+- `--guess-wrapped`: guess the appropriate underlying tools to invoke from
   the current `PATH` and other runtime environment;
-* `--swizzle-path`: rewrite the `PATH` to put some common build tool shims
+- `--swizzle-path`: rewrite the `PATH` to put some common build tool shims
   first, e.g. redirecting `cc` to `blight-cc`.
 
 For example, the following will run `cc -v` under `blight`'s instrumentation,
@@ -156,13 +160,13 @@ See each action's Python module for its documentation.
 
 Actions can be enabled in two different ways:
 
-* With the `--action` flag, which can be passed multiple times. For example,
+- With the `--action` flag, which can be passed multiple times. For example,
   `--action SkipStrip --action Record` enables both the
   [`SkipStrip`](https://trailofbits.github.io/blight/blight/actions/skip_strip.html)
   and [`Record`](https://trailofbits.github.io/blight/blight/actions/record.html)
   actions.
 
-* With the `BLIGHT_ACTIONS` environment variable, which can take multiple
+- With the `BLIGHT_ACTIONS` environment variable, which can take multiple
   actions delimited by `:`. For example, `BLIGHT_ACTIONS=SkipStrip:Record`
   is equivalent to `--action SkipStrip --action Record`.
 
@@ -187,10 +191,10 @@ BLIGHT_ACTION_RECORD="output=/tmp/output.jsonl"
 
 There are two ways to get output from actions under `blight`:
 
-* Many actions support an `output` configuration value, which should be a
+- Many actions support an `output` configuration value, which should be a
   filename to write to. This allows each action to write its own output
   file.
-* `blight` supports a "journaling" mode, in which all action outputs
+- `blight` supports a "journaling" mode, in which all action outputs
   are written to a single file, keyed by action name.
 
 The "journaling" mode is generally encouraged over individual outputs,
@@ -293,16 +297,16 @@ The swizzled addition can be identified by its `@blight-swizzle@` directory name
 Sometimes build systems need more coaxing than just `--guess-wrapped` and
 `--swizzle-path`. Common examples include:
 
-* Hard-coding a particular tool or tool version rather than using the symbolic
+- Hard-coding a particular tool or tool version rather than using the symbolic
   name (e.g. `clang-7 example.c` instead of `$(CC) example.c`);
-* Running lots of "junk" commands that can be suppressed (e.g. lots of `echo`
+- Running lots of "junk" commands that can be suppressed (e.g. lots of `echo`
   invocations)
 
-You can use *shims* and *stubs* to smooth out these cases:
+You can use _shims_ and _stubs_ to smooth out these cases:
 
-* *shims* replace a command with a build tool that `blight` knows about, e.g.
+- _shims_ replace a command with a build tool that `blight` knows about, e.g.
   `clang-3.8` with `cc`.
-* *stubs* replace a command with an invocation of `true`, meaning that it
+- _stubs_ replace a command with an invocation of `true`, meaning that it
   does nothing and never fails.
 
 Shims are specified with `--shim cmd:tool`, while stubs are specified with
@@ -318,17 +322,17 @@ blight-exec --guess-wrapped --swizzle-path --shim tcc:cc --stub echo -- make
 
 ## Goals
 
-* Wrapping `CC`, `CXX`, `CPP`, `LD`, `AS`, `AR`, `STRIP`, and `INSTALL`.
-* Providing a visitor-style API for each of the above, pre- and post-execution.
-* Providing a nice set of default actions.
-* Being as non-invasive as possible.
+- Wrapping `CC`, `CXX`, `CPP`, `LD`, `AS`, `AR`, `STRIP`, and `INSTALL`.
+- Providing a visitor-style API for each of the above, pre- and post-execution.
+- Providing a nice set of default actions.
+- Being as non-invasive as possible.
 
 ## Anti-goals
 
-* Using `LD_PRELOAD` to capture every `exec` in a build system,
-a la [Bear](https://github.com/rizsotto/Bear).
-* Supporting `cl.exe`.
-* Detailed support for non C/C++ languages.
+- Using `LD_PRELOAD` to capture every `exec` in a build system,
+  a la [Bear](https://github.com/rizsotto/Bear).
+- Supporting `cl.exe`.
+- Detailed support for non C/C++ languages.
 
 ## Contributing a new action
 

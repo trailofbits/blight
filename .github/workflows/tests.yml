@@ -34,7 +34,7 @@ jobs:
     if: always()
 
     needs:
-    - test
+      - test
 
     runs-on: ubuntu-latest
 
