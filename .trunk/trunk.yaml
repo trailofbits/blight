@@ -7,6 +7,10 @@ plugins:
       ref: v0.0.10
       uri: https://github.com/trunk-io/plugins
 lint:
+  ignore:
+    - linters: [mypy]
+      paths:
+        - "test/*"
   enabled:
     - mypy@1.0.1
     - prettier@2.8.4
