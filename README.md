@@ -21,7 +21,7 @@ systems. It contains:
 - [Cookbook](#cookbook)
 - [Goals](#goals)
 - [Anti-goals](#anti-goals)
-- [Contributing a new action](#contributing-a-new-action)
+- [Contributing](#contributing)
 
 ## Installation
 
@@ -334,34 +334,6 @@ blight-exec --guess-wrapped --swizzle-path --shim tcc:cc --stub echo -- make
 - Supporting `cl.exe`.
 - Detailed support for non C/C++ languages.
 
-## Contributing a new action
+## Contributing
 
-New blight actions are easy to write. For example, the following prints a
-message before every `ld` invocation:
-
-```python
-# src/blight/actions/printld.py
-
-from blight.action import LDAction
-
-
-class PrintLD(LDAction):
-    def before_run(self, tool):
-        print(f"ld was run with: {tool.args}")
-```
-
-```python
-# src/blight/actions/__init__.py
-
-# bring PrintLD into blight.actions so that `BLIGHT_ACTIONS` can find it
-from printld import PrintLD  # noqa: F401
-```
-
-```bash
-eval $(blight-env --guess-wrapped)
-export BLIGHT_ACTIONS="PrintLD"
-make
-```
-
-Check out blight's [API documentation](https://trailofbits.github.io/blight)
-for more details, including the kinds of available actions.
+Check out our [CONTRIBUTING.md](./CONTRIBUTING.md)!
