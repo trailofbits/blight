@@ -8,41 +8,21 @@ dynamic = ["version"]
 description = "A catch-all compile-tool wrapper"
 readme = "README.md"
 license = { file = "LICENSE" }
-authors = [
-  { name = "William Woodruff", email = "william@trailofbits.com" }
-]
+authors = [{ name = "William Woodruff", email = "william@trailofbits.com" }]
 classifiers = [
   "Programming Language :: Python :: 3",
   "License :: OSI Approved :: Apache Software License",
   "Intended Audience :: Developers",
   "Topic :: Software Development :: Build Tools",
 ]
-dependencies = [
-  "click >= 7.1,< 9.0",
-  "typing_extensions",
-  "pydantic ~= 1.7",
-]
+dependencies = ["click >= 7.1,< 9.0", "typing_extensions", "pydantic ~= 1.7"]
 requires-python = ">=3.7"
 
 [project.optional-dependencies]
-doc = [
-  "pdoc",
-]
-lint = [
-  "black",
-  "mypy",
-  "ruff",
-]
-test = [
-  "pytest",
-  "pytest-cov",
-  "pretend",
-  "coverage[toml]",
-]
-dev = [
-  "blight[doc,lint,test]",
-  "twine",
-]
+doc = ["pdoc"]
+lint = ["black", "mypy", "ruff"]
+test = ["pytest", "pytest-cov", "pretend", "coverage[toml]"]
+dev = ["blight[doc,lint,test]", "twine"]
 
 [project.scripts]
 "blight-env" = "blight._cli:env"
@@ -85,6 +65,8 @@ warn_return_any = true
 warn_unreachable = true
 warn_unused_configs = true
 warn_unused_ignores = true
+
+exclude = ["test/"]
 
 [tool.ruff]
 line-length = 100
