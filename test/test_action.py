@@ -1,4 +1,5 @@
 import pytest
+
 from blight import action, tool
 
 

@@ -3,6 +3,7 @@ from pathlib import Path
 
 import pretend
 import pytest
+
 from blight import util
 from blight.actions import Record
 from blight.exceptions import BlightError

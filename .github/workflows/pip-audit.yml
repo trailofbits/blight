@@ -2,9 +2,9 @@ name: Scan dependencies for vulnerabilities with pip-audit
 
 on:
   push:
-    branches: [ "master" ]
+    branches: ["master"]
   pull_request:
-    branches: [ "master" ]
+    branches: ["master"]
   schedule:
     - cron: "0 12 * * *"
 
@@ -24,11 +24,9 @@ jobs:
       - name: Install project
         run: make dev
 
-
       - name: Run pip-audit
         uses: trailofbits/gh-action-pip-audit@v1.0.6
         with:
           virtual-environment: env/
           ignore-vulns: |
             GHSA-w596-4wvx-j9j6
-

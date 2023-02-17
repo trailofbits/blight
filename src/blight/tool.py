@@ -25,7 +25,11 @@ from blight.enums import (
     Std,
 )
 from blight.exceptions import BlightError, BuildError, SkipRun
-from blight.protocols import CanonicalizedArgsProtocol, IndexedUndefinesProtocol, LangProtocol
+from blight.protocols import (
+    CanonicalizedArgsProtocol,
+    IndexedUndefinesProtocol,
+    LangProtocol,
+)
 from blight.util import json_helper
 
 logger = logging.getLogger(__name__)
