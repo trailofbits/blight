@@ -31,17 +31,12 @@ $(VENV)/pyvenv.cfg: pyproject.toml
 dev: $(VENV)/pyvenv.cfg
 
 .PHONY: lint
-lint: $(VENV_EXISTS)
-	. $(VENV_BIN)/activate && \
-		black --check $(ALL_PY_SRCS) && \
-		ruff $(ALL_PY_SRCS) && \
-		mypy src
+lint:
+	trunk check
 
 .PHONY: format
-format: $(VENV_EXISTS)
-	. $(VENV_BIN)/activate && \
-		ruff --fix $(ALL_PY_SRCS) && \
-		black $(ALL_PY_SRCS)
+format:
+	trunk fmt
 
 .PHONY: test
 test: $(VENV_EXISTS)
