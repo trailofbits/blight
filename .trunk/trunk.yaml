@@ -1,10 +1,10 @@
 version: 0.1
 cli:
-  version: 1.4.1
+  version: 1.5.0
 plugins:
   sources:
     - id: trunk
-      ref: v0.0.10
+      ref: v0.0.11
       uri: https://github.com/trunk-io/plugins
 lint:
   ignore:
@@ -12,10 +12,10 @@ lint:
       paths:
         - "test/*"
   enabled:
+    - ruff@0.0.249
     - mypy@1.0.1
     - prettier@2.8.4
     - black@23.1.0
-    - flake8@6.0.0
     - git-diff-check
     - markdownlint@0.33.0
     - gitleaks@8.15.3
