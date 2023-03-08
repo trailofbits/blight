@@ -10,7 +10,11 @@ jobs:
     name: upload release to PyPI
     runs-on: ubuntu-latest
     permissions:
+      # For OIDC publishing + Sigstore signing
       id-token: write
+
+      # For signature + release asset uploading
+      contents: write
     steps:
       - uses: actions/checkout@v3
 
