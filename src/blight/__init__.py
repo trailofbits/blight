@@ -2,4 +2,4 @@
 `blight`'s public APIs.
 """
 
-__version__ = "0.0.53a0"
+__version__ = "0.0.53a1"
