@@ -34,4 +34,4 @@ class Lint(CompilerAction):
         for name, _ in tool.defines:
             # TODO: Maybe do something more drastic here, like stopping the run.
             if name == "FORTIFY_SOURCE":
-                logger.warning(f"found -DFORTIFY_SOURCE; you probably meant: -D_FORTIFY_SOURCE")
+                logger.warning("found -DFORTIFY_SOURCE; you probably meant: -D_FORTIFY_SOURCE")
