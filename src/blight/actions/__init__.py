@@ -16,7 +16,6 @@ from .lint import Lint
 from .record import Record
 from .skip_strip import SkipStrip
 
-
 __all__ = [
     "Benchmark",
     "CCForCXX",
