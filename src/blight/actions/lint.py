@@ -3,10 +3,8 @@ The `Lint` action.
 """
 
 import logging
-import shlex
 
 from blight.action import CompilerAction
-from blight.enums import CompilerStage, Lang
 from blight.tool import CompilerTool
 
 logger = logging.getLogger(__name__)
