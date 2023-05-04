@@ -2,7 +2,6 @@ import shlex
 
 import pretend
 import pytest
-
 from blight.actions import lint
 from blight.tool import CC
 
