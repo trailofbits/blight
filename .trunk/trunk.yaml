@@ -1,26 +1,27 @@
 version: 0.1
 cli:
-  version: 1.5.0
+  version: 1.9.1
 plugins:
   sources:
     - id: trunk
-      ref: v0.0.11
+      ref: v0.0.14
       uri: https://github.com/trunk-io/plugins
 lint:
+  disabled:
+    - isort
   ignore:
     - linters: [mypy]
       paths:
-        - "test/*"
+        - "test/**"
   enabled:
-    - ruff@0.0.249
-    - mypy@1.0.1
-    - prettier@2.8.4
-    - black@23.1.0
+    - ruff@0.0.264
+    - mypy@1.2.0
+    - prettier@2.8.8
+    - black@23.3.0
     - git-diff-check
-    - markdownlint@0.33.0
-    - gitleaks@8.15.3
-    - actionlint@1.6.23
-    - isort@5.12.0
+    - markdownlint@0.34.0
+    - gitleaks@8.16.3
+    - actionlint@1.6.24
     - taplo@0.7.0
 runtimes:
   enabled:
