@@ -25,7 +25,7 @@ jobs:
         run: make dev
 
       - name: Run pip-audit
-        uses: trailofbits/gh-action-pip-audit@v1.0.7
+        uses: trailofbits/gh-action-pip-audit@v1.0.8
         with:
           virtual-environment: env/
           ignore-vulns: |
