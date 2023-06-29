@@ -73,6 +73,9 @@ class BuildTool(str, enum.Enum):
         else:
             assert_never(self)  # pragma: no cover
 
+    def __str__(self) -> str:
+        return self.value
+
 
 @enum.unique
 class BlightTool(str, enum.Enum):
@@ -117,6 +120,9 @@ class BlightTool(str, enum.Enum):
     def env(self) -> str:
         return f"BLIGHT_WRAPPED_{self.build_tool.env}"
 
+    def __str__(self) -> str:
+        return self.value
+
 
 @enum.unique
 class CompilerFamily(enum.Enum):
@@ -148,6 +154,9 @@ class CompilerFamily(enum.Enum):
     """
     An unknown compiler family.
     """
+
+    def __str__(self) -> str:
+        return self.name
 
 
 @enum.unique
@@ -188,6 +197,9 @@ class CompilerStage(enum.Enum):
     An unknown or unqualified stage.
     """
 
+    def __str__(self) -> str:
+        return self.name
+
 
 @enum.unique
 class Lang(enum.Enum):
@@ -214,6 +226,9 @@ class Lang(enum.Enum):
     """
     An unknown language.
     """
+
+    def __str__(self) -> str:
+        return self.name
 
 
 @enum.unique
@@ -411,6 +426,9 @@ class Std(enum.Enum):
     A completely unknown language standard.
     """
 
+    def __str__(self) -> str:
+        return self.name
+
 
 @enum.unique
 class OptLevel(enum.Enum):
@@ -484,6 +502,9 @@ class OptLevel(enum.Enum):
     An unknown optimization level.
     """
 
+    def __str__(self) -> str:
+        return self.name
+
 
 @enum.unique
 class CodeModel(enum.Enum):
@@ -516,6 +537,9 @@ class CodeModel(enum.Enum):
     An unknown machine code model.
     """
 
+    def __str__(self) -> str:
+        return self.name
+
 
 @enum.unique
 class OutputKind(str, enum.Enum):
@@ -533,6 +557,9 @@ class OutputKind(str, enum.Enum):
     Directory: str = "directory"
     Unknown: str = "unknown"
 
+    def __str__(self) -> str:
+        return self.value
+
 
 @enum.unique
 class InputKind(str, enum.Enum):
@@ -548,3 +575,6 @@ class InputKind(str, enum.Enum):
     StaticLibrary: str = "static"
     Directory: str = "directory"
     Unknown: str = "unknown"
+
+    def __str__(self) -> str:
+        return self.value
