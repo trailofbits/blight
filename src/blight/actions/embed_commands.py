@@ -1,8 +1,17 @@
+"""
+The `EmbedCommands` action.
+
+`EmbedCommands` embeds JSON compile commands, including environment variables,
+inside of a custom section of each built object file. These sections make it
+into the final binary.
+"""
+
 import os
 import re
 import hashlib
 import logging
 import json
+import random
 import subprocess
 import shutil
 from pathlib import Path
@@ -98,17 +107,58 @@ def cc_as_string(tool_record: Dict, hash_str=None):
     return json.dumps(tool_record).replace('"', '\\"').replace("\\\\", "\\")
 
 
+def add_to_envp(envp: Dict, key: str, value):
+    if isinstance(value, str):
+        envp[key] = value.replace('"', "'")
+    elif isinstance(value, list):
+        envp[key] = [v.replace('"', "'") for v in value]
+    else:
+        envp[key] = value
+
+
+def is_input_assembly(tool: Tool):
+    for file_path in tool.inputs:
+        file_path_str = str(file_path)
+        if file_path_str.endswith(".S") or file_path_str.endswith(".s"):
+            return True
+    return False
+
+
+def cc_as_dict(tool: Tool) -> Dict:
+    env = {}
+    tool_dict = tool.asdict()
+    old_env = tool_dict["env"]
+    for key, value in old_env.items():
+        if key == "PS1" or key == "LS_COLORS" or key.startswith("BLIGHT"):
+            continue
+        add_to_envp(env, key, value)
+
+    for key, value in old_env.items():
+        if key.startswith("BLIGHT_WRAPPED_"):
+            add_to_envp(env, key[15:], value)
+
+    return {
+        "cwd": tool_dict["cwd"],
+        "env": env,
+        "args": [v.replace('"', "'") for v in tool.args],
+        "canonicalized_args": [v.replace('"', "'") for v in tool.canonicalized_args],
+        "wrapped_tool": shutil.which(tool.wrapped_tool()),
+        "lang": tool.lang.name,
+    }
+
+
 _ALIGN = 4
+
+
 def align_string(string: str) -> str:
     length = len(string)
     length_aligned = length if length % _ALIGN == 0 else (int(length / _ALIGN) + 1) * _ALIGN
     return string.ljust(length_aligned, '\0')
 
 
-class CompileCommand(CompilerAction):
+class EmbedCommands(CompilerAction):
     def __init__(self, config):
-        super(CompileCommand, self).__init__(config)
-        self._tool = None
+        super(EmbedCommands, self).__init__(config)
 
     def _is_input_assembly(self):
         has_assembly = False
@@ -121,10 +171,8 @@ class CompileCommand(CompilerAction):
 
     def _get_header_file(self):
         output = Path(self._config["output"])
-        tool_record = self._tool.asdict()
-
-        cmd_hash = SHA256(json.dumps(tool_record))
-        header_file = "{}/{}.h".format(output, cmd_hash)
+        header_file = "{}/{}_{}_{}.h".format(
+            output, cmd_hash, os.getpid(), random.randint(0, 9999999))
         if os.path.exists(header_file):
             os.remove(header_file)
         return header_file
@@ -159,32 +207,25 @@ class CompileCommand(CompilerAction):
         if self._is_input_assembly():
             return
 
-        comp_info, sha256 = get_compiler_info(self._tool.wrapped_tool())
-        cc_string = cc_as_string(self._get_tool_asdict(), sha256)        
-        
-        file = self._get_header_file()
-        with flock_append(file) as io:
+        if is_input_assembly(tool):
+            return
+
+        cc_string = cc_as_string(cc_as_dict(tool)).strip()
+        cmd_hash = SHA256(cc_string)
+        header_file = self._get_header_file(cmd_hash)
+        with flock_append(header_file) as io:
             variable = """
 #ifndef __linux__
-    __attribute__((used,section(\"__DATA,.trailofbits_cc\"))) static const char var_{}[] = \"{}\";
-    __attribute__((used,selectany,section(\"__DATA,.trailofbits_ci\"))) extern const char compinfo_{}[] = \"{}\";
+__attribute__((section(\"__DATA,.trailofbits_cc\")))
 #else
-    __attribute__((used,section(\".trailofbits_cc, \\"S\\", @note;\\n#\"))) static const char var_{}[] = \"''{}\";
-   /* __attribute__((used,section(\".trailofbits_ci, \\"S\\", @note;\\n#\"))) extern const char compinfo_{}[] __attribute__((weak)) = \"{}\";
-   */
-#endif""".format(
-                SHA256(cc_string),
-                cc_string.strip(),
-                sha256,
-                comp_info.strip(),
-                SHA256(cc_string),
-                cc_string.strip(),
-                sha256,
-                comp_info.strip(),
-            )
+__attribute__((section(\".trailofbits_cc, \\"S\\", @note;\\n#\")))
+#endif
+__attribute__((used))
+static const char cc_{}[] = \"{}\";
+""".format(cmd_hash, cc_string,)
             print(variable, file=io)
 
-        tool.args += ["-include", file, 
+        tool.args += ["-include", header_file, 
                       "-Wno-overlength-strings",
                       "-Wno-error",
                       "-Wno-extern-initializer",

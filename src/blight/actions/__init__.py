@@ -15,6 +15,7 @@ from .inject_flags import InjectFlags
 from .lint import Lint
 from .record import Record
 from .skip_strip import SkipStrip
+from .embed_commands import EmbedCommands  # noqa: F401
 
 __all__ = [
     "Benchmark",
@@ -30,4 +31,5 @@ __all__ = [
     "Lint",
     "Record",
     "SkipStrip",
+    "EmbedCommands",
 ]
