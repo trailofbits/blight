@@ -31,7 +31,7 @@ systems. It contains:
 python -m pip install blight
 ```
 
-Python 3.7 or newer is required.
+Python 3.8 or newer is required.
 
 ## Usage
 
