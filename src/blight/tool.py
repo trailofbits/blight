@@ -286,6 +286,10 @@ class LangMixin:
         Returns:
             A `blight.enums.Lang` value representing the tool's language
         """
+        logger.warning(
+            "This API might not do what you expect; see: https://github.com/trailofbits/blight/issues/43493"
+        )
+
         x_lang_map = {"c": Lang.C, "c-header": Lang.C, "c++": Lang.Cxx, "c++-header": Lang.Cxx}
 
         # First, check for `-x lang`. This overrides the language determined by
