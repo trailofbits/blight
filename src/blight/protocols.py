@@ -5,9 +5,7 @@ These are, generally speaking, an implementation detail.
 """
 
 from pathlib import Path
-from typing import Dict, List
-
-from typing_extensions import Protocol
+from typing import Dict, List, Protocol
 
 from blight.enums import Lang
 
