@@ -91,7 +91,7 @@ the environment with some common-sense defaults:
   first, e.g. redirecting `cc` to `blight-cc`.
 
 For example, the following will run `cc -v` under `blight`'s instrumentation,
-with the [`Demo`](https://trailofbits.github.io/blight/blight/actions/demo.html)
+with the [`Demo`](https://trailofbits.github.io/blight/blight/actions.html#Demo)
 action:
 
 ```bash
@@ -162,8 +162,8 @@ Actions can be enabled in two different ways:
 
 - With the `--action` flag, which can be passed multiple times. For example,
   `--action SkipStrip --action Record` enables both the
-  [`SkipStrip`](https://trailofbits.github.io/blight/blight/actions/skip_strip.html)
-  and [`Record`](https://trailofbits.github.io/blight/blight/actions/record.html)
+  [`SkipStrip`](https://trailofbits.github.io/blight/blight/actions.html#SkipStrip)
+  and [`Record`](https://trailofbits.github.io/blight/blight/actions.html#Record)
   actions.
 
 - With the `BLIGHT_ACTIONS` environment variable, which can take multiple
