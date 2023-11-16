@@ -8,12 +8,10 @@ into the final binary.
 
 import hashlib
 import json
-import os
-import random
 import shutil
 import tempfile
 from pathlib import Path
-from typing import Dict
+from typing import Any, Dict
 
 from blight.action import CompilerAction
 from blight.enums import Lang
@@ -25,7 +23,7 @@ def cc_as_string(tool_record: Dict) -> str:
     return json.dumps(tool_record).replace('"', '\\"').replace("\\\\", "\\")
 
 
-def add_to_envp(envp: Dict, key: str, value) -> None:
+def add_to_envp(envp: Dict, key: str, value: Any) -> None:
     if isinstance(value, str):
         envp[key] = value.replace('"', "'")
     elif isinstance(value, list):
@@ -43,7 +41,7 @@ def is_input_assembly(tool: CompilerTool) -> bool:
 
 
 def cc_as_dict(tool: CompilerTool) -> Dict:
-    env = {}
+    env: Dict[str, Any] = {}
     tool_dict = tool.asdict()
     old_env = tool_dict["env"]
     for key, value in old_env.items():
@@ -91,7 +89,6 @@ class EmbedCommands(CompilerAction):
         super().__init__(config)
 
     def _get_header_file(self, cmd_hash: str) -> str:
-        output = Path(self._config["output"])
         f = tempfile.NamedTemporaryFile(suffix=".h", delete=False)
         return f.name
 
