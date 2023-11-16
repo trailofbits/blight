@@ -67,6 +67,18 @@ def cc_as_dict(tool: CompilerTool) -> Dict:
 
 _ALIGN = 4
 
+_VARIABLE_TEMPLATE = """
+#ifndef __linux__
+__attribute__((section(\"__DATA,.trailofbits_cc\")))
+#elifndef __clang__
+__attribute__((section(\".trailofbits_cc, \\"S\\", @note;\\n#\")))
+#else
+__attribute__((section(\".trailofbits_cc\")))
+#endif
+__attribute__((used))
+static const char cc_{}[] = \"{}\";
+"""
+
 
 def align_string(string: str) -> str:
     length = len(string)
@@ -80,8 +92,8 @@ class EmbedCommands(CompilerAction):
 
     def _get_header_file(self, cmd_hash: str) -> str:
         output = Path(self._config["output"])
-        header = tempfile.NamedTemporaryFile(suffix='.h', delete=False)
-        return header.name
+        f = tempfile.NamedTemporaryFile(suffix='.h', delete=False)
+        return f.name
 
     def before_run(self, tool: CompilerTool) -> None:
         if tool.lang not in (Lang.C, Lang.Cxx):
@@ -93,19 +105,8 @@ class EmbedCommands(CompilerAction):
         cc_string = cc_as_string(cc_as_dict(tool)).strip()
         cmd_hash = hashlib.sha256(cc_string.encode()).hexdigest()
         header_file = self._get_header_file(cmd_hash)
-        with flock_append(header_file) as io:
-            variable = """
-#ifndef __linux__
-__attribute__((section(\"__DATA,.trailofbits_cc\")))
-#else
-__attribute__((section(\".trailofbits_cc, \\"S\\", @note;\\n#\")))
-#endif
-__attribute__((used))
-static const char cc_{}[] = \"{}\";
-""".format(
-                cmd_hash,
-                cc_string,
-            )
+        with flock_append(Path(header_file)) as io:
+            variable = _VARIABLE_TEMPLATE.format(cmd_hash, cc_string)
             print(variable, file=io)
 
         tool.args += [
