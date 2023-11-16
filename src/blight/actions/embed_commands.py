@@ -11,6 +11,7 @@ import json
 import os
 import random
 import shutil
+import tempfile
 from pathlib import Path
 from typing import Dict
 
@@ -79,12 +80,8 @@ class EmbedCommands(CompilerAction):
 
     def _get_header_file(self, cmd_hash: str) -> str:
         output = Path(self._config["output"])
-        header_file = "{}/{}_{}_{}.h".format(
-            output, cmd_hash, os.getpid(), random.randint(0, 9999999)
-        )
-        if os.path.exists(header_file):
-            os.remove(header_file)
-        return header_file
+        header = tempfile.NamedTemporaryFile(suffix='.h', delete=False)
+        return header.name
 
     def before_run(self, tool: CompilerTool) -> None:
         if tool.lang not in (Lang.C, Lang.Cxx):
