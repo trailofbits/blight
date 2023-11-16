@@ -92,7 +92,7 @@ class EmbedCommands(CompilerAction):
 
     def _get_header_file(self, cmd_hash: str) -> str:
         output = Path(self._config["output"])
-        f = tempfile.NamedTemporaryFile(suffix='.h', delete=False)
+        f = tempfile.NamedTemporaryFile(suffix=".h", delete=False)
         return f.name
 
     def before_run(self, tool: CompilerTool) -> None:
@@ -115,4 +115,4 @@ class EmbedCommands(CompilerAction):
             "-Wno-overlength-strings",
             "-Wno-error",
             "-Wno-unknown-escape-sequence",
-            ]
+        ]
