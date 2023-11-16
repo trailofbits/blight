@@ -16,15 +16,15 @@ from typing import Dict
 
 from blight.action import CompilerAction
 from blight.enums import Lang
-from blight.tool import Tool
+from blight.tool import CompilerTool
 from blight.util import flock_append
 
 
-def cc_as_string(tool_record: Dict):
+def cc_as_string(tool_record: Dict) -> str:
     return json.dumps(tool_record).replace('"', '\\"').replace("\\\\", "\\")
 
 
-def add_to_envp(envp: Dict, key: str, value):
+def add_to_envp(envp: Dict, key: str, value) -> None:
     if isinstance(value, str):
         envp[key] = value.replace('"', "'")
     elif isinstance(value, list):
@@ -33,7 +33,7 @@ def add_to_envp(envp: Dict, key: str, value):
         envp[key] = value
 
 
-def is_input_assembly(tool: Tool):
+def is_input_assembly(tool: CompilerTool) -> bool:
     for file_path in tool.inputs:
         file_path_str = str(file_path)
         if file_path_str.endswith(".S") or file_path_str.endswith(".s"):
@@ -41,7 +41,7 @@ def is_input_assembly(tool: Tool):
     return False
 
 
-def cc_as_dict(tool: Tool) -> Dict:
+def cc_as_dict(tool: CompilerTool) -> Dict:
     env = {}
     tool_dict = tool.asdict()
     old_env = tool_dict["env"]
@@ -117,4 +117,4 @@ static const char cc_{}[] = \"{}\";
             "-Wno-overlength-strings",
             "-Wno-error",
             "-Wno-unknown-escape-sequence",
-        ]
+            ]
