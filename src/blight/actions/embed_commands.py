@@ -20,14 +20,14 @@ from blight.util import flock_append
 
 
 def cc_as_string(tool_record: Dict) -> str:
-    return json.dumps(tool_record).replace('"', '\\"').replace("\\\\", "\\")
+    return json.dumps(tool_record).replace('"', '\\"')
 
 
 def add_to_envp(envp: Dict, key: str, value: Any) -> None:
     if isinstance(value, str):
-        envp[key] = value.replace('"', "'")
+        envp[key] = value
     elif isinstance(value, list):
-        envp[key] = [v.replace('"', "'") for v in value]
+        envp[key] = [v for v in value]
     else:
         envp[key] = value
 
@@ -56,8 +56,8 @@ def cc_as_dict(tool: CompilerTool) -> Dict:
     return {
         "cwd": tool_dict["cwd"],
         "env": env,
-        "args": [v.replace('"', "'") for v in tool.args],
-        "canonicalized_args": [v.replace('"', "'") for v in tool.canonicalized_args],
+        "args": [v for v in tool.args],
+        "canonicalized_args": [v for v in tool.canonicalized_args],
         "wrapped_tool": shutil.which(tool.wrapped_tool()),
         "lang": tool.lang.name,
     }
