@@ -20,7 +20,7 @@ from blight.util import flock_append
 
 
 def cc_as_string(tool_record: Dict) -> str:
-    return json.dumps(tool_record).replace('"', '\\"')
+    return json.dumps(tool_record).replace('"', '\\"').replace('\\\\"', '\\"')
 
 
 def add_to_envp(envp: Dict, key: str, value: Any) -> None:
@@ -66,9 +66,9 @@ def cc_as_dict(tool: CompilerTool) -> Dict:
 _ALIGN = 4
 
 _VARIABLE_TEMPLATE = """
-#ifndef __linux__
+#if !defined(__linux__)
 __attribute__((section(\"__DATA,.trailofbits_cc\")))
-#elifndef __clang__
+#elif !defined(__clang__)
 __attribute__((section(\".trailofbits_cc, \\"S\\", @note;\\n#\")))
 #else
 __attribute__((section(\".trailofbits_cc\")))
