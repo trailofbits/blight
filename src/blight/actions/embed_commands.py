@@ -20,7 +20,7 @@ from blight.util import flock_append
 
 
 def cc_as_string(tool_record: Dict) -> str:
-    return json.dumps(tool_record).replace('"', '\\"').replace('\\\\"', '\\"')
+    return json.dumps(tool_record).replace('\\', '\\\\').replace('"', '\\"')
 
 
 def add_to_envp(envp: Dict, key: str, value: Any) -> None:
