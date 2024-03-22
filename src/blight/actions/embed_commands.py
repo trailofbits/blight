@@ -31,11 +31,12 @@ def add_to_envp(envp: Dict, key: str, value: Any) -> None:
     else:
         envp[key] = value
 
+VALID_EXTENSIONS = ("c", "cc", "cxx", "cpp", "c++")
 
-def is_input_assembly(tool: CompilerTool) -> bool:
+def is_input_source_code(tool: CompilerTool) -> bool:
     for file_path in tool.inputs:
-        file_path_str = str(file_path)
-        if file_path_str.endswith(".S") or file_path_str.endswith(".s"):
+        extension = str(file_path).lower().split(".")[-1]
+        if extension in VALID_EXTENSIONS:
             return True
     return False
 
@@ -63,8 +64,6 @@ def cc_as_dict(tool: CompilerTool) -> Dict:
     }
 
 
-_ALIGN = 4
-
 _VARIABLE_TEMPLATE = """
 #if !defined(__linux__)
 __attribute__((section(\"__DATA,.trailofbits_cc\")))
@@ -78,12 +77,6 @@ static const char cc_{}[] = \"{}\";
 """
 
 
-def align_string(string: str) -> str:
-    length = len(string)
-    length_aligned = length if length % _ALIGN == 0 else (int(length / _ALIGN) + 1) * _ALIGN
-    return string.ljust(length_aligned, "\0")
-
-
 class EmbedCommands(CompilerAction):
     def __init__(self, config: dict[str, str]) -> None:
         super().__init__(config)
@@ -93,10 +86,7 @@ class EmbedCommands(CompilerAction):
         return f.name
 
     def before_run(self, tool: CompilerTool) -> None:
-        if tool.lang not in (Lang.C, Lang.Cxx):
-            return
-
-        if is_input_assembly(tool):
+        if not is_input_source_code(tool):
             return
 
         cc_string = cc_as_string(cc_as_dict(tool)).strip()
